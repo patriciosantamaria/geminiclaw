@@ -1,0 +1,12 @@
+# Local Databases and sensitive data
+.agent/memory.db
+.agent/briefings/latest_brief.json
+
+# Large Binary Files
+*.pdf
+
+# System Files
+.DS_Store
+node_modules/
+dist/
+build/

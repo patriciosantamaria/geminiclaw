@@ -1,0 +1,10 @@
+[Unit]
+Description=Vopak Autonomous Tank Inspector (Vertex AI Powered)
+
+[Service]
+Type=oneshot
+# The command executes the specialized tank-inspector skill using Gemini CLI
+ExecStart=/usr/bin/gemini --skill vopak-tank-inspector run "Perform daily tank inspection audit and update master tracker"
+WorkingDirectory=/home/patosoto/geminiclaw/projects/tank-inspection
+StandardOutput=journal
+StandardError=journal
