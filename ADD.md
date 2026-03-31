@@ -15,9 +15,9 @@ The system's core intelligence is segmented into specialized mindsets, each with
 - **Lead Trainer:** Simplification and education.
 
 ### 🧠 2.2. Hybrid Memory System
-The system maintains a dual-layer persistent memory:
-1.  **SQLite (Relational):** Stores structured metadata, project milestones, ROI metrics, and task statuses.
-2.  **ChromaDB (Vector/Semantic):** Stores unstructured context, previous meeting summaries, and technical research for semantic retrieval via Ollama.
+The system maintains a dual-layer persistent memory for high-fidelity context retention:
+1.  **SQLite (Relational - `.agent/memory.db`):** Stores structured metadata, project milestones, ROI metrics, and task statuses. This ensures data integrity for key-value facts and project tracking.
+2.  **ChromaDB (Vector/Semantic):** Stores unstructured context, previous meeting summaries, and technical research. Using the `nomic-embed-text` model via local **Ollama**, the system converts text into high-dimensional vectors for semantic retrieval. This allows the agent to "remember" the nuances of past conversations and decisions without needing exact keyword matches.
 
 ### ⚡ 2.3. Agentic Loops (Plan -> Act -> Verify)
 - **Planning:** The agent decomposes complex user directives into discrete sub-tasks.
@@ -26,7 +26,24 @@ The system maintains a dual-layer persistent memory:
 
 ---
 
-## 🔌 3. Core Integrations
+## 🔍 3. The Indexer and Harvester
+The "Strategic Harvester" is the system's proactive indexing engine. It does not wait for user input; instead, it actively gathers context to keep the memory fresh.
+
+### 🧺 3.1. Proactive Data Gathering
+- **The "Deep Fetch" Scan:** Every 24 hours (triggered at 08:00 AM), the harvester performs a 7-day rolling scan of the user's calendar, extracting details from event descriptions and linked attachments.
+- **ServiceNow Triage:** Scans incoming emails for "INC" or "RITM" numbers, automatically cross-referencing them with the local knowledge index.
+- **Strategic Intelligence:** Gathers external intelligence on Gemini and Enterprise AI trends, indexing them for the daily "Wizard Tips" section of the morning brief.
+
+### 🪞 3.2. Self-Reflection & Post-Session Indexing
+After every significant interaction, the `vopak-self-reflection` skill triggers a "reflection loop" where the agent:
+1.  Summarizes the key takeaways of the session.
+2.  Extracts new stakeholder preferences (e.g., "Rinaldo prefers concise summaries").
+3.  Calculates ROI metrics (Time Saved) and indexes them into the SQLite database.
+4.  Updates the project's "Narrative Arc" in the vector store.
+
+---
+
+## 🔌 4. Core Integrations
 
 ### 💼 3.1. Google Workspace
 The primary data source and output medium. The system treats Google Docs, Slides, and Sheets as API-controllable primitives for generating professional-grade corporate artifacts.

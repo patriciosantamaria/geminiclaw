@@ -24,27 +24,34 @@ The workspace is organized into a core agentic layer (`.agent/`) and functional 
 
 ## ⚙️ 2. Core Components
 
-### 🧠 2.1. Hybrid Memory Client (`memory-client.ts`)
-A TypeScript-based client for interacting with the SQLite/ChromaDB memory layers.
-- **SQLite Schema:** `knowledge_index`, `roi_metrics`, `stakeholder_preferences`.
-- **Vector Search:** Integrated with **Ollama** for local embedding generation and semantic similarity.
+### 🧠 2.1. Hybrid Memory Stack
+The system implements a multi-modal memory stack to balance speed, structure, and semantic depth.
 
-### 💼 2.2. Workspace Automation Layer
-Utilizes the **Google Workspace Extension** tools to perform programmatic actions:
-- **`docs.create` / `slides.create`:** Uses branding templates to ensure consistency.
-- **`calendar.listEvents`:** Scans a 7-day rolling horizon for the "Morning Audit."
-- **`gmail.send`:** Drafts and dispatches branded HTML emails.
+- **SQLite Engine:** Manages relational data in `.agent/memory.db`.
+  - **Tables:** `knowledge_index` (Key/Value/Source), `roi_metrics` (Task/TimeSaved/Date), `stakeholder_preferences` (Email/Pref/Context).
+- **ChromaDB Vector Store:** A local vector database (port 8000) for semantic context.
+- **Ollama Integration:** The `MemoryClient` utilizes Ollama's `nomic-embed-text` model to generate 768-dimensional embeddings for all indexed documents.
+
+### 💼 2.2. Memory Client API (`memory-client.ts`)
+The `MemoryClient` provides a high-level TypeScript interface:
+- **`remember(id, text, metadata)`:** Generates an embedding via Ollama and persists the document + vector to ChromaDB.
+- **`recall(query, nResults)`:** Performs a cosine-similarity search in the vector space to retrieve the top-N relevant context blocks.
+- **`getEmbedding(text)`:** Direct interface to the local embedding model.
 
 ---
 
-## ⏲️ 3. Background Services (Systemd)
+## ⚙️ 3. The Proactive Indexer (Harvester)
 
-### 🧺 3.1. Harvester Service (`harvester.service`)
-A systemd unit that executes the `harvester.ts` script.
-- **Responsibility:** Auditing the calendar, identifying new tasks in emails, and gathering technical intelligence for upcoming meetings.
+### 🧺 3.1. Indexing Flow
+The `harvester.ts` script executes a multi-stage indexing pipeline:
+1.  **Extraction:** Scans Google Calendar (7-day window) and Gmail (unread messages) for new data points.
+2.  **Transformation:** Cleans and structures the data (e.g., parsing attendee status or extracting ServiceNow ticket IDs).
+3.  **Loading:** Upserts structured facts into SQLite and semantic context into ChromaDB.
 
-### ⏰ 3.2. Harvester Timer (`harvester.timer`)
-Triggers the harvester service daily at **08:00 AM**.
+### ⏲️ 3.2. Background Execution (Systemd)
+The indexing cycle is managed by `harvester.timer`, ensuring the memory is refreshed before the user's workday begins.
+- **Service:** `harvester.service`
+- **Schedule:** `OnCalendar=*-*-* 08:00:00`
 
 ---
 
