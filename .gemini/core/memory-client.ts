@@ -16,6 +16,8 @@ export class MemoryClient {
   public chroma: ChromaClient;
   public defaultCollection: string;
   private embeddingCache = new Map<string, number[]>();
+  private embeddingQueue: { text: string; resolve: (v: number[]) => void; reject: (e: any) => void }[] = [];
+  private isProcessingQueue = false;
   public db: sqlite3.Database;
 
   constructor(
@@ -138,53 +140,36 @@ export class MemoryClient {
   }
 
   /**
-   * Turn text into a vector using local Ollama model with in-memory caching
+   * Process the embedding queue sequentially in the background
    */
-  async getEmbedding(text: string): Promise<number[]> {
-    try {
-      if (this.embeddingCache.has(text)) {
-        logger.debug('⚡ Using cached embedding');
-        return this.embeddingCache.get(text)!;
+  private async processEmbeddingQueue() {
+    if (this.isProcessingQueue || this.embeddingQueue.length === 0) return;
+    this.isProcessingQueue = true;
+
+    while (this.embeddingQueue.length > 0) {
+      const { text, resolve, reject } = this.embeddingQueue.shift()!;
+      try {
+        // Double check cache in case it was added while in queue
+        if (this.embeddingCache.has(text)) {
+          resolve(this.embeddingCache.get(text)!);
+          continue;
+        }
+
+        const response = await ollama.embeddings({
+          model: 'nomic-embed-text',
+          prompt: text,
+        });
+
+        this.embeddingCache.set(text, response.embedding);
+        resolve(response.embedding);
+      } catch (e) {
+        reject(handleError(logger, e, 'Failed to get embedding from background queue'));
       }
-
-      const response = await ollama.embeddings({
-        model: 'nomic-embed-text',
-        prompt: text,
-      });
-
-      this.embeddingCache.set(text, response.embedding);
-      return response.embedding;
-    } catch (e) {
-      throw handleError(logger, e, 'Failed to get embedding');
     }
+
+    this.isProcessingQueue = false;
   }
 
-  /**
-   * Save a fact to local vector memory
-   */
-  async remember(id: string, text: string, metadata: any = {}, collectionName?: string) {
-    try {
-      const targetCollection = collectionName || this.defaultCollection;
-      const embedding = await this.getEmbedding(text);
-      const collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
-
-      // Inject timestamp for time-decay weighting
-      const enrichedMetadata = {
-        ...metadata,
-        timestamp: metadata.timestamp || new Date().toISOString(),
-      };
-
-      await collection.add({
-        ids: [id],
-        embeddings: [embedding],
-        metadatas: [enrichedMetadata],
-        documents: [text],
-      });
-      logger.info(`Stored fact: ${id}`);
-    } catch (e) {
-      throw handleError(logger, e, `Failed to store fact: ${id}`);
-    }
-  }
 
   /**
    * Query local memory semantically with Time-Decay Weighting
@@ -269,6 +254,57 @@ export class MemoryClient {
         }
       });
     });
+  }
+
+  /**
+   * Multi-modal support: Get embedding for an image (STUB)
+   */
+  async getEmbedding(text: string): Promise<number[]>;
+  async getEmbedding(textOrPath: string, isImage: boolean): Promise<number[]>;
+  async getEmbedding(textOrPath: string, isImage: boolean = false): Promise<number[]> {
+    if (isImage) {
+      logger.info(`Multi-modal stub: Requesting embedding for image ${textOrPath}`);
+      return Array(768).fill(0);
+    }
+
+    if (this.embeddingCache.has(textOrPath)) {
+      logger.debug('⚡ Using cached embedding');
+      return this.embeddingCache.get(textOrPath)!;
+    }
+
+    return new Promise((resolve, reject) => {
+      this.embeddingQueue.push({ text: textOrPath, resolve, reject });
+      this.processEmbeddingQueue();
+    });
+  }
+
+  /**
+   * Save a fact to local vector memory (Overloaded for multi-modal support)
+   */
+  async remember(id: string, text: string, metadata?: any, collectionName?: string): Promise<void>;
+  async remember(id: string, path: string, metadata: any, collectionName: string, isImage: boolean): Promise<void>;
+  async remember(id: string, textOrPath: string, metadata: any = {}, collectionName?: string, isImage: boolean = false) {
+    try {
+      const targetCollection = collectionName || this.defaultCollection;
+      const embedding = await this.getEmbedding(textOrPath, isImage);
+      const collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
+
+      // Inject timestamp for time-decay weighting
+      const enrichedMetadata = {
+        ...metadata,
+        timestamp: metadata.timestamp || new Date().toISOString(),
+      };
+
+      await collection.add({
+        ids: [id],
+        embeddings: [embedding],
+        metadatas: [enrichedMetadata],
+        documents: [isImage ? `image_path: ${textOrPath}` : textOrPath],
+      });
+      logger.info(`Stored ${isImage ? 'image' : 'fact'}: ${id}`);
+    } catch (e) {
+      throw handleError(logger, e, `Failed to store ${isImage ? 'image' : 'fact'}: ${id}`);
+    }
   }
 
   /**

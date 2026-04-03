@@ -1,0 +1,16 @@
+# Litestream Configuration for Real-Time SQLite Replication
+# 🚀 Preparing for Cloud Storage Sync
+
+access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
+secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
+
+dbs:
+  - path: .gemini/data/memory.db
+    replicas:
+      - url: s3://${LITESTREAM_S3_BUCKET}/memory.db
+        # Retain snapshots for 7 days
+        retention: 168h
+        # Check for new data every 1 second
+        sync-interval: 1s
+        # Snapshot daily
+        snapshot-interval: 24h
