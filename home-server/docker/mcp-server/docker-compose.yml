@@ -8,6 +8,10 @@ services:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+    deploy:
+      resources:
+        limits:
+          memory: 128M
     networks:
       - home-server-network
 
@@ -28,6 +32,10 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /srv/docker/mcp-server/home-server-ts:/app/home-server-ts
@@ -64,6 +72,10 @@ services:
       timeout: 10s
       retries: 3
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - home-server-network
 
@@ -96,6 +108,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - home-server-network
 
@@ -124,6 +140,10 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     networks:
       - home-server-network
 
@@ -142,6 +162,10 @@ services:
     stdin_open: true
     tty: true
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     volumes:
       - /srv/docker/mcp-server/jules-agent-factory:/app
       - /srv:/srv:ro
@@ -157,6 +181,10 @@ services:
       - "16686:16686" # Web UI
       - "4317:4317"   # OTLP gRPC collector
       - "4318:4318"   # OTLP HTTP collector
+    deploy:
+      resources:
+        limits:
+          memory: 512M
     networks:
       - home-server-network
     restart: unless-stopped
@@ -172,6 +200,10 @@ services:
       - /srv/app_data/home-server/mcp-db:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     networks:
       - home-server-network
     restart: unless-stopped

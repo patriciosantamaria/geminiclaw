@@ -126,7 +126,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     
     vm.createContext(sandbox);
 
-    // Wrap the script in an async IIFE
+    // Compile the script into a script object for repeated execution if needed
     const asyncWrapper = `
       (async () => {
         try {
@@ -137,7 +137,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       })()
     `;
 
-    const result = await vm.runInContext(asyncWrapper, sandbox);
+    const scriptObj = new vm.Script(asyncWrapper);
+    const result = await scriptObj.runInContext(sandbox);
 
     return {
       content: [
