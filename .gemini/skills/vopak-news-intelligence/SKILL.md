@@ -17,7 +17,7 @@ Example command to resolve the true URL:
 1.  **Google Workspace, Security & Developer Updates:** Search `site:workspaceupdates.googleblog.com OR site:security.googleblog.com OR site:developers.googleblog.com`. Find ALL recent updates. You must highlight the ones that require Admin actions or are highly useful for the Vopak ecosystem. Also, search for or synthesize 1-2 Google Workspace "Efficiency Tips" (e.g., keyboard shortcuts, Gmail/Drive organization).
 2.  **Google AI, DeepMind & Next-Gen:** Search `site:blog.google/innovation-and-ai/technology/ai/ OR site:blog.google/innovation-and-ai/models-and-research/google-labs/ OR site:blog.google/innovation-and-ai/products/gemini-app/ OR site:blog.google/feed/ OR "DeepMind" OR "Project Mariner" OR "Project Astra" OR "Gemini Live"`.
 3.  **GCP & Vertex AI Ecosystem:** Search `"Google Cloud" OR "Vertex AI" OR "Google AI Studio" news`.
-4.  **General AI & Competitors:** Search `"Anthropic" OR "OpenAI" OR "ChatGPT" OR "Copilot" OR "AWS AI" OR "AI Agents" OR "Gemini CLI" OR "OpenClaw" OR "google antigravity" news`.
+4.  **General AI, Competitors & Overarching Tech:** Search `"Anthropic" OR "OpenAI" OR "ChatGPT" OR "Copilot" OR "AWS AI" OR "AI Agents" OR "Gemini CLI" OR "OpenClaw" OR "google antigravity" news`. (Note: You may include overarching or highly impactful Google news here if it fits the broader tech landscape narrative).
 
 ### 2. Synthesis & Formatting (Vopak Branded HTML)
 You MUST synthesize the findings into a highly detailed HTML newsletter using the official Vopak Branding Template.
