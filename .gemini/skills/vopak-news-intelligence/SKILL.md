@@ -43,39 +43,37 @@ You MUST synthesize the findings into a highly detailed HTML newsletter using th
 
 For the Executive Summary, use this exact HTML structure:
 ```html
-<div class="category">
-    <div class="category-title">🎯 Executive Summary & Action Items</div>
-    <div class="insight-box">
-        <strong>🚨 Urgent Super Admin Actions:</strong>
-        <ul>
-            <li><a href="EXACT_URL" target="_blank">Action Name</a>: Describe the action...</li>
-        </ul>
-        <strong>♟️ Major Strategic Shifts:</strong>
-        <ul>
-            <li><a href="EXACT_URL" target="_blank">Shift Name</a>: Describe the shift...</li>
-        </ul>
-    </div>
+<h2 class="section-title">🎯 Executive Summary & Action Items</h2>
+<div class="insight-panel">
+    <div class="insight-panel-title">🚨 Urgent Super Admin Actions:</div>
+    <ul>
+        <li><a href="EXACT_URL" target="_blank">Action Name</a>: Describe the action...</li>
+    </ul>
+    <div class="insight-panel-title" style="margin-top:15px;">♟️ Major Strategic Shifts:</div>
+    <ul>
+        <li><a href="EXACT_URL" target="_blank">Shift Name</a>: Describe the shift...</li>
+    </ul>
 </div>
 ```
 
 For ALL other categories (2 through 6), use this exact HTML structure:
 ```html
-<div class="category">
-    <div class="category-title">CATEGORY ICON & NAME (e.g., 🛡️ Google Workspace & Security Operations)</div>
-    
-    <!-- Repeat for each news/tip item -->
-    <div class="news-card">
-        <h3 class="card-title">Detailed News Headline</h3>
-        <p class="card-content">A comprehensive, detailed summary (3-4 sentences). Do not use bullet points here, use a flowing executive narrative.</p>
-        <div class="insight-box">
-            <strong>Why it matters:</strong>
-            <p>Direct, detailed application for Vopak employees or Super Admin policy improvements. Mention if ADMIN ACTION is required.</p>
-            <strong>Strategic Value:</strong>
-            <p>How it aligns with enterprise security, scaling, or the "Flow Forward" narrative.</p>
-        </div>
-        <!-- MUST USE EXACT ARTICLE URL -->
-        <a href="EXACT_SPECIFIC_URL_HERE" class="read-more" target="_blank">Read Full Report</a>
+<h2 class="section-title">CATEGORY ICON & NAME (e.g., 🛡️ Google Workspace & Security Operations)</h2>
+
+<!-- Repeat for each news/tip item -->
+<div class="card">
+    <span class="card-category">Tag (e.g. Security, Admin, Dev)</span>
+    <h3 class="card-title">Detailed News Headline</h3>
+    <p class="card-text">A comprehensive, detailed summary (3-4 sentences). Do not use bullet points here, use a flowing executive narrative.</p>
+    <div class="insight-panel">
+        <div class="insight-panel-title">Why it matters</div>
+        <p>Direct, detailed application for Vopak employees or Super Admin policy improvements. Mention if ADMIN ACTION is required.</p>
+        <br>
+        <div class="insight-panel-title">Strategic Value</div>
+        <p>How it aligns with enterprise security, scaling, or the "Flow Forward" narrative.</p>
     </div>
+    <!-- MUST USE EXACT ARTICLE URL -->
+    <a href="EXACT_SPECIFIC_URL_HERE" class="action-link" target="_blank">Read Full Report</a>
 </div>
 ```
 

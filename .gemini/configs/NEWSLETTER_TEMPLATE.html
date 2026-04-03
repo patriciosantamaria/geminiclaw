@@ -16,7 +16,7 @@
             --vopak-grey: #e1e1e1;
             --bg-light: #f4f7f6;
             --text-dark: #1a1a1a;
-            --text-muted: #555555;
+            --text-muted: #46555a;
         }
 
         body {
@@ -25,171 +25,230 @@
             color: var(--text-dark);
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             -webkit-font-smoothing: antialiased;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 850px;
             margin: 0 auto;
             background: #ffffff;
-            border-radius: 0px;
-            box-shadow: 0 8px 30px rgba(10, 35, 115, 0.08);
+            border-radius: 0px; /* Strictly matter-of-fact */
+            box-shadow: 0 10px 40px rgba(10, 35, 115, 0.1);
+            border-top: 8px solid var(--vopak-cyan);
             overflow: hidden;
-            border-top: 6px solid var(--vopak-cyan);
         }
 
         .header {
             background-color: var(--vopak-deep-blue);
             color: #ffffff;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
+            padding: 50px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header h1 {
+        .header-content {
+            text-align: left;
+        }
+
+        .header-content h1 {
             margin: 0;
-            font-size: 36px;
+            font-size: 38px;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
 
-        .header p {
+        .header-content p {
             margin: 10px 0 0;
-            font-size: 16px;
+            font-size: 14px;
             color: var(--vopak-cyan);
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .project-header {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--vopak-grey);
+            text-transform: uppercase;
             letter-spacing: 1px;
+            border-right: 3px solid var(--vopak-cyan);
+            padding-right: 15px;
         }
 
         .content {
-            padding: 40px 40px;
+            padding: 50px 40px;
         }
 
-        .category-title {
+        .section-title {
             color: var(--vopak-deep-blue);
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 800;
-            border-bottom: 3px solid var(--vopak-grey);
-            padding-bottom: 12px;
-            margin-top: 40px;
-            margin-bottom: 25px;
+            border-bottom: 2px solid var(--vopak-grey);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
         }
 
-        .category-title:first-child {
-            margin-top: 0;
-        }
-
-        .news-card {
+        .card {
             background: #ffffff;
-            border-left: 4px solid var(--vopak-deep-blue);
-            padding: 25px 20px 25px 30px;
+            border: 1px solid var(--vopak-grey);
+            border-left: 5px solid var(--vopak-deep-blue);
+            padding: 30px;
             margin-bottom: 30px;
             border-radius: 0px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
-            transition: transform 0.2s ease;
+            transition: all 0.3s ease;
         }
 
-        .news-card:hover {
-            transform: translateX(5px);
+        .card:hover {
+            transform: translateX(8px);
             border-left-color: var(--vopak-cyan);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
         }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 15px;
+        .card-category {
+            font-size: 12px;
+            color: var(--vopak-steel);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
         }
 
         .card-title {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 700;
+            margin: 0 0 15px 0;
+            font-size: 22px;
+            font-weight: 800;
             color: var(--vopak-deep-blue);
             line-height: 1.3;
         }
 
-        .card-content {
+        .card-text {
             font-size: 15px;
-            color: var(--text-dark);
+            color: var(--text-muted);
             margin-bottom: 20px;
-            text-align: justify;
+            text-align: left;
         }
 
-        .insight-box {
-            background-color: rgba(0, 207, 225, 0.08);
-            border: 1px solid rgba(0, 207, 225, 0.3);
-            padding: 15px 20px;
-            border-radius: 0px;
+        .action-link {
+            display: inline-flex;
+            align-items: center;
             font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .insight-box strong {
-            color: var(--vopak-deep-blue);
-            display: block;
-            margin-bottom: 4px;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .insight-box p {
-            margin: 0 0 12px 0;
-        }
-        
-        .insight-box p:last-child {
-            margin: 0;
-        }
-
-        .read-more {
-            display: inline-block;
-            font-size: 14px;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--vopak-light-blue);
             text-decoration: none;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .read-more:hover {
+        .action-link:hover {
             color: var(--vopak-deep-blue);
         }
 
-        .read-more::after {
+        /* Flow Forward Arrow styling */
+        .action-link::after {
             content: " →";
             color: var(--vopak-cyan);
+            margin-left: 5px;
+            font-size: 16px;
             font-weight: 800;
+            transition: margin-left 0.2s ease;
+        }
+
+        .action-link:hover::after {
+            margin-left: 8px;
+        }
+
+        .insight-panel {
+            background-color: rgba(0, 207, 225, 0.05);
+            border-left: 4px solid var(--vopak-cyan);
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .insight-panel-title {
+            color: var(--vopak-deep-blue);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .insight-panel p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .insight-panel ul {
+            margin: 0 0 0 20px;
+            padding: 0;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .insight-panel li {
+            margin-bottom: 8px;
         }
 
         .footer {
             background-color: var(--vopak-steel);
             color: #ffffff;
             text-align: center;
-            padding: 30px;
+            padding: 35px 40px;
             font-size: 13px;
         }
-        
-        .footer strong {
-            color: var(--vopak-cyan);
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
         }
 
-        @media (max-width: 600px) {
-            .content { padding: 20px; }
-            .header { padding: 30px 20px; }
-            .news-card { padding: 20px 15px 20px 20px; }
+        .footer-tagline {
+            color: var(--vopak-cyan);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .project-header {
+                text-align: left;
+                border-right: none;
+                border-left: 3px solid var(--vopak-cyan);
+                padding-right: 0;
+                padding-left: 15px;
+                margin-top: 20px;
+            }
+            .content { padding: 30px 20px; }
+            .card { padding: 20px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Vopak Strategic Intelligence</h1>
-            <p>Global IT & Super Admin Briefing | {{DATE}}</p>
+            <div class="header-content">
+                <h1>Strategic Intelligence</h1>
+                <p>Global IT & Super Admin Briefing</p>
+            </div>
+            <div class="project-header">
+                {{DATE}}<br>
+                <span style="color: #00cfe1;">Daily Update</span>
+            </div>
         </div>
         
         <div class="content">
@@ -198,8 +257,10 @@
         </div>
 
         <div class="footer">
-            Generated autonomously by <strong>GeminiClaw V4.0</strong> for Patricio Santamaria & Yassin Bahasuan.<br>
-            Flow Forward Strategy | Trust, Collaboration, Courage
+            <div class="footer-logo">VOPAK</div>
+            <div class="footer-tagline">Flow Forward | Trust, Collaboration, Courage</div>
+            <div>Generated autonomously by GeminiClaw V4.0 for Patricio Santamaria & Yassin Bahasuan.</div>
+            <div style="margin-top: 10px; color: var(--vopak-grey); font-size: 11px;">Confidential & Proprietary. Do not distribute without authorization.</div>
         </div>
     </div>
 </body>
