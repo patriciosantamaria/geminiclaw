@@ -1,0 +1,9 @@
+[Unit]
+Description=Vopak Daily AI & Google News Intelligence
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/gemini --skill vopak-news-intelligence run "Run the daily news intelligence gathering and draft the 3 strategic emails based on yesterday's news"
+WorkingDirectory=/home/patosoto/geminiclaw
+StandardOutput=journal
+StandardError=journal
