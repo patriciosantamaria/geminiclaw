@@ -1,15 +1,15 @@
-
 /**
  * ⚡ DataProcessor V1.0 - Professional Server-Side Analyzer
  * Designed for Patricio Santamaria (Vopak Senior Google Consultant)
  * Goal: Use the i7's power to process massive files and return high-signal summaries.
  */
 
-import fs from 'fs';
-import readline from 'readline';
-import path from 'path';
-import { Logger } from './utils/logger';
-import { GeminiClawError, ErrorCode, handleError } from './utils/errors';
+import fs from 'node:fs';
+import readline from 'node:readline';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { Logger } from './utils/logger.js';
+import { GeminiClawError, ErrorCode, handleError } from './utils/errors.js';
 
 const logger = new Logger('DataProcessor');
 
@@ -148,28 +148,36 @@ export class DataProcessor {
 }
 
 // 🚀 Command-Line Interface (Simple)
-const [,, cmd, ...args] = process.argv;
-const dp = new DataProcessor();
+const isMain = process.argv[1] && (
+  process.argv[1] === fileURLToPath(import.meta.url) ||
+  process.argv[1].endsWith('data-processor.ts') ||
+  process.argv[1].endsWith('data-processor.js')
+);
 
-(async () => {
-  try {
-    if (cmd === 'search') {
-      const results = await dp.search(args[0], args[1], parseInt(args[2]) || 100);
-      process.stdout.write(JSON.stringify(results, null, 2) + '\n');
-    } else if (cmd === 'stats') {
-      const stats = await dp.getStats(args[0]);
-      process.stdout.write(JSON.stringify(stats, null, 2) + '\n');
-    } else if (cmd === 'summarize') {
-      const summary = await dp.summarizeJSON(args[0], args[1]?.split(',') || []);
-      process.stdout.write(JSON.stringify(summary, null, 2) + '\n');
-    } else if (cmd === 'chunk') {
-      const paths = await dp.chunk(args[0], parseInt(args[1]) || 500);
-      process.stdout.write(JSON.stringify({ chunksCreated: paths.length, paths }, null, 2) + '\n');
+if (isMain) {
+  const [,, cmd, ...args] = process.argv;
+  const dp = new DataProcessor();
+
+  (async () => {
+    try {
+      if (cmd === 'search') {
+        const results = await dp.search(args[0], args[1], parseInt(args[2]) || 100);
+        process.stdout.write(JSON.stringify(results, null, 2) + '\n');
+      } else if (cmd === 'stats') {
+        const stats = await dp.getStats(args[0]);
+        process.stdout.write(JSON.stringify(stats, null, 2) + '\n');
+      } else if (cmd === 'summarize') {
+        const summary = await dp.summarizeJSON(args[0], args[1]?.split(',') || []);
+        process.stdout.write(JSON.stringify(summary, null, 2) + '\n');
+      } else if (cmd === 'chunk') {
+        const paths = await dp.chunk(args[0], parseInt(args[1]) || 500);
+        process.stdout.write(JSON.stringify({ chunksCreated: paths.length, paths }, null, 2) + '\n');
+      }
+    } catch (e: any) {
+      // If it reaches here it's likely already been logged by handleError, but we make sure.
+      if (!(e instanceof GeminiClawError)) {
+        logger.error(`CLI execution error: ${e.message}`);
+      }
     }
-  } catch (e: any) {
-    // If it reaches here it's likely already been logged by handleError, but we make sure.
-    if (!(e instanceof GeminiClawError)) {
-      logger.error(`CLI execution error: ${e.message}`);
-    }
-  }
-})();
+  })();
+}
