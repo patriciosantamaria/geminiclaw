@@ -13,12 +13,9 @@ The workspace is organized into a core agentic layer (`.gemini/`) and functional
 │   ├── briefings/          # JSON data for Morning Briefings
 │   ├── scripts/            # Helper automation (Bash/TypeScript)
 │   └── data/               # Persistent storage (memory.db)
-├── home-server/              # Home Server & Infrastructure
-│   ├── docker/             # Docker Compose stacks
-│   │   └── mcp-server/     # Model Context Protocol servers
-│   └── FLEET.md            # Infrastructure fleet status
 ├── projects/                 # Professional & Technical projects
 │   └── tank-inspection/    # Vopak Tank Inspection automation
+├── wizard-bridge-mcp/        # Model Context Protocol server for Google Workspace
 ├── .gitignore                # Repository exclusion rules
 ├── README.md                 # Project entry point & overview
 ├── ADD.md                    # Architectural Design Document
@@ -79,7 +76,7 @@ Before any code change is finalized, it must undergo a 3-step validation:
 - **Gemini CLI:** Main execution engine.
 - **gh CLI:** Authenticated via `patriciosantamaria`.
 - **Jules Extension:** Used for project-wide refactoring and unit test generation.
-- **Wizard Bridge MCP:** A custom Node.js server (`home-server/docker/mcp-server/wizard-bridge-mcp`) providing 3-Tier dynamic script execution for Google Workspace APIs.
+- **Wizard Bridge MCP:** A custom Node.js server (`wizard-bridge-mcp`) providing 3-Tier dynamic script execution for Google Workspace APIs.
 
 ---
 
