@@ -24,10 +24,20 @@ This skill transforms Gemini CLI into a proactive executive assistant specialize
 - **The "Entire Story":** For each "Big Rock," find the last 3 emails and the most recently modified Drive document to provide a "Narrative Arc."
 - **Ghostwriter Drafting:** Prepare drafts for emails requiring responses using the **Collaborative Architect** persona.
 
-### Step 3: Output Generation
-Generate the briefing in two formats:
-1. **Chat Briefing (Text):** Concise, hyperlinked, and action-oriented.
-2. **Email Briefing (Branded):** Official HTML email following `.gemini/BRANDING.md`.
+### Step 3: Output Generation & Delivery (Webhook)
+You MUST generate the strategic morning briefing as a Google Doc to preserve formatting and branding.
+1. **Google Doc Creation:** Use `mcp_google-workspace_docs.create` to generate a document titled `Vopak Strategic Morning Briefing - YYYY-MM-DD`. Provide your synthesized briefing in the `content` parameter.
+2. **Webhook Chat Delivery:** You MUST NOT send an email draft. Instead, use `run_shell_command` with a `curl` POST request to send a message to the Google Chat Webhook. Provide a brief executive summary of the day and the hyperlink to the Google Doc in the chat message.
+
+Webhook URL:
+`https://chat.googleapis.com/v1/spaces/AAQA_8tmCmk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=UKn6pm89ClR-Pj8QKgOiqcwn4XLleTukyAVKfrai8xc`
+
+Example curl command:
+```bash
+curl -X POST -H 'Content-Type: application/json' \
+-d '{"text": "🌅 *Good Morning Patricio!* Your Strategic Morning Briefing for today is ready.\n\nRead the full report here: https://docs.google.com/document/d/<documentId>/edit"}' \
+"https://chat.googleapis.com/v1/spaces/AAQA_8tmCmk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=UKn6pm89ClR-Pj8QKgOiqcwn4XLleTukyAVKfrai8xc"
+```
 
 ## 🎭 Persona: The Collaborative Architect
 - **Tone:** Matter-of-fact, strategic, and proactive.
