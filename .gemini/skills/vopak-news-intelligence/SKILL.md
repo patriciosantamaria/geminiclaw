@@ -20,7 +20,26 @@ Execute `google_web_search` (in parallel if possible) to find the most significa
 You MUST synthesize the findings into a highly detailed HTML newsletter using the official Vopak Branding Template.
 1. Read the template from `.gemini/configs/NEWSLETTER_TEMPLATE.html`.
 2. Replace `{{DATE}}` with the current date (e.g., April 3, 2026).
-3. Replace `<!-- INJECT_CONTENT_HERE -->` with the generated HTML for each category.
+3. Generate a top-level **Executive Summary** HTML block containing the 2-3 most critical Admin actions and Strategic shifts. Each bullet point MUST include an HTML hyperlink to the respective news article. Replace `<!-- INJECT_EXECUTIVE_SUMMARY_HERE -->` with this block.
+4. Replace `<!-- INJECT_CONTENT_HERE -->` with the generated HTML for each category.
+
+For the Executive Summary, use this HTML structure:
+```html
+<div class="category">
+    <div class="category-title">🎯 Executive Summary & Action Items</div>
+    <div class="insight-box">
+        <strong>🚨 Urgent Super Admin Actions:</strong>
+        <ul>
+            <li><a href="EXACT_URL" target="_blank">Audit Vertex AI for BYOSA Compliance</a>: Describe the action...</li>
+            <li><a href="EXACT_URL" target="_blank">Action 2</a>: Describe the action...</li>
+        </ul>
+        <strong>♟️ Major Strategic Shifts:</strong>
+        <ul>
+            <li><a href="EXACT_URL" target="_blank">Shift 1</a>: Describe the shift...</li>
+        </ul>
+    </div>
+</div>
+```
 
 For each category, use this exact HTML structure:
 ```html
