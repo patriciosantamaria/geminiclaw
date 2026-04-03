@@ -37,16 +37,17 @@ function onAddToSpace(event) {
 }
 
 /**
- * Action Handler: Triggered by Card button clicks
+ * Action Handler: Triggered by 'Run News' Button
  */
-function onCardClick(event) {
-  const command = event.common.invokedFunction;
-  if (command === 'runNews') {
-    return triggerPubSub('run_news', event, '');
-  } else if (command === 'runSynthesis') {
-    return triggerPubSub('run_synthesis', event, '');
-  }
-  return { text: "Unknown action" };
+function runNews(event) {
+  return triggerPubSub('run_news', event, '');
+}
+
+/**
+ * Action Handler: Triggered by 'Run Synthesis' Button
+ */
+function runSynthesis(event) {
+  return triggerPubSub('run_synthesis', event, '');
 }
 
 /**
