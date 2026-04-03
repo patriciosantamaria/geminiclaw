@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vopak AI Intelligence</title>
+    <style>
+        :root {
+            --bg-color: #f9fafb;
+            --container-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --primary: #0a2373;
+            --accent: #00cfe1;
+            --border: #e5e7eb;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #111827;
+                --container-bg: #1f2937;
+                --text-main: #f9fafb;
+                --text-muted: #9ca3af;
+                --primary: #60a5fa;
+                --accent: #00cfe1;
+                --border: #374151;
+            }
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #0a2373 0%, #00cfe1 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .category {
+            margin-bottom: 40px;
+        }
+        .category-title {
+            color: var(--primary);
+            font-size: 22px;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card {
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .card-title {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .card-summary {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+        .insight {
+            background: rgba(0, 207, 225, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .insight strong {
+            color: var(--primary);
+        }
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .read-more:hover {
+            text-decoration: underline;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Vopak AI Intelligence</h1>
+            <p>Strategic Briefing for Global IT & Super Admins</p>
+        </div>
+        <div class="content">
+            
+            <div class="category">
+                <div class="category-title">🛡️ Google Workspace & Security</div>
+                
+                <div class="card">
+                    <h3 class="card-title">Indirect Prompt Injection (IPI) Mitigation Released</h3>
+                    <p class="card-summary">Google published a robust defense-in-depth strategy for Workspace with Gemini, featuring a centralized Policy Engine to combat malicious prompt injections hidden in data.</p>
+                    <div class="insight">
+                        <strong>Why it matters:</strong> Critical for enforcing security policies at the Super Admin level, protecting Vopak's corporate data from external manipulation.<br><br>
+                        <strong>Strategic Value:</strong> Safeguards our Context-Aware Access (CAA) and DLP as Gemini is scaled globally.
+                    </div>
+                    <a href="https://workspaceupdates.googleblog.com" class="read-more" target="_blank">Read Full Report →</a>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Google Vids: "Nano Banana 2" AI Avatars</h3>
+                    <p class="card-summary">Advanced custom branding capabilities and AI avatars have landed in Google Vids, alongside native YouTube publishing and Chrome screen recording.</p>
+                    <div class="insight">
+                        <strong>Why it matters:</strong> Accelerates internal training video production, allowing executives to easily generate high-quality modules.<br><br>
+                        <strong>Strategic Value:</strong> Essential for the "Blueprint-to-Slide" and "Flow Forward" automation pipelines.
+                    </div>
+                    <a href="https://workspaceupdates.googleblog.com" class="read-more" target="_blank">Explore Google Vids →</a>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">☁️ Google Cloud & Vertex AI</div>
+                
+                <div class="card">
+                    <h3 class="card-title">Gemma 4 Open Models Unleashed</h3>
+                    <p class="card-summary">Google's new Gemma 4 models (up to 31B Dense) are now available, purpose-built for local agentic workflows and advanced multimodal reasoning.</p>
+                    <div class="insight">
+                        <strong>Why it matters:</strong> Vopak can deploy highly capable, private models on edge devices without the costs of massive cloud APIs.<br><br>
+                        <strong>Strategic Value:</strong> Accelerates the creation of hyper-secure internal agents (e.g., Tank Inspector AI) with zero privacy risk.
+                    </div>
+                    <a href="https://blog.google/technology/developers/gemma-open-models/" class="read-more" target="_blank">Read Developer Specs →</a>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Vertex AI Vulnerability & BYOSA</h3>
+                    <p class="card-summary">Following researchers identifying blind spots in default service accounts, Google now strictly mandates a Bring Your Own Service Account (BYOSA) architecture for Vertex AI.</p>
+                    <div class="insight">
+                        <strong>Why it matters:</strong> High-priority action item to audit all Vopak Vertex AI deployments and migrate them to BYOSA.<br><br>
+                        <strong>Strategic Value:</strong> Prevents unauthorized data access, keeping us fully compliant with enterprise security standards.
+                    </div>
+                    <a href="https://cloud.google.com/blog/products/identity-security" class="read-more" target="_blank">Review Security Alert →</a>
+                </div>
+            </div>
+
+            <div class="category">
+                <div class="category-title">🤖 The Agentic Ecosystem</div>
+                
+                <div class="card">
+                    <h3 class="card-title">Gemini CLI v0.36.0 Released</h3>
+                    <p class="card-summary">A massive update introduces native sandboxing and multi-registry support, allowing safe, isolated subagent workflows in parallel.</p>
+                    <div class="insight">
+                        <strong>Why it matters:</strong> Allows GeminiClaw to execute autonomous tasks (like Janitor sweeps and news fetching) concurrently without colliding.<br><br>
+                        <strong>Strategic Value:</strong> Massively increases the speed and reliability of your local workflow automations.
+                    </div>
+                    <a href="https://github.com/google/gemini-cli" class="read-more" target="_blank">Update Gemini CLI →</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="footer">
+            Generated autonomously by GeminiClaw V4.0<br>
+            April 3, 2026 | Vopak Digital IT
+        </div>
+    </div>
+</body>
+</html>
