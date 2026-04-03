@@ -45,3 +45,20 @@ The agent must autonomously select the appropriate mindset based on the user's t
 - **Post-Meeting Loop:** Automatically parse notes for action items assigned to the user.
 - **Contextual Search:** Research agenda technologies (e.g., Kiro) before meetings start.
 - **Time Optimization:** Proactively suggest resolutions for detected calendar conflicts.
+
+---
+
+## 🏗️ Project-Specific Workflows
+
+### 🛡️ Tank Inspection Platform AI
+This workflow automates the end-to-end reporting for Vopak terminal inspections.
+1. **Watch:** Monitor the 'M2O - Tank Inspection Platform' Drive folder for new PDFs/Data Packs.
+2. **Ingest:** Download and perform 'Adaptive Extraction' on high-volume technical dossiers.
+3. **Analyze:** Use Vertex AI (Multimodal) to correlate drone frames with sensor data.
+4. **Generate:** Create a Vopak Branded (v3.0) Final Report in Google Docs.
+5. **Sync:** Update the 'Vopak Master Tank Inspection Tracker' and notify stakeholders.
+
+**Specific Mandates:**
+- **Enterprise Data Sovereignty:** For the Tank Inspection project, all indexing and AI analysis MUST utilize Google Cloud/Vertex AI models. Local Hybrid Memory (Ollama/ChromaDB) is reserved for non-Sovereign or personal contexts.
+- **GCP Safety:** All `gcloud` operations must follow the `vopak-gcloud-expert` skill rules.
+- **Autonomous Persistence:** The agent operates via `tank-inspector.timer` for continuous monitoring without user intervention.
