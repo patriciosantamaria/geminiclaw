@@ -8,19 +8,27 @@ import ollama from 'ollama';
 export class MemoryClient {
   private chroma: ChromaClient;
   private collectionName = 'vopak_assistant_memory';
+  private embeddingCache = new Map<string, number[]>();
 
   constructor() {
     this.chroma = new ChromaClient({ path: 'http://localhost:8000' });
   }
 
   /**
-   * Turn text into a vector using local Ollama model
+   * Turn text into a vector using local Ollama model with in-memory caching
    */
   async getEmbedding(text: string): Promise<number[]> {
+    if (this.embeddingCache.has(text)) {
+      console.log('⚡ Using cached embedding');
+      return this.embeddingCache.get(text)!;
+    }
+
     const response = await ollama.embeddings({
       model: 'nomic-embed-text',
       prompt: text,
     });
+
+    this.embeddingCache.set(text, response.embedding);
     return response.embedding;
   }
 

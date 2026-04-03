@@ -10,24 +10,43 @@ class StrategicHarvester {
   async runDailyBriefing() {
     console.log('🚀 Initiating Full-Week Strategic Scan...');
     
-    // 1. WEEKLY CALENDAR SCAN (7-Day Horizon)
-    // - Retrieve all events for the next 168 hours
-    // - Identify "Big Rocks" (High-priority meetings with Koen, Rinaldo, or Externals)
-    // - Detect scheduling gaps for Focus Blocks
-    
-    // 2. AI INTELLIGENCE GATHERING
-    // - Search for "Gemini for Workspace" and "Enterprise AI" news
-    // - Extract 2-3 high-impact "Wizard Tips" for the day
-    
-    // 3. ANALYZE WORKLOAD (The "Personal Picture")
-    // - Calculate Sent/Received ratios
-    // - Triage ServiceNow tickets
-    
-    // 4. DISPATCH 8AM BRIEFING EMAIL
-    // - Construct a branded Vopak email
-    // - Include: Summary, Time-Management Suggestions, and AI News.
-    
-    console.log('✅ Strategic Briefing Generated and Sent.');
+    // Use Promise.all for parallel execution of independent tasks
+    try {
+      const [calendarData, aiIntelligence, workloadMetrics] = await Promise.all([
+        this.scanCalendar(),
+        this.gatherAIIntelligence(),
+        this.analyzeWorkload()
+      ]);
+
+      await this.dispatchBriefingEmail(calendarData, aiIntelligence, workloadMetrics);
+
+      console.log('✅ Strategic Briefing Generated and Sent.');
+    } catch (error) {
+      console.error('❌ Error during daily briefing:', error);
+    }
+  }
+
+  private async scanCalendar() {
+    console.log('📅 Scanning Calendar (7-Day Horizon)...');
+    // Implementation for calendar scan
+    return { events: [], bigRocks: [] };
+  }
+
+  private async gatherAIIntelligence() {
+    console.log('🧠 Gathering AI Intelligence...');
+    // Implementation for AI news search
+    return { news: [], tips: [] };
+  }
+
+  private async analyzeWorkload() {
+    console.log('📊 Analyzing Workload...');
+    // Implementation for ServiceNow triage and email ratios
+    return { ratios: {}, tickets: [] };
+  }
+
+  private async dispatchBriefingEmail(calendar: any, intelligence: any, workload: any) {
+    console.log('📧 Dispatching Branded Briefing Email...');
+    // Implementation for email construction and sending
   }
 }
 

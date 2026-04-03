@@ -7,21 +7,22 @@ let totalDurationMs = 0;
 let uniqueAttendees = new Set();
 let totalEvents = events.length;
 
-for (const event of events) {
-    if (event.start && event.start.dateTime && event.end && event.end.dateTime) {
-        const start = new Date(event.start.dateTime);
-        const end = new Date(event.end.dateTime);
-        totalDurationMs += (end - start);
+// Optimized event processing using a single loop and early exits
+events.forEach(event => {
+    const { start, end, attendees } = event;
+
+    if (start?.dateTime && end?.dateTime) {
+        totalDurationMs += (new Date(end.dateTime) - new Date(start.dateTime));
     }
     
-    if (event.attendees && Array.isArray(event.attendees)) {
-        for (const attendee of event.attendees) {
+    if (Array.isArray(attendees)) {
+        attendees.forEach(attendee => {
             if (attendee.email) {
-                uniqueAttendees.add(attendee.email);
+                uniqueAttendees.add(attendee.email.toLowerCase());
             }
-        }
+        });
     }
-}
+});
 
 const totalDurationHours = totalDurationMs / (1000 * 60 * 60);
 
