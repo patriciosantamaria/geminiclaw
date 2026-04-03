@@ -13,7 +13,7 @@ const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopa
  */
 function onMessage(event) {
   const userMessage = (event.message && event.message.text) ? event.message.text.trim() : '';
-  const senderEmail = event.user.email;
+  const senderEmail = (event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '';
 
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
     return { text: "⛔ Unauthorized: You do not have clearance to communicate with GeminiClaw." };
@@ -112,7 +112,7 @@ function buildMenuCard() {
  * Publishes the command or question to Google Cloud Pub/Sub via REST API.
  */
 function triggerPubSub(command, event, query = '') {
-  const senderEmail = event.user.email;
+  const senderEmail = (event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '';
   
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
     return { text: "⛔ Unauthorized: You do not have Super Admin clearance to command GeminiClaw." };
