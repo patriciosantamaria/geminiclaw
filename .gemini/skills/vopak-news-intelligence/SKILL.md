@@ -14,7 +14,7 @@ Execute `google_web_search` (in parallel if possible) to find the most significa
 Example command to resolve the true URL:
 `curl -sLI -o /dev/null -w '%{url_effective}' "REDIRECT_URL_HERE"`
 
-1.  **Google Workspace Updates & Efficiency:** Search `site:workspaceupdates.googleblog.com OR "Google Workspace" updates news`. Find ALL recent updates. You must highlight the ones that require Admin actions or are highly useful for the Vopak ecosystem. Also, search for or synthesize 1-2 Google Workspace "Efficiency Tips" (e.g., keyboard shortcuts, Gmail/Drive organization).
+1.  **Google Workspace, Security & Developer Updates:** Search `site:workspaceupdates.googleblog.com OR site:security.googleblog.com OR site:developers.googleblog.com`. Find ALL recent updates. You must highlight the ones that require Admin actions or are highly useful for the Vopak ecosystem. Also, search for or synthesize 1-2 Google Workspace "Efficiency Tips" (e.g., keyboard shortcuts, Gmail/Drive organization).
 2.  **Google AI, DeepMind & Next-Gen:** Search `"DeepMind" OR "Project Mariner" OR "Project Astra" OR "Gemini Live" OR "Google AI" news`.
 3.  **GCP & Vertex AI Ecosystem:** Search `"Google Cloud" OR "Vertex AI" OR "Google AI Studio" news`.
 4.  **General AI & Competitors:** Search `"Anthropic" OR "OpenAI" OR "ChatGPT" OR "Copilot" OR "AWS AI" OR "AI Agents" OR "Gemini CLI" OR "OpenClaw" OR "google antigravity" news`.
