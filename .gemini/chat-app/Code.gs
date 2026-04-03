@@ -8,15 +8,43 @@ const PROJECT_ID = 'flow-forward-with-ai';
 const TOPIC_NAME = 'geminiclaw-commands';
 const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopak.com'];
 
+function createTextCard(title, message) {
+  return {
+    "actionResponse": { "type": "NEW_MESSAGE" },
+    "cardsV2": [
+      {
+        "cardId": "text_card",
+        "card": {
+          "header": {
+            "title": title
+          },
+          "sections": [
+            {
+              "widgets": [
+                {
+                  "textParagraph": {
+                    "text": message
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  };
+}
+
 /**
  * Triggered when a user sends a message to the bot.
  */
 function onMessage(event) {
   const userMessage = (event.message && event.message.text) ? event.message.text.trim() : '';
-  const senderEmail = (event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '';
+  const senderEmail = ((event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '').toLowerCase();
 
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
-    return { text: "⛔ Unauthorized: You do not have clearance to communicate with GeminiClaw." };
+    const debugInfo = JSON.stringify(event.user || event.message?.sender || {});
+    return createTextCard("⛔ Unauthorized", `You do not have clearance. Detected: ${senderEmail}. User Object: ${debugInfo}`);
   }
 
   const cleanMsg = userMessage.replace(/@geminiclaw/gi, '').trim().toLowerCase();
@@ -112,10 +140,11 @@ function buildMenuCard() {
  * Publishes the command or question to Google Cloud Pub/Sub via REST API.
  */
 function triggerPubSub(command, event, query = '') {
-  const senderEmail = (event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '';
+  const senderEmail = ((event.message && event.message.sender && event.message.sender.email) || (event.user && event.user.email) || '').toLowerCase();
   
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
-    return { text: "⛔ Unauthorized: You do not have Super Admin clearance to command GeminiClaw." };
+    const debugInfo = JSON.stringify(event.user || event.message?.sender || {});
+    return createTextCard("⛔ Unauthorized", `You do not have Super Admin clearance to command GeminiClaw. Detected: ${senderEmail}. User Object: ${debugInfo}`);
   }
 
   try {
@@ -149,7 +178,7 @@ function triggerPubSub(command, event, query = '') {
 
     // If it's a natural language query, return a simple text acknowledgement
     if (command === 'ask_colleague') {
-        return { text: `🧠 Thinking... Transmitting query to secure local core.` };
+        return createTextCard("🧠 Thinking...", "Transmitting query to secure local core.");
     }
 
     // Return a success card updating the UI for button clicks
@@ -181,6 +210,6 @@ function triggerPubSub(command, event, query = '') {
     };
 
   } catch (e) {
-    return { text: `Error triggering Pub/Sub: ${e.toString()}` };
+    return createTextCard("Error", `Error triggering Pub/Sub: ${e.toString()}`);
   }
 }
