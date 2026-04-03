@@ -14,13 +14,34 @@ function createTextResponse(text) {
     return { text };
 }
 /**
+ * Helper to extract data from both Native Chat and Add-on event structures.
+ */
+function getEventData(event) {
+    if (event.chat && event.chat.messagePayload) {
+        return {
+            text: event.chat.messagePayload.message ? event.chat.messagePayload.message.text : '',
+            email: event.chat.user ? event.chat.user.email : '',
+            space: event.chat.messagePayload.space ? event.chat.messagePayload.space.name : ''
+        };
+    } else {
+        return {
+            text: event.message ? event.message.text : '',
+            email: (event.user && event.user.email) || (event.message && event.message.sender && event.message.sender.email) || '',
+            space: event.space ? event.space.name : ''
+        };
+    }
+}
+
+/**
  * Triggered when a user sends a message to the bot.
  */
 function onMessage(event) {
     try {
         console.log('onMessage event received:', JSON.stringify(event));
-        const userMessage = (event.message && event.message.text) ? event.message.text.trim() : '';
-        const senderEmail = (event.user && event.user.email || '').toLowerCase();
+        const data = getEventData(event);
+        const userMessage = (data.text || '').trim();
+        const senderEmail = (data.email || '').toLowerCase();
+        
         if (!senderEmail) {
             console.error('No sender email found in event');
             return createTextResponse("❌ Error: Missing user email. Please ensure the app has permission to access your identity.");
@@ -114,7 +135,8 @@ function createActionResponse(text) {
  * Publishes the command or question to Google Cloud Pub/Sub via REST API.
  */
 function triggerPubSub(command, event, query = '') {
-    const senderEmail = (event.user && event.user.email || '').toLowerCase();
+    const data = getEventData(event);
+    const senderEmail = (data.email || '').toLowerCase();
     const isInteractive = !!(event.common && event.common.invokedFunction);
     if (!AUTHORIZED_USERS.includes(senderEmail)) {
         const errorText = `⛔ Unauthorized: You do not have Super Admin clearance. Detected: ${senderEmail}`;
@@ -123,7 +145,7 @@ function triggerPubSub(command, event, query = '') {
     try {
         const token = ScriptApp.getOAuthToken();
         const url = `https://pubsub.googleapis.com/v1/projects/${PROJECT_ID}/topics/${TOPIC_NAME}:publish`;
-        const spaceName = (event.space && event.space.name) ? event.space.name : '';
+        const spaceName = data.space;
         const payload = {
             messages: [{
                     data: Utilities.base64Encode(JSON.stringify({
