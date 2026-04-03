@@ -27,6 +27,8 @@ async function listenForMessages() {
       const payload = JSON.parse(message.data.toString());
       const command = payload.command;
       const requestedBy = payload.requestedBy;
+      const query = payload.query || '';
+      const replySpace = payload.replySpace;
 
       logger.info(`📥 Received command: [${command}] from ${requestedBy}`);
 
@@ -34,6 +36,16 @@ async function listenForMessages() {
         executeCommand('docker run --rm --env-file .env -v $(pwd):/app -w /app geminiclaw-sandbox --skill vopak-news-intelligence run "Run the daily news intelligence gathering and generate the HTML newsletter"');
       } else if (command === 'run_synthesis') {
         executeCommand('docker run --rm --env-file .env -v $(pwd):/app -w /app geminiclaw-sandbox --skill vopak-synthesis run "Generate the personal and business synthesis reports"');
+      } else if (command === 'ask_colleague') {
+        // Prepare the safe query string (escaping quotes)
+        const safeQuery = query.replace(/"/g, '\\"');
+        const isOwner = requestedBy === 'patricio.santamaria@vopak.com';
+        
+        // Pass the identity flag to the skill so it knows how to restrict its context
+        const skillDirective = `Answer this question from ${requestedBy}: "${safeQuery}". IsOwner: ${isOwner}. Reply Space: ${replySpace}`;
+        
+        logger.info(`Routing question to Digital Colleague subagent...`);
+        executeCommand(`docker run --rm --env-file .env -v $(pwd):/app -w /app geminiclaw-sandbox --skill vopak-colleague run "${skillDirective}"`);
       } else {
         logger.warn(`Unknown command received: ${command}`);
       }

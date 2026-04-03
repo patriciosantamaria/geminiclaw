@@ -2,7 +2,7 @@
  * GeminiClaw Google Chat App (Cloud Interface)
  * Deployed via Google Apps Script
  * Uses CardService to provide a beautiful, interactive Vopak UI.
- * Receives button clicks from Google Chat and publishes them to GCP Pub/Sub.
+ * Receives button clicks and natural language messages from Google Chat and publishes them to GCP Pub/Sub.
  */
 
 const PROJECT_ID = 'flow-forward-with-ai';
@@ -11,10 +11,25 @@ const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopa
 
 /**
  * Triggered when a user sends a message to the bot.
- * We ignore the text and just return the interactive Command Center Card.
  */
 function onMessage(event) {
-  return buildMenuCard();
+  const userMessage = event.message.text ? event.message.text.trim() : '';
+  const senderEmail = event.user.email;
+
+  if (!AUTHORIZED_USERS.includes(senderEmail)) {
+    return { text: "⛔ Unauthorized: You do not have clearance to communicate with GeminiClaw." };
+  }
+
+  // If the message is just mentioning the bot or is empty, show the Command Center
+  // Also show Command Center if the message is exactly "menu" or "help"
+  const cleanMsg = userMessage.replace(/@geminiclaw/gi, '').trim().toLowerCase();
+  
+  if (cleanMsg === '' || cleanMsg === 'menu' || cleanMsg === 'help') {
+    return buildMenuCard();
+  }
+
+  // Otherwise, treat it as a natural language question/command and send it to Pub/Sub
+  return triggerPubSub('ask_colleague', event, userMessage);
 }
 
 /**
@@ -50,7 +65,7 @@ function buildMenuCard() {
 
   const section = CardService.newCardSection()
     .setHeader('Available Strategic Workflows')
-    .addWidget(CardService.newTextParagraph().setText('Select a command to execute securely on the local Vopak infrastructure in Rotterdam.'))
+    .addWidget(CardService.newTextParagraph().setText('Select a command or type a question to execute securely on the local Vopak infrastructure.'))
     .addWidget(CardService.newButtonSet()
       .addButton(CardService.newTextButton()
         .setText('📰 Run News Intelligence')
@@ -76,9 +91,9 @@ function buildMenuCard() {
 }
 
 /**
- * Publishes the command to Google Cloud Pub/Sub via REST API.
+ * Publishes the command or question to Google Cloud Pub/Sub via REST API.
  */
-function triggerPubSub(command, event) {
+function triggerPubSub(command, event, query = '') {
   const senderEmail = event.user.email;
   
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
@@ -93,6 +108,7 @@ function triggerPubSub(command, event) {
       messages: [{
         data: Utilities.base64Encode(JSON.stringify({
           command: command,
+          query: query,
           replySpace: event.space.name,
           requestedBy: senderEmail,
           timestamp: new Date().toISOString()
@@ -110,7 +126,12 @@ function triggerPubSub(command, event) {
 
     UrlFetchApp.fetch(url, options);
 
-    // Return a success card updating the UI
+    // If it's a natural language query, return a simple text acknowledgement
+    if (command === 'ask_colleague') {
+        return { text: `🧠 Thinking... Transmitting query to secure local core.` };
+    }
+
+    // Return a success card updating the UI for button clicks
     const successHeader = CardService.newCardHeader()
       .setTitle('Command Acknowledged')
       .setSubtitle(`Target: ${command}`)
