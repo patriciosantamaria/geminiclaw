@@ -1,0 +1,234 @@
+{
+  "session_id": "923213e7-f4b0-48b3-bf6d-fa5da76cfe98",
+  "response": "The strategic morning briefing for Monday, March 30, 2026, is complete. I have provided a concise, action-oriented update in our chat and sent a professionally branded HTML briefing to your inbox. \n\nThe brief highlights the successful completion of your first **Flow Forward** session today, identifies the critical pushback from **Koen van Daalen** regarding Google Cloud's role, and suggests a \"Wizard Bridge\" strategy to align his architectural vision with our AI initiatives. I've also flagged the upcoming schedule conflict for Wednesday and confirmed that your **Gemini CLI Workspace Extension** access is now active.\n\n*Un saludo cordial,*\n\n**Gemini CLI** ➔",
+  "stats": {
+    "models": {
+      "gemini-2.5-flash-lite": {
+        "api": {
+          "totalRequests": 1,
+          "totalErrors": 0,
+          "totalLatencyMs": 2439
+        },
+        "tokens": {
+          "input": 4462,
+          "prompt": 4462,
+          "candidates": 85,
+          "total": 4933,
+          "cached": 0,
+          "thoughts": 386,
+          "tool": 0
+        },
+        "roles": {
+          "utility_router": {
+            "totalRequests": 1,
+            "totalErrors": 0,
+            "totalLatencyMs": 2439,
+            "tokens": {
+              "input": 4462,
+              "prompt": 4462,
+              "candidates": 85,
+              "total": 4933,
+              "cached": 0,
+              "thoughts": 386,
+              "tool": 0
+            }
+          }
+        }
+      },
+      "gemini-3-flash-preview": {
+        "api": {
+          "totalRequests": 10,
+          "totalErrors": 0,
+          "totalLatencyMs": 55196
+        },
+        "tokens": {
+          "input": 60776,
+          "prompt": 356032,
+          "candidates": 2533,
+          "total": 361652,
+          "cached": 295256,
+          "thoughts": 3087,
+          "tool": 0
+        },
+        "roles": {
+          "main": {
+            "totalRequests": 10,
+            "totalErrors": 0,
+            "totalLatencyMs": 55196,
+            "tokens": {
+              "input": 60776,
+              "prompt": 356032,
+              "candidates": 2533,
+              "total": 361652,
+              "cached": 295256,
+              "thoughts": 3087,
+              "tool": 0
+            }
+          }
+        }
+      }
+    },
+    "tools": {
+      "totalCalls": 19,
+      "totalSuccess": 19,
+      "totalFail": 0,
+      "totalDurationMs": 4727,
+      "totalDecisions": {
+        "accept": 19,
+        "reject": 0,
+        "modify": 0,
+        "auto_accept": 0
+      },
+      "byName": {
+        "activate_skill": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 14,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_people.getMe": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 624,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_time.getTimeZone": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 73,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_time.getCurrentDate": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 22,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "list_directory": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 16,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_calendar.listEvents": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 290,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_gmail.search": {
+          "count": 3,
+          "success": 3,
+          "fail": 0,
+          "durationMs": 949,
+          "decisions": {
+            "accept": 3,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "run_shell_command": {
+          "count": 2,
+          "success": 2,
+          "fail": 0,
+          "durationMs": 183,
+          "decisions": {
+            "accept": 2,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_gmail.get": {
+          "count": 5,
+          "success": 5,
+          "fail": 0,
+          "durationMs": 1315,
+          "decisions": {
+            "accept": 5,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_drive.search": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 701,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "read_file": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 11,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        },
+        "mcp_google-workspace_gmail.send": {
+          "count": 1,
+          "success": 1,
+          "fail": 0,
+          "durationMs": 529,
+          "decisions": {
+            "accept": 1,
+            "reject": 0,
+            "modify": 0,
+            "auto_accept": 0
+          }
+        }
+      }
+    },
+    "files": {
+      "totalLinesAdded": 0,
+      "totalLinesRemoved": 0
+    }
+  }
+}

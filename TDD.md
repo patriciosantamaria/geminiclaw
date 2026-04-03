@@ -1,11 +1,11 @@
 # 👨‍💻 Technical Design Document (TDD): GeminiClaw
 
 ## 📂 1. File Structure & Organization
-The workspace is organized into a core agentic layer (`.agent/`) and functional project directories.
+The workspace is organized into a core agentic layer (`.gemini/`) and functional project directories.
 
 ```text
 /home/patosoto/geminiclaw/
-├── .agent/                  # Core Agent Intelligence & Configuration
+├── .gemini/                  # Core Agent Intelligence & Configuration
 │   ├── skills/             # Modular Agentic capabilities (vopak-*)
 │   ├── briefings/          # JSON data for Morning Briefings
 │   ├── scripts/            # Automation (Bash/TypeScript)
@@ -27,7 +27,7 @@ The workspace is organized into a core agentic layer (`.agent/`) and functional 
 ### 🧠 2.1. Hybrid Memory Stack
 The system implements a multi-modal memory stack to balance speed, structure, and semantic depth.
 
-- **SQLite Engine:** Manages relational data in `.agent/memory.db`.
+- **SQLite Engine:** Manages relational data in `.gemini/memory.db`.
   - **Tables:** `knowledge_index` (Key/Value/Source), `roi_metrics` (Task/TimeSaved/Date), `stakeholder_preferences` (Email/Pref/Context).
 - **ChromaDB Vector Store:** A local vector database (port 8000) for semantic context.
 - **Ollama Integration:** The `MemoryClient` utilizes Ollama's `nomic-embed-text` model to generate 768-dimensional embeddings for all indexed documents.

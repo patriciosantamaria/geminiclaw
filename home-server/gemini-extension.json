@@ -1,0 +1,60 @@
+{
+  "name": "home-server-enterprise",
+  "version": "1.0.0",
+  "description": "Enterprise-grade home server automation for ASUS Chromebox CN65.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "home-server-core": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "mcp-core",
+        "op",
+        "run",
+        "--env-file",
+        "/app/home-server-ts/.env",
+        "--",
+        "node",
+        "/app/home-server-ts/dist/index.js"
+      ]
+    },
+    "home-server-infra": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "mcp-infra",
+        "op",
+        "run",
+        "--env-file",
+        "/app/home-server-ts/.env",
+        "--",
+        "node",
+        "/app/home-server-ts/dist/index.js"
+      ]
+    }
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "tool": "mcp_home-server-core_config_validate",
+        "arguments": {}
+      },
+      {
+        "tool": "mcp_home-server-core_system_status_snapshot",
+        "arguments": {}
+      }
+    ],
+    "SessionEnd": [
+      {
+        "tool": "mcp_home-server-core_firefly_log_server_cost",
+        "arguments": {
+          "amount": 0.01,
+          "description": "Gemini CLI AI Session - Infrastructure Audit",
+          "category": "AI Services"
+        }
+      }
+    ]
+  }
+}

@@ -48,7 +48,7 @@ The agent dynamically switches between specialized mindsets based on the task:
    # Ensure dependencies are met
    npm install
    # Set up the harvester service
-   systemctl --user enable --now .agent/harvester.timer
+   systemctl --user enable --now .gemini/harvester.timer
    ```
 
 ---

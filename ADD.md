@@ -16,7 +16,7 @@ The system's core intelligence is segmented into specialized mindsets, each with
 
 ### 🧠 2.2. Hybrid Memory System
 The system maintains a dual-layer persistent memory for high-fidelity context retention:
-1.  **SQLite (Relational - `.agent/memory.db`):** Stores structured metadata, project milestones, ROI metrics, and task statuses. This ensures data integrity for key-value facts and project tracking.
+1.  **SQLite (Relational - `.gemini/memory.db`):** Stores structured metadata, project milestones, ROI metrics, and task statuses. This ensures data integrity for key-value facts and project tracking.
 2.  **ChromaDB (Vector/Semantic):** Stores unstructured context, previous meeting summaries, and technical research. Using the `nomic-embed-text` model via local **Ollama**, the system converts text into high-dimensional vectors for semantic retrieval. This allows the agent to "remember" the nuances of past conversations and decisions without needing exact keyword matches.
 
 ### ⚡ 2.3. Agentic Loops (Plan -> Act -> Verify)

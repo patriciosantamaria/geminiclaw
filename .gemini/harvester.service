@@ -1,0 +1,8 @@
+[Unit]
+Description=Vopak Assistant Daily Harvester
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/node /home/patosoto/geminiclaw/.gemini/harvester.ts
+StandardOutput=journal
+StandardError=journal
