@@ -12,17 +12,17 @@
 ## 📝 EB Minute Taking Tool
 **Goal:** Develop a secure, automated solution for Executive Board minutes.
 **Narrative Arc:** Shift from custom Scenarios 2/3 (EUR 20k-60k) to Intermediate (EUR 0) using Google Meet Native AI + Host Controls. Strategy focus: Restricted distribution for EB (Host-only) and anonymity. Meeting with Chaniel/Yassin on March 31.
-- [ ] Prepare for meeting with Chaniel and Yassin - Tuesday, March 31, 10:30.
+- [x] Prepare for meeting with Chaniel and Yassin - Tuesday, March 31, 10:30.
 - [x] Review "Requirements Minute Taking Tool EB" for finalized specs.
 - [x] Compare Technical Scenarios (Intermediate vs. Scenario 2/3).
-- [ ] Verify Host-only distribution in Meet settings for Legal sign-off.
+- [x] Verify Host-only distribution in Meet settings for Legal sign-off.
 
 ## 🚀 AWS Kiro Enablement
 **Goal:** Explore AWS Kiro for Vopak-specific agentic development.
 **Narrative Arc:** Workshop scheduled with AWS & Inqdo for April 1. Researching due diligence and Vopak-specific agentic dev. Goal: Align AWS Kiro with Vopak-hosted data and Workspace frontend.
-- [ ] Research "Kiro at Vopak" due diligence documents.
-- [ ] Brief on external participants (AWS & Inqdo).
-- [ ] Attend Workshop - Wednesday, April 1, 10:00.
+- [x] Research "Kiro at Vopak" due diligence documents.
+- [x] Brief on external participants (AWS & Inqdo).
+- [x] Attend Workshop - Wednesday, April 1, 10:00.
 
 ## 🛡️ Tank Inspection Platform AI
 **Goal:** Automate the reporting and data ingestion for the global inspection platform.
