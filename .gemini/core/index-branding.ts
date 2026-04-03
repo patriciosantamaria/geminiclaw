@@ -4,7 +4,7 @@ import fs from 'fs';
 
 async function indexBranding() {
   const memory = new MemoryClient();
-  const brandingContent = fs.readFileSync('./BRANDING.md', 'utf-8');
+  const brandingContent = fs.readFileSync('../configs/BRANDING.md', 'utf-8');
   
   console.log('🧠 Indexing Vopak Branding v3.0 into ChromaDB...');
   

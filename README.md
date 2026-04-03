@@ -55,7 +55,7 @@ The agent dynamically switches between specialized mindsets based on the task:
    # Ensure dependencies are met
    npm install
    # Set up the harvester service
-   systemctl --user enable --now .gemini/harvester.timer
+   systemctl --user enable --now .gemini/infra/systemd/harvester.timer
    ```
 
 ---
@@ -85,7 +85,7 @@ If you've forgotten a detail from a project months ago:
 ---
 
 ## 📊 ROI Tracking
-Every automated task records "Time Saved." View the cumulative impact in the `memory.db` ROI dashboard to demonstrate value to executive stakeholders.
+Every automated task records "Time Saved." View the cumulative impact in the `.gemini/data/memory.db` ROI dashboard to demonstrate value to executive stakeholders.
 
 ---
 

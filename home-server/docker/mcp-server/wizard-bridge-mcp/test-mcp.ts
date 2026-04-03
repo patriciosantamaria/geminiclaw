@@ -4,7 +4,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 async function main() {
   const transport = new StdioClientTransport({
     command: "node",
-    args: ["/home/patosoto/geminiclaw/wizard-bridge-mcp/dist/index.js"]
+    args: ["/home/patosoto/geminiclaw/home-server/docker/mcp-server/wizard-bridge-mcp/dist/index.js"]
   });
 
   const client = new Client({
@@ -18,7 +18,7 @@ async function main() {
   
   console.log("Calling tool...");
   const result = await client.callTool({
-    name: "execute_workspace_script",
+    name: "read_workspace_script",
     arguments: {
       script: `
         const drive = google.drive({ version: 'v3', auth });
