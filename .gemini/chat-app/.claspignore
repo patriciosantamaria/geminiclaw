@@ -1,0 +1,6 @@
+# Ignore local IDE files and node_modules
+node_modules/
+.git/
+.clasp.json
+.claspignore
+deploy.sh
