@@ -10,6 +10,9 @@ When activated, you MUST perform the following steps sequentially. Use your high
 Execute `google_web_search` (in parallel if possible) to find the most significant news from the past 24-48 hours for the following four categories. You must gather deep, detailed technical and strategic information.
 
 **CRITICAL: You MUST extract the specific, exact URL for each news article. DO NOT use generic homepages like `https://workspaceupdates.googleblog.com/`.**
+*Anti-Hallucination Guardrail:* If the `google_web_search` tool returns a grounding redirect URL (e.g., `https://vertexaisearch.cloud.google.com/grounding-api-redirect/...`), you MUST use `run_shell_command` to resolve the final destination URL before including it in the HTML report. Do NOT guess or hallucinate the final URL. 
+Example command to resolve the true URL:
+`curl -sLI -o /dev/null -w '%{url_effective}' "REDIRECT_URL_HERE"`
 
 1.  **Google Workspace Updates & Efficiency:** Search `site:workspaceupdates.googleblog.com OR "Google Workspace" updates news`. Find ALL recent updates. You must highlight the ones that require Admin actions or are highly useful for the Vopak ecosystem. Also, search for or synthesize 1-2 Google Workspace "Efficiency Tips" (e.g., keyboard shortcuts, Gmail/Drive organization).
 2.  **Google AI, DeepMind & Next-Gen:** Search `"DeepMind" OR "Project Mariner" OR "Project Astra" OR "Gemini Live" OR "Google AI" news`.
