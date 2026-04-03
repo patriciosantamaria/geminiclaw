@@ -6,8 +6,5 @@
   "oauthScopes": [
     "https://www.googleapis.com/auth/pubsub",
     "https://www.googleapis.com/auth/script.external_request"
-  ],
-  "chat": {
-    "addToSpaceFallbackMessage": "Thank you for adding GeminiClaw to this space. I am your Cloud-to-Ground bridge."
-  }
+  ]
 }
