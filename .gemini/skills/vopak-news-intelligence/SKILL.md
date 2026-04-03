@@ -23,36 +23,50 @@ Example command to resolve the true URL:
 You MUST synthesize the findings into a highly detailed HTML newsletter using the official Vopak Branding Template.
 1. Read the template from `.gemini/configs/NEWSLETTER_TEMPLATE.html`.
 2. Replace `{{DATE}}` with the current date (e.g., April 3, 2026).
-3. Generate a top-level **Executive Summary** HTML block containing the 2-3 most critical Admin actions and Strategic shifts. Each bullet point MUST include an HTML hyperlink to the respective news article. Replace `<!-- INJECT_EXECUTIVE_SUMMARY_HERE -->` with this block.
-4. Replace `<!-- INJECT_CONTENT_HERE -->` with the generated HTML for each category.
+3. Generate a top-level **Executive Summary** HTML block.
+4. Replace `<!-- INJECT_CONTENT_HERE -->` with the generated HTML.
 
-For the Executive Summary, use this HTML structure:
+**CRITICAL: You MUST order the newsletter exactly in this sequence to optimize the executive reading experience:**
+
+1. **🎯 Executive Summary & Action Items**: 
+   - 2-3 most critical Admin actions and Strategic shifts. Each bullet point MUST include an HTML hyperlink to the respective news article.
+2. **🛡️ Google Workspace & Security Operations**: 
+   - List all updates found, heavily emphasizing those requiring Admin action or representing a significant ecosystem upgrade.
+3. **☁️ GCP & Enterprise AI Infrastructure**: 
+   - Updates from Google Cloud, Vertex AI, and Google AI Studio.
+4. **🧠 The Future of Google AI**: 
+   - News regarding DeepMind, Project Astra, Gemini Live, and core Google AI research.
+5. **🌐 The Broader AI Ecosystem**: 
+   - Competitive landscape (Anthropic, OpenAI, Microsoft, AWS, Agentic tools).
+6. **💡 Executive Efficiency & Workflow Tips**: 
+   - Present 1-2 practical tips to organize or move faster in Google Workspace (e.g., keyboard shortcuts, Gmail/Drive organization).
+
+For the Executive Summary, use this exact HTML structure:
 ```html
 <div class="category">
     <div class="category-title">🎯 Executive Summary & Action Items</div>
     <div class="insight-box">
         <strong>🚨 Urgent Super Admin Actions:</strong>
         <ul>
-            <li><a href="EXACT_URL" target="_blank">Audit Vertex AI for BYOSA Compliance</a>: Describe the action...</li>
-            <li><a href="EXACT_URL" target="_blank">Action 2</a>: Describe the action...</li>
+            <li><a href="EXACT_URL" target="_blank">Action Name</a>: Describe the action...</li>
         </ul>
         <strong>♟️ Major Strategic Shifts:</strong>
         <ul>
-            <li><a href="EXACT_URL" target="_blank">Shift 1</a>: Describe the shift...</li>
+            <li><a href="EXACT_URL" target="_blank">Shift Name</a>: Describe the shift...</li>
         </ul>
     </div>
 </div>
 ```
 
-For each category, use this exact HTML structure:
+For ALL other categories (2 through 6), use this exact HTML structure:
 ```html
 <div class="category">
-    <div class="category-title">CATEGORY ICON & NAME</div>
+    <div class="category-title">CATEGORY ICON & NAME (e.g., 🛡️ Google Workspace & Security Operations)</div>
     
-    <!-- Repeat for each news item -->
+    <!-- Repeat for each news/tip item -->
     <div class="news-card">
         <h3 class="card-title">Detailed News Headline</h3>
-        <p class="card-content">A comprehensive, detailed summary of the news (3-4 sentences). Do not use bullet points here, use a flowing executive narrative.</p>
+        <p class="card-content">A comprehensive, detailed summary (3-4 sentences). Do not use bullet points here, use a flowing executive narrative.</p>
         <div class="insight-box">
             <strong>Why it matters:</strong>
             <p>Direct, detailed application for Vopak employees or Super Admin policy improvements. Mention if ADMIN ACTION is required.</p>
@@ -64,10 +78,6 @@ For each category, use this exact HTML structure:
     </div>
 </div>
 ```
-
-**Special Instructions per Category:**
-- **Google Workspace Updates:** List all updates found, but heavily emphasize/highlight those requiring Admin action or representing a significant ecosystem upgrade.
-- **Efficiency Tips (New Section):** Add a specific category section titled `💡 Workspace Efficiency Tips` presenting 1-2 practical tips to organize or move faster in Google Workspace.
 
 ### 3. Distribution (GitHub Pages & Chat)
 Save the generated HTML file locally to `.gemini/data/newsletters/YYYY-MM-DD.html`.
