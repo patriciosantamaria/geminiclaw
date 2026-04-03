@@ -1,10 +1,10 @@
 {
   "timeZone": "Europe/Amsterdam",
-  "dependencies": {
-  },
+  "dependencies": {},
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8",
-  "chat": {
-    "addToSpaceFallbackMessage": "Thank you for adding GeminiClaw to this space. I am your Cloud-to-Ground bridge.",
-  }
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/pubsub",
+    "https://www.googleapis.com/auth/script.external_request"
+  ]
 }

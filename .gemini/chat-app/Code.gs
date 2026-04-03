@@ -1,8 +1,7 @@
 /**
  * GeminiClaw Google Chat App (Cloud Interface)
  * Deployed via Google Apps Script
- * Uses CardService to provide a beautiful, interactive Vopak UI.
- * Receives button clicks from Google Chat and publishes them to GCP Pub/Sub.
+ * Receives messages and button clicks from Google Chat and publishes them to GCP Pub/Sub.
  */
 
 const PROJECT_ID = 'flow-forward-with-ai';
@@ -11,10 +10,23 @@ const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopa
 
 /**
  * Triggered when a user sends a message to the bot.
- * We ignore the text and just return the interactive Command Center Card.
  */
 function onMessage(event) {
-  return buildMenuCard();
+  const userMessage = event.message.text ? event.message.text.trim() : '';
+  const senderEmail = event.user.email;
+
+  if (!AUTHORIZED_USERS.includes(senderEmail)) {
+    return { text: "⛔ Unauthorized: You do not have clearance to communicate with GeminiClaw." };
+  }
+
+  const cleanMsg = userMessage.replace(/@geminiclaw/gi, '').trim().toLowerCase();
+  
+  if (cleanMsg === '' || cleanMsg === 'menu' || cleanMsg === 'help') {
+    return buildMenuCard();
+  }
+
+  // Otherwise, treat it as a natural language question/command and send it to Pub/Sub
+  return triggerPubSub('ask_colleague', event, userMessage);
 }
 
 /**
@@ -25,60 +37,80 @@ function onAddToSpace(event) {
 }
 
 /**
- * Action Handler: News Button Clicked
+ * Action Handler: Triggered by Card button clicks
  */
-function runNews(event) {
-  return triggerPubSub('run_news', event);
+function onCardClick(event) {
+  const command = event.common.invokedFunction;
+  if (command === 'runNews') {
+    return triggerPubSub('run_news', event, '');
+  } else if (command === 'runSynthesis') {
+    return triggerPubSub('run_synthesis', event, '');
+  }
+  return { text: "Unknown action" };
 }
 
 /**
- * Action Handler: Synthesis Button Clicked
- */
-function runSynthesis(event) {
-  return triggerPubSub('run_synthesis', event);
-}
-
-/**
- * Builds the Interactive Vopak AI Command Center Card using CardService
+ * Builds the Interactive Vopak AI Command Center Card using Chat API v2 JSON
  */
 function buildMenuCard() {
-  const header = CardService.newCardHeader()
-    .setTitle('Vopak AI Command Center')
-    .setSubtitle('GeminiClaw V4.0 | Flow Forward')
-    .setImageUrl('https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Google_Chat_icon_%282020%29.svg/1024px-Google_Chat_icon_%282020%29.svg.png')
-    .setImageStyle(CardService.ImageStyle.CIRCLE);
-
-  const section = CardService.newCardSection()
-    .setHeader('Available Strategic Workflows')
-    .addWidget(CardService.newTextParagraph().setText('Select a command to execute securely on the local Vopak infrastructure in Rotterdam.'))
-    .addWidget(CardService.newButtonSet()
-      .addButton(CardService.newTextButton()
-        .setText('📰 Run News Intelligence')
-        .setBackgroundColor('#00cfe1') // Vopak Cyan
-        .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-        .setOnClickAction(CardService.newAction().setFunctionName('runNews')))
-      .addButton(CardService.newTextButton()
-        .setText('📊 Run Synthesis Reports')
-        .setBackgroundColor('#0a2373') // Vopak Deep Blue
-        .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-        .setOnClickAction(CardService.newAction().setFunctionName('runSynthesis')))
-    );
-
-  const card = CardService.newCardBuilder()
-    .setHeader(header)
-    .addSection(section)
-    .build();
-
   return {
-    actionResponse: { type: 'NEW_MESSAGE' },
-    cards: [card]
+    "actionResponse": { "type": "NEW_MESSAGE" },
+    "cardsV2": [
+      {
+        "cardId": "menu_card",
+        "card": {
+          "header": {
+            "title": "Vopak AI Command Center",
+            "subtitle": "GeminiClaw V4.0 | Flow Forward",
+            "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Google_Chat_icon_%282020%29.svg/1024px-Google_Chat_icon_%282020%29.svg.png",
+            "imageType": "CIRCLE"
+          },
+          "sections": [
+            {
+              "header": "Available Strategic Workflows",
+              "widgets": [
+                {
+                  "textParagraph": {
+                    "text": "Select a command or type a question to execute securely on the local Vopak infrastructure in Rotterdam."
+                  }
+                },
+                {
+                  "buttonList": {
+                    "buttons": [
+                      {
+                        "text": "📰 Run News Intelligence",
+                        "color": { "red": 0, "green": 0.811, "blue": 0.882, "alpha": 1 },
+                        "onClick": {
+                          "action": {
+                            "function": "runNews"
+                          }
+                        }
+                      },
+                      {
+                        "text": "📊 Run Synthesis Reports",
+                        "color": { "red": 0.039, "green": 0.137, "blue": 0.451, "alpha": 1 },
+                        "onClick": {
+                          "action": {
+                            "function": "runSynthesis"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    ]
   };
 }
 
 /**
- * Publishes the command to Google Cloud Pub/Sub via REST API.
+ * Publishes the command or question to Google Cloud Pub/Sub via REST API.
  */
-function triggerPubSub(command, event) {
+function triggerPubSub(command, event, query = '') {
   const senderEmail = event.user.email;
   
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
@@ -89,11 +121,15 @@ function triggerPubSub(command, event) {
     const token = ScriptApp.getOAuthToken();
     const url = `https://pubsub.googleapis.com/v1/projects/${PROJECT_ID}/topics/${TOPIC_NAME}:publish`;
     
+    // We get the space name differently depending on if it's a card click or text message
+    const spaceName = event.space ? event.space.name : (event.message ? event.message.space.name : '');
+
     const payload = {
       messages: [{
         data: Utilities.base64Encode(JSON.stringify({
           command: command,
-          replySpace: event.space.name,
+          query: query,
+          replySpace: spaceName,
           requestedBy: senderEmail,
           timestamp: new Date().toISOString()
         }))
@@ -108,22 +144,39 @@ function triggerPubSub(command, event) {
       muteHttpExceptions: true
     };
 
-    UrlFetchApp.fetch(url, options);
+    const response = UrlFetchApp.fetch(url, options);
 
-    // Return a success card updating the UI
-    const successHeader = CardService.newCardHeader()
-      .setTitle('Command Acknowledged')
-      .setSubtitle(`Target: ${command}`)
-      .setImageUrl('https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/check_circle/default/48px.svg');
+    // If it's a natural language query, return a simple text acknowledgement
+    if (command === 'ask_colleague') {
+        return { text: `🧠 Thinking... Transmitting query to secure local core.` };
+    }
 
-    const successSection = CardService.newCardSection()
-      .addWidget(CardService.newTextParagraph().setText(`Transmitting \`${command}\` to local Chromebox via secure Pub/Sub. You will receive the output in your Webhook space shortly.`));
-
-    const card = CardService.newCardBuilder().setHeader(successHeader).addSection(successSection).build();
-
+    // Return a success card updating the UI for button clicks
     return {
-      actionResponse: { type: 'NEW_MESSAGE' },
-      cards: [card]
+      "actionResponse": { "type": "NEW_MESSAGE" },
+      "cardsV2": [
+        {
+          "cardId": "success_card",
+          "card": {
+            "header": {
+              "title": "Command Acknowledged",
+              "subtitle": `Target: ${command}`,
+              "imageUrl": "https://fonts.gstatic.com/s/i/short-term/release/googlesymbols/check_circle/default/48px.svg"
+            },
+            "sections": [
+              {
+                "widgets": [
+                  {
+                    "textParagraph": {
+                      "text": `Transmitting \`${command}\` to local Chromebox via secure Pub/Sub. You will receive the output in your Webhook space shortly.`
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     };
 
   } catch (e) {
