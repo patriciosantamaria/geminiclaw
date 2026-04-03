@@ -1,12 +1,12 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.ts";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.ts";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.ts";
 import { z } from "zod";
 import * as vm from "vm";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
-import { Logger } from "./utils/logger.js";
-import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.js";
+import { Logger } from "./utils/logger.ts";
+import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.ts";
 
 const logger = new Logger("WizardBridgeMCP");
 

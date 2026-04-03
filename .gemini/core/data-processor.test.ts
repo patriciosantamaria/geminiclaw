@@ -3,9 +3,9 @@ import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
-import { DataProcessor } from './data-processor.js';
-import { GeminiClawError, ErrorCode } from './utils/errors.js';
-import { Logger, LogLevel } from './utils/logger.js';
+import { DataProcessor } from './data-processor.ts';
+import { GeminiClawError, ErrorCode } from './utils/errors.ts';
+import { Logger, LogLevel } from './utils/logger.ts';
 
 describe('DataProcessor', () => {
   const logger = new Logger('DataProcessorTest', LogLevel.DEBUG);

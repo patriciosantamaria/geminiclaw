@@ -8,8 +8,8 @@ import fs from 'node:fs';
 import readline from 'node:readline';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Logger } from './utils/logger.js';
-import { GeminiClawError, ErrorCode, handleError } from './utils/errors.js';
+import { Logger } from './utils/logger.ts';
+import { GeminiClawError, ErrorCode, handleError } from './utils/errors.ts';
 
 const logger = new Logger('DataProcessor');
 
@@ -151,7 +151,7 @@ export class DataProcessor {
 const isMain = process.argv[1] && (
   process.argv[1] === fileURLToPath(import.meta.url) ||
   process.argv[1].endsWith('data-processor.ts') ||
-  process.argv[1].endsWith('data-processor.js')
+  process.argv[1].endsWith('data-processor.ts')
 );
 
 if (isMain) {

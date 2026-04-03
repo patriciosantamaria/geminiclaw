@@ -1,16 +1,16 @@
 
 /**
  * 🛠️ Unified Logger Utility
- * Provides consistent logging across all GeminiClaw services.
- * Automatically redirects logs to stderr to avoid interfering with MCP stdout communication.
  */
 
-export enum LogLevel {
-  DEBUG = 0,
-  INFO = 1,
-  WARN = 2,
-  ERROR = 3,
-}
+export const LogLevel = {
+  DEBUG: 0,
+  INFO: 1,
+  WARN: 2,
+  ERROR: 3,
+} as const;
+
+export type LogLevel = typeof LogLevel[keyof typeof LogLevel];
 
 export class Logger {
   private component: string;

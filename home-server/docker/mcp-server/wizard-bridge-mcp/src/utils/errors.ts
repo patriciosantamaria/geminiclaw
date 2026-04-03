@@ -4,16 +4,18 @@
  * Defines custom error types and a common way to format errors.
  */
 
-import { Logger } from './logger.js';
+import { Logger } from './logger';
 
-export enum ErrorCode {
-  NOT_FOUND = 'NOT_FOUND',
-  UNAUTHORIZED = 'UNAUTHORIZED',
-  FORBIDDEN = 'FORBIDDEN',
-  INTERNAL_ERROR = 'INTERNAL_ERROR',
-  VALIDATION_ERROR = 'VALIDATION_ERROR',
-  EXTERNAL_API_ERROR = 'EXTERNAL_API_ERROR',
-}
+export const ErrorCode = {
+  NOT_FOUND: 'NOT_FOUND',
+  UNAUTHORIZED: 'UNAUTHORIZED',
+  FORBIDDEN: 'FORBIDDEN',
+  INTERNAL_ERROR: 'INTERNAL_ERROR',
+  VALIDATION_ERROR: 'VALIDATION_ERROR',
+  EXTERNAL_API_ERROR: 'EXTERNAL_API_ERROR',
+} as const;
+
+export type ErrorCode = typeof ErrorCode[keyof typeof ErrorCode];
 
 export class GeminiClawError extends Error {
   public code: ErrorCode;
