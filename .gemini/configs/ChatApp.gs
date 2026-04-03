@@ -4,7 +4,7 @@
  * Receives messages from Google Chat and publishes them to GCP Pub/Sub.
  */
 
-const PROJECT_ID = 'YOUR_GCP_PROJECT_ID';
+const PROJECT_ID = 'flow-forward-with-ai';
 const TOPIC_NAME = 'geminiclaw-commands';
 
 /**

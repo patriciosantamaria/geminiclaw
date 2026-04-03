@@ -11,7 +11,7 @@ const logger = new Logger('CloudListener');
  */
 
 // Replace with your actual GCP Project ID and Subscription Name
-const PROJECT_ID = 'YOUR_GCP_PROJECT_ID';
+const PROJECT_ID = 'flow-forward-with-ai';
 const SUBSCRIPTION_NAME = 'geminiclaw-commands-sub';
 
 const pubSubClient = new PubSub({ projectId: PROJECT_ID });
