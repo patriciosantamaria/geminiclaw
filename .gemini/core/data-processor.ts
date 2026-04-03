@@ -8,6 +8,10 @@
 import fs from 'fs';
 import readline from 'readline';
 import path from 'path';
+import { Logger } from './utils/logger';
+import { GeminiClawError, ErrorCode, handleError } from './utils/errors';
+
+const logger = new Logger('DataProcessor');
 
 export class DataProcessor {
   /**
@@ -15,22 +19,30 @@ export class DataProcessor {
    * Doesn't load the file into context, only returns matching lines.
    */
   async search(filePath: string, pattern: string, limit: number = 100): Promise<string[]> {
-    const results: string[] = [];
-    const regex = new RegExp(pattern, 'i');
-    const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
-
-    let count = 0;
-    let lineNum = 0;
-    for await (const line of rl) {
-      lineNum++;
-      if (regex.test(line)) {
-        results.push(`[Line ${lineNum}] ${line}`);
-        count++;
+    logger.info(`Searching for pattern "${pattern}" in ${filePath}`);
+    try {
+      if (!fs.existsSync(filePath)) {
+        throw new GeminiClawError(`File not found: ${filePath}`, ErrorCode.NOT_FOUND);
       }
-      if (count >= limit) break;
+      const results: string[] = [];
+      const regex = new RegExp(pattern, 'i');
+      const fileStream = fs.createReadStream(filePath);
+      const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
+
+      let count = 0;
+      let lineNum = 0;
+      for await (const line of rl) {
+        lineNum++;
+        if (regex.test(line)) {
+          results.push(`[Line ${lineNum}] ${line}`);
+          count++;
+        }
+        if (count >= limit) break;
+      }
+      return results;
+    } catch (e) {
+      throw handleError(logger, e, 'Search failed');
     }
-    return results;
   }
 
   /**
@@ -38,21 +50,29 @@ export class DataProcessor {
    * For massive JSON arrays/objects, returns keys and object counts.
    */
   async summarizeJSON(filePath: string, sampleKeys: string[] = []): Promise<any> {
-    const content = fs.readFileSync(filePath, 'utf-8');
-    const data = JSON.parse(content);
-    
-    if (Array.isArray(data)) {
-      return {
-        type: 'Array',
-        count: data.length,
-        sample: data.slice(0, 3).map(item => {
-          const summary: any = {};
-          sampleKeys.forEach(k => summary[k] = item[k]);
-          return summary;
-        })
-      };
+    logger.info(`Summarizing JSON file: ${filePath}`);
+    try {
+      if (!fs.existsSync(filePath)) {
+        throw new GeminiClawError(`File not found: ${filePath}`, ErrorCode.NOT_FOUND);
+      }
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const data = JSON.parse(content);
+
+      if (Array.isArray(data)) {
+        return {
+          type: 'Array',
+          count: data.length,
+          sample: data.slice(0, 3).map(item => {
+            const summary: any = {};
+            sampleKeys.forEach(k => summary[k] = item[k]);
+            return summary;
+          })
+        };
+      }
+      return { type: 'Object', keys: Object.keys(data) };
+    } catch (e) {
+      throw handleError(logger, e, 'JSON summarization failed');
     }
-    return { type: 'Object', keys: Object.keys(data) };
   }
 
   /**
@@ -60,19 +80,27 @@ export class DataProcessor {
    * Quick line count and size check.
    */
   async getStats(filePath: string): Promise<any> {
-    const stats = fs.statSync(filePath);
-    const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
+    logger.info(`Getting stats for file: ${filePath}`);
+    try {
+      if (!fs.existsSync(filePath)) {
+        throw new GeminiClawError(`File not found: ${filePath}`, ErrorCode.NOT_FOUND);
+      }
+      const stats = fs.statSync(filePath);
+      const fileStream = fs.createReadStream(filePath);
+      const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
-    let lines = 0;
-    for await (const line of rl) { lines++; }
+      let lines = 0;
+      for await (const line of rl) { lines++; }
 
-    return {
-      name: path.basename(filePath),
-      sizeMB: (stats.size / (1024 * 1024)).toFixed(2),
-      lineCount: lines,
-      lastModified: stats.mtime
-    };
+      return {
+        name: path.basename(filePath),
+        sizeMB: (stats.size / (1024 * 1024)).toFixed(2),
+        lineCount: lines,
+        lastModified: stats.mtime
+      };
+    } catch (e) {
+      throw handleError(logger, e, 'Getting stats failed');
+    }
   }
 
   /**
@@ -80,34 +108,42 @@ export class DataProcessor {
    * Splits a massive file into chunks for safe AI consumption if needed.
    */
   async chunk(filePath: string, linesPerChunk: number = 500, targetDir: string = './chunks'): Promise<string[]> {
-    if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
-    
-    const baseName = path.basename(filePath);
-    const fileStream = fs.createReadStream(filePath);
-    const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
+    logger.info(`Chunking file: ${filePath} (${linesPerChunk} lines per chunk)`);
+    try {
+      if (!fs.existsSync(filePath)) {
+        throw new GeminiClawError(`File not found: ${filePath}`, ErrorCode.NOT_FOUND);
+      }
+      if (!fs.existsSync(targetDir)) fs.mkdirSync(targetDir, { recursive: true });
 
-    let currentLines: string[] = [];
-    let chunkNum = 1;
-    const chunkPaths: string[] = [];
+      const baseName = path.basename(filePath);
+      const fileStream = fs.createReadStream(filePath);
+      const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
-    for await (const line of rl) {
-      currentLines.push(line);
-      if (currentLines.length >= linesPerChunk) {
+      let currentLines: string[] = [];
+      let chunkNum = 1;
+      const chunkPaths: string[] = [];
+
+      for await (const line of rl) {
+        currentLines.push(line);
+        if (currentLines.length >= linesPerChunk) {
+          const chunkPath = path.join(targetDir, `${baseName}.chunk.${chunkNum}.txt`);
+          fs.writeFileSync(chunkPath, currentLines.join('\n'));
+          chunkPaths.push(chunkPath);
+          currentLines = [];
+          chunkNum++;
+        }
+      }
+
+      if (currentLines.length > 0) {
         const chunkPath = path.join(targetDir, `${baseName}.chunk.${chunkNum}.txt`);
         fs.writeFileSync(chunkPath, currentLines.join('\n'));
         chunkPaths.push(chunkPath);
-        currentLines = [];
-        chunkNum++;
       }
-    }
 
-    if (currentLines.length > 0) {
-      const chunkPath = path.join(targetDir, `${baseName}.chunk.${chunkNum}.txt`);
-      fs.writeFileSync(chunkPath, currentLines.join('\n'));
-      chunkPaths.push(chunkPath);
+      return chunkPaths;
+    } catch (e) {
+      throw handleError(logger, e, 'Chunking failed');
     }
-
-    return chunkPaths;
   }
 }
 
@@ -119,18 +155,21 @@ const dp = new DataProcessor();
   try {
     if (cmd === 'search') {
       const results = await dp.search(args[0], args[1], parseInt(args[2]) || 100);
-      console.log(JSON.stringify(results, null, 2));
+      process.stdout.write(JSON.stringify(results, null, 2) + '\n');
     } else if (cmd === 'stats') {
       const stats = await dp.getStats(args[0]);
-      console.log(JSON.stringify(stats, null, 2));
+      process.stdout.write(JSON.stringify(stats, null, 2) + '\n');
     } else if (cmd === 'summarize') {
       const summary = await dp.summarizeJSON(args[0], args[1]?.split(',') || []);
-      console.log(JSON.stringify(summary, null, 2));
+      process.stdout.write(JSON.stringify(summary, null, 2) + '\n');
     } else if (cmd === 'chunk') {
       const paths = await dp.chunk(args[0], parseInt(args[1]) || 500);
-      console.log(JSON.stringify({ chunksCreated: paths.length, paths }, null, 2));
+      process.stdout.write(JSON.stringify({ chunksCreated: paths.length, paths }, null, 2) + '\n');
     }
   } catch (e: any) {
-    console.error(`Error: ${e.message}`);
+    // If it reaches here it's likely already been logged by handleError, but we make sure.
+    if (!(e instanceof GeminiClawError)) {
+      logger.error(`CLI execution error: ${e.message}`);
+    }
   }
 })();

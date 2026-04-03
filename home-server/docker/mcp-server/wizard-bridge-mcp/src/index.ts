@@ -5,6 +5,10 @@ import { z } from "zod";
 import * as vm from "vm";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
+import { Logger } from "./utils/logger.js";
+import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.js";
+
+const logger = new Logger("WizardBridgeMCP");
 
 // Common scopes for Google Workspace + Tasks & Contacts (removed datastudio)
 const SCOPES = [
@@ -96,10 +100,9 @@ async function getAuthClient() {
     try {
       const auth = new GoogleAuth({ scopes: SCOPES });
       authClient = await auth.getClient();
-      console.error("Initialized Google Auth Client with Application Default Credentials.");
+      logger.info("Initialized Google Auth Client with Application Default Credentials.");
     } catch (e) {
-      console.error("Failed to initialize Google Auth Client. Please ensure ADC is set up.");
-      throw e;
+      throw handleError(logger, e, "Failed to initialize Google Auth Client. Please ensure ADC is set up.");
     }
   }
   return authClient;
@@ -112,6 +115,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   const { script } = ExecuteWorkspaceScriptSchema.parse(request.params.arguments);
+  logger.info(`Executing script for tool: ${request.params.name}`);
 
   try {
     const auth = await getAuthClient();
@@ -149,11 +153,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       ],
     };
   } catch (error: any) {
+    const geminiError = handleError(logger, error, 'Error executing workspace script');
     return {
       content: [
         {
           type: "text",
-          text: `Error executing script:\n${error.message}\n${error.stack}`,
+          text: JSON.stringify(geminiError.toJSON(), null, 2),
         },
       ],
       isError: true,
@@ -164,10 +169,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Wizard Bridge MCP Server running on stdio (3-Tier Architecture)");
+  logger.info("Wizard Bridge MCP Server running on stdio (3-Tier Architecture)");
 }
 
 main().catch((error) => {
-  console.error("Server error:", error);
+  handleError(logger, error, "Critical server error");
   process.exit(1);
 });
