@@ -60,7 +60,7 @@ function onMessage(event) {
 /**
  * Triggered when the bot is added to a space or DM.
  */
-function onAddToSpace(event) {
+function onAddedToSpace(event) {
   return buildMenuCard();
 }
 
