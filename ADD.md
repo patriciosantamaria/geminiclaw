@@ -45,10 +45,13 @@ After every significant interaction, the `vopak-self-reflection` skill triggers 
 
 ## 🔌 4. Core Integrations
 
-### 💼 3.1. Google Workspace
-The primary data source and output medium. The system treats Google Docs, Slides, and Sheets as API-controllable primitives for generating professional-grade corporate artifacts.
+### 💼 4.1. Google Workspace & The 3-Tier Wizard Bridge
+The system bypasses standard, limited API tools in favor of the **Wizard Bridge MCP**, which allows dynamic JavaScript execution directly against the `googleapis` SDK. To ensure safety, it is split into three strictly isolated tiers:
+1.  **`read_workspace_script` (Safe):** Used for discovering context, scanning the Inbox for "real humans" via the `vopak-inbox-triage` skill, and fetching Contacts/Tasks.
+2.  **`write_workspace_script` (Mutating):** Used for drafting emails, creating branded reports, and organizing Drive folders.
+3.  **`destructive_workspace_script` (Dangerous):** Isolated for trashing files or deleting data, always triggering explicit confirmation.
 
-### 🐙 3.2. GitHub & Jules
+### 🐙 4.2. GitHub & Jules
 The system uses the **Jules** extension for high-level repository tasks, enabling autonomous refactoring, dependency management, and code analysis.
 
 ---

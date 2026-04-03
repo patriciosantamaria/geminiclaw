@@ -13,8 +13,15 @@ To autonomously manage, optimize, and scale the user's digital life and professi
 
 ### 📅 Proactive Workspace Management
 - **The "Deep Fetch" Mandate:** Automatically retrieves full calendar details, attendee status, and linked attachments.
+- **Human-Only Inbox Triage:** Uses the `vopak-inbox-triage` skill to filter out system alerts and isolate emails from real people (Colleagues, Managers, Partners).
 - **Wizard’s Morning Brief:** Every morning at 8:00 AM, the agent performs a 360-degree audit and sends a branded HTML briefing email covering "Big Rocks," weekly horizons, and AI tips.
 - **Smart Scheduling:** Identifies tasks in emails and proactively suggests/creates calendar events.
+
+### 🌉 3-Tier Wizard Bridge (Secure Execution)
+The agent interacts with Google Workspace via a secure, 3-Tier dynamic script execution model:
+1. **Read Tier:** Safe GET queries for Contacts, Tasks, and Calendar.
+2. **Write Tier:** Mutating actions for Docs, Sheets, and email drafting.
+3. **Destructive Tier:** High-risk actions isolated behind explicit user confirmation.
 
 ### 🧠 Hybrid Memory System (SQLite + ChromaDB)
 - **Memory-First Search:** Before searching the web, GeminiClaw queries its local long-term memory to recall previous decisions, stakeholder preferences (Rinaldo, Richard, Koen), and project history.

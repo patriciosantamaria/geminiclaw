@@ -72,8 +72,9 @@ Before any code change is finalized, it must undergo a 3-step validation:
 
 ## 🔌 5. External Tools Configuration
 - **Gemini CLI:** Main execution engine.
-- **gh CLI:** Authenticated via `patosantamaria`.
+- **gh CLI:** Authenticated via `patriciosantamaria`.
 - **Jules Extension:** Used for project-wide refactoring and unit test generation.
+- **Wizard Bridge MCP:** A custom Node.js server (`wizard-bridge-mcp`) providing 3-Tier dynamic script execution for Google Workspace APIs.
 
 ---
 
