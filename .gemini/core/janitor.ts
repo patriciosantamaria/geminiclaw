@@ -54,7 +54,7 @@ export class Janitor {
   async deduplicateChroma(): Promise<number> {
     logger.info('Starting ChromaDB deduplication...');
     try {
-      const collectionName = this.memoryClient.collectionName;
+      const collectionName = this.memoryClient.defaultCollection;
       const chroma = this.memoryClient.chroma;
 
       let collection;
