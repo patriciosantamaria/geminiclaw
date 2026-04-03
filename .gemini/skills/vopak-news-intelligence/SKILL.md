@@ -22,4 +22,14 @@ Synthesize the findings from all three categories into a structured plain-text f
 ### 3. Distribution (Google Drive & Chat)
 You MUST use the `mcp_google-workspace_docs.create` tool to generate a Google Doc titled `Vopak AI Intelligence Daily Briefing - YYYY-MM-DD`. Provide your synthesized plain-text newsletter in the `content` parameter. This securely hosts the briefing in Vopak's Google Drive.
 
-Then, you MUST use the `mcp_google-workspace_chat.sendDm` tool to send a direct message to `patricio.santamaria@vopak.com` and `yassin.bahasuan@vopak.com` notifying them that the daily intelligence briefing is ready. Provide the Google Doc URL (e.g., `https://docs.google.com/document/d/<documentId>/edit`) in the chat message so they can click and open it directly from Google Chat across any device.
+Then, you MUST use `run_shell_command` with a `curl` POST request to the following webhook URL to notify the "Get news headlines summarized daily" space that the daily intelligence briefing is ready. Provide the Google Doc URL (e.g., `https://docs.google.com/document/d/<documentId>/edit`) in the chat message so they can click and open it directly from Google Chat across any device.
+
+Webhook URL:
+`https://chat.googleapis.com/v1/spaces/AAQAqVVMfbw/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7vUO6B8NRfCWVuS9k4CTeygmrZB_4mkbNyL4sNOHBr4`
+
+Example curl command:
+```bash
+curl -X POST -H 'Content-Type: application/json' \
+-d '{"text": "Hi team, the Vopak AI Intelligence Daily Briefing for today has been generated. You can view the new strategic newsletter seamlessly in Google Drive by opening this link: https://docs.google.com/document/d/<documentId>/edit"}' \
+"https://chat.googleapis.com/v1/spaces/AAQAqVVMfbw/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7vUO6B8NRfCWVuS9k4CTeygmrZB_4mkbNyL4sNOHBr4"
+```

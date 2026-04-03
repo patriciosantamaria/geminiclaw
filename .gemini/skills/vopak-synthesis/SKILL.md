@@ -19,7 +19,17 @@ This skill acts as an objective, unbiased executive coach and chronicler. It syn
    - **Tasks:** Analyze Google Tasks to assess task completion rates (if data is available) or derive action items.
    - **Drive & Chat:** List new/modified documents and identify active spaces.
 3. **HTML-to-Doc Conversion (The Doc Creator Method):** Do NOT use `docs.create` or `docs.formatText`. Instead, generate complete, beautifully formatted HTML strings (using inline CSS for Vopak Branding: `#0a2373` headers, `#00cfe1` accents) and use the `write_workspace_script` tool to upload them directly to Drive.
-4. **Draft-Only Email Delivery:** Generate an HTML draft in Gmail to `patricio.santamaria@vopak.com` containing brief executive summaries and hyperlinks to BOTH Google Docs.
+4. **Webhook Chat Delivery:** You MUST NOT send an email draft. Instead, use `run_shell_command` with a `curl` POST request to send a message to the Google Chat Webhook. Provide brief executive summaries and hyperlinks to BOTH Google Docs in the chat message.
+
+Webhook URL:
+`https://chat.googleapis.com/v1/spaces/AAQAS0ALyAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=L-gsK88uQKIDATipQ4TtxWfSW2xua0j6lAiDYqFs1Qw`
+
+Example curl command:
+```bash
+curl -X POST -H 'Content-Type: application/json' \
+-d '{"text": "The Vopak Synthesis Reports have been generated.\n\nPersonal Report: https://docs.google.com/document/d/<personalDocId>/edit\nBusiness Report: https://docs.google.com/document/d/<businessDocId>/edit"}' \
+"https://chat.googleapis.com/v1/spaces/AAQAS0ALyAE/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=L-gsK88uQKIDATipQ4TtxWfSW2xua0j6lAiDYqFs1Qw"
+```
 
 ## Framework 1: Personal Synthesis (For Patricio)
 
