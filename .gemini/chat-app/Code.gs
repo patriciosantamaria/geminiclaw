@@ -12,7 +12,7 @@ const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopa
  * Triggered when a user sends a message to the bot.
  */
 function onMessage(event) {
-  const userMessage = event.message.text ? event.message.text.trim() : '';
+  const userMessage = (event.message && event.message.text) ? event.message.text.trim() : '';
   const senderEmail = event.user.email;
 
   if (!AUTHORIZED_USERS.includes(senderEmail)) {
