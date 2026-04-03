@@ -14,11 +14,15 @@ const logger = new Logger('MemoryClient');
  */
 export class MemoryClient {
   public chroma: ChromaClient;
-  public collectionName = 'vopak_assistant_memory';
+  public defaultCollection: string;
   private embeddingCache = new Map<string, number[]>();
   public db: sqlite3.Database;
 
-  constructor(dbPath: string = '.gemini/data/memory.db') {
+  constructor(
+    dbPath: string = '.gemini/data/memory.db',
+    defaultCollection: string = 'vopak_general'
+  ) {
+    this.defaultCollection = defaultCollection;
     const dir = path.dirname(dbPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -158,15 +162,22 @@ export class MemoryClient {
   /**
    * Save a fact to local vector memory
    */
-  async remember(id: string, text: string, metadata: any = {}) {
+  async remember(id: string, text: string, metadata: any = {}, collectionName?: string) {
     try {
+      const targetCollection = collectionName || this.defaultCollection;
       const embedding = await this.getEmbedding(text);
-      const collection = await this.chroma.getOrCreateCollection({ name: this.collectionName });
+      const collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
+
+      // Inject timestamp for time-decay weighting
+      const enrichedMetadata = {
+        ...metadata,
+        timestamp: metadata.timestamp || new Date().toISOString(),
+      };
 
       await collection.add({
         ids: [id],
         embeddings: [embedding],
-        metadatas: [metadata],
+        metadatas: [enrichedMetadata],
         documents: [text],
       });
       logger.info(`Stored fact: ${id}`);
@@ -176,19 +187,114 @@ export class MemoryClient {
   }
 
   /**
-   * Query local memory semantically
+   * Query local memory semantically with Time-Decay Weighting
    */
-  async recall(query: string, nResults: number = 3) {
+  async recall(query: string, nResults: number = 3, collectionName?: string) {
     try {
+      const targetCollection = collectionName || this.defaultCollection;
       const queryEmbedding = await this.getEmbedding(query);
-      const collection = await this.chroma.getCollection({ name: this.collectionName });
+      const collection = await this.chroma.getCollection({ name: targetCollection });
 
-      return await collection.query({
+      // Fetch 2x results to allow for re-ranking
+      const results = await collection.query({
         queryEmbeddings: [queryEmbedding],
-        nResults,
+        nResults: nResults * 2,
       });
+
+      if (!results || !results.distances || results.distances[0].length === 0) {
+        return results;
+      }
+
+      // Re-rank based on recency bias
+      const now = new Date().getTime();
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+      const scoredResults = results.distances[0].map((distance, index) => {
+        const metadata = results.metadatas![0][index] as any;
+        const timestamp = metadata?.timestamp ? new Date(metadata.timestamp).getTime() : now;
+        const age = now - timestamp;
+
+        // Semantic score (lower distance is better)
+        let score = distance;
+
+        // Apply recency boost: if newer than 30 days, reduce the "distance" (improve score)
+        // A simple linear boost up to 20% improvement for brand new content
+        if (age < thirtyDaysMs) {
+          const recencyFactor = 1 - (age / thirtyDaysMs);
+          score = score * (1 - (0.2 * recencyFactor));
+        }
+
+        return {
+          id: results.ids[0][index],
+          document: results.documents![0][index],
+          metadata,
+          distance,
+          score
+        };
+      });
+
+      // Sort by boosted score
+      scoredResults.sort((a, b) => a.score - b.score);
+
+      // Return top nResults in the expected format
+      const topResults = scoredResults.slice(0, nResults);
+      return {
+        ids: [topResults.map(r => r.id)],
+        distances: [topResults.map(r => r.distance)], // Keeping original distance here
+        metadatas: [topResults.map(r => r.metadata)],
+        documents: [topResults.map(r => r.document)],
+      } as any;
+
     } catch (e) {
       throw handleError(logger, e, 'Recall failed');
+    }
+  }
+
+  /**
+   * Retrieve all associated stakeholders for a project using relational mapping
+   */
+  async getExecutivesForProject(projectId: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const query = `
+        SELECT s.* FROM stakeholders s
+        JOIN entity_links el ON s.email = el.stakeholder_email
+        WHERE el.project_id = ?
+      `;
+      this.db.all(query, [projectId], (err, rows) => {
+        if (err) {
+          logger.error(`Failed to get executives for project: ${projectId}`, err);
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  /**
+   * Pipeline method to generate a "Golden Record" summary of a project's history
+   */
+  async generateGoldenRecord(projectId: string): Promise<string> {
+    try {
+      const collection = await this.chroma.getCollection({ name: this.defaultCollection });
+
+      // Get all documents for this project from Chroma
+      const results = await collection.get({
+        where: { project_id: projectId }
+      });
+
+      if (!results || !results.documents || results.documents.length === 0) {
+        return `No historical records found for project ${projectId}.`;
+      }
+
+      // Prepare documents for summarization
+      const history = results.documents.join('\n---\n');
+
+      // Return a stubbed prompt/context for LLM summarization
+      return `GOLDEN RECORD CONTEXT - PROJECT: ${projectId}\n\nRECORDS:\n${history}\n\n[PROMPT: Summarize the above trajectory, identifying key pivots and outcomes.]`;
+    } catch (e) {
+      logger.error(`Golden Record generation failed for ${projectId}`, e);
+      return `Failed to generate golden record for project ${projectId}.`;
     }
   }
 }
