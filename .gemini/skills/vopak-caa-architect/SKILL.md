@@ -1,85 +1,45 @@
 ---
 name: vopak-caa-architect
-description: TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.
+description: Use this skill to design, audit, and implement Context-Aware Access (CAA) policies and Super Admin security protocols. It follows a "Bridge" methodology to safely guide Super Admin actions from a standard account.
 ---
 
-# Vopak Caa Architect
+# Vopak CAA Architect & Security Advisor
 
 ## Overview
+This skill enables the agent to act as a technical advisor for Vopak's Zero Trust architecture. It specializes in Google Workspace Context-Aware Access (CAA), Data Loss Prevention (DLP), and secure Super Admin practices.
 
-[TODO: 1-2 sentences explaining what this skill enables]
+## 🛡️ The "Super Admin Bridge" Workflow
+Since the agent operates on a standard consultant account, it cannot execute Super Admin changes directly. Use this workflow to prepare execution plans:
 
-## Structuring This Skill
+1.  **Requirement Gathering:** Identify the specific app, user group, or device restriction needed.
+2.  **Access Level Design:** Draft the Common Expression Language (CEL) snippet for the Access Level.
+3.  **Execution Manifest:** Generate a step-by-step markdown guide for the user to follow in the Super Admin console.
 
-[TODO: Choose the structure that best fits this skill's purpose. Common patterns:
+## 📐 CAA Policy Design Patterns
 
-**1. Workflow-Based** (best for sequential processes)
-- Works well when there are clear step-by-step procedures
-- Example: CSV-Processor skill with "Workflow Decision Tree" → "Ingestion" → "Cleaning" → "Analysis"
-- Structure: ## Overview → ## Workflow Decision Tree → ## Step 1 → ## Step 2...
+### 1. The "Secure Office" (IP-Based)
+Restrict access to specific apps (e.g., Admin Console, GCP) only from Vopak trusted IPs.
+- **Access Level Name:** `vopak_trusted_office_ips`
+- **Logic:** `ip_address_in_range(["1.2.3.4/32", "5.6.7.8/32"])`
 
-**2. Task-Based** (best for tool collections)
-- Works well when the skill offers different operations/capabilities
-- Example: PDF skill with "Quick Start" → "Merge PDFs" → "Split PDFs" → "Extract Text"
-- Structure: ## Overview → ## Quick Start → ## Task Category 1 → ## Task Category 2...
+### 2. The "Managed Device Only" (EDM)
+Ensure users can only access Google Drive from corporate-managed, encrypted laptops with screen locks.
+- **Logic:** `device.is_managed_device && device.encryption_status == DeviceEncryptionStatus.ENCRYPTED && device.screen_lock_enabled == true`
 
-**3. Reference/Guidelines** (best for standards or specifications)
-- Works well for brand guidelines, coding standards, or requirements
-- Example: Brand styling with "Brand Guidelines" → "Colors" → "Typography" → "Features"
-- Structure: ## Overview → ## Guidelines → ## Specifications → ## Usage...
+## 📋 Security Audit Protocol
+When asked to "audit security" or "review CAA":
+1.  Search for `[CAA]` or `[Security]` tags in the `memory.db` for previous implementations.
+2.  Cross-reference current policies with Vopak Branding v3.0 technical standards.
+3.  Draft a "Security Gap Analysis" Doc for Rinaldo and Koen.
 
-**4. Capabilities-Based** (best for integrated systems)
-- Works well when the skill provides multiple interrelated features
-- Example: Product Management with "Core Capabilities" → numbered capability list
-- Structure: ## Overview → ## Core Capabilities → ### 1. Feature → ### 2. Feature...
-
-Patterns can be mixed and matched as needed. Most skills combine patterns (e.g., start with task-based, add workflow for complex operations).
-
-Delete this entire "Structuring This Skill" section when done - it's just guidance.]
-
-## [TODO: Replace with the first main section based on chosen structure]
-
-[TODO: Add content here. See examples in existing skills:
-- Code samples for technical skills
-- Decision trees for complex workflows
-- Concrete examples with realistic user requests
-- References to scripts/templates/references as needed]
-
-## Resources
-
-This skill includes example resource directories that demonstrate how to organize different types of bundled resources:
-
-### scripts/
-Executable code that can be run directly to perform specific operations.
-
-**Examples from other skills:**
-- PDF skill: fill_fillable_fields.cjs, extract_form_field_info.cjs - utilities for PDF manipulation
-- CSV skill: normalize_schema.cjs, merge_datasets.cjs - utilities for tabular data manipulation
-
-**Appropriate for:** Node.cjs scripts (cjs), shell scripts, or any executable code that performs automation, data processing, or specific operations.
-
-**Note:** Scripts may be executed without loading into context, but can still be read by Gemini CLI for patching or environment adjustments.
-
-### references/
-Documentation and reference material intended to be loaded into context to inform Gemini CLI's process and thinking.
-
-**Examples from other skills:**
-- Product management: communication.md, context_building.md - detailed workflow guides
-- BigQuery: API reference documentation and query examples
-- Finance: Schema documentation, company policies
-
-**Appropriate for:** In-depth documentation, API references, database schemas, comprehensive guides, or any detailed information that Gemini CLI should reference while working.
-
-### assets/
-Files not intended to be loaded into context, but rather used within the output Gemini CLI produces.
-
-**Examples from other skills:**
-- Brand styling: PowerPoint template files (.pptx), logo files
-- Frontend builder: HTML/React boilerplate project directories
-- Typography: Font files (.ttf, .woff2)
-
-**Appropriate for:** Templates, boilerplate code, document templates, images, icons, fonts, or any files meant to be copied or used in the final output.
-
+## 🚀 Execution Manifest Template
+When the user is ready to implement, provide this format:
 ---
+**Topic:** Implementation of [Policy Name]
+**Account:** SUPER ADMIN (Please switch accounts)
+**Console:** `admin.google.com` -> Security -> Access and data control -> Context-Aware Access.
 
-**Any unneeded directories can be deleted.** Not every skill requires all three types of resources.
+**Step 1:** Create Access Level...
+**Step 2:** Assign to Organization Unit (OU)...
+**Step 3:** Verify with User [Name]...
+---
