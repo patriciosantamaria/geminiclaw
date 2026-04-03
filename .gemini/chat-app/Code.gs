@@ -11,7 +11,10 @@ const AUTHORIZED_USERS = ['patricio.santamaria@vopak.com', 'yassin.bahasuan@vopa
  * Helper to create a standardized text response.
  */
 function createTextResponse(text) {
-    return { text };
+    return { 
+        "actionResponse": { "type": "NEW_MESSAGE" },
+        "text": text 
+    };
 }
 /**
  * Helper to extract data from both Native Chat and Add-on event structures.
