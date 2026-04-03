@@ -1,0 +1,25 @@
+# Dockerfile.sandbox
+# A lightweight, secure ACP (Agent Control Protocol) Sandbox for GeminiClaw
+# Prevents autonomous agents from accessing the host OS during execution.
+
+FROM node:22-slim
+
+# Install basic OS utilities needed for skills (e.g., git, curl, jq)
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Gemini CLI
+# Assuming it is published as @google/gemini-cli, otherwise copy the local installation
+RUN npm install -g @google/gemini-cli
+
+# Setup a non-root user for maximum security
+RUN useradd -m -s /bin/bash geminiuser
+USER geminiuser
+
+WORKDIR /app
+
+# Set the entrypoint so `docker run` natively executes Gemini CLI commands
+ENTRYPOINT ["gemini"]

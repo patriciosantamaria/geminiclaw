@@ -84,7 +84,7 @@ Then, you MUST use `run_shell_command` to commit and push the new HTML file to t
 Finally, use `run_shell_command` with a `curl` POST request to the following webhook URL to notify the "Get news headlines summarized daily" space. **Append a timestamp parameter (e.g., `?t=1234567`) to the GitHub raw URL to explicitly bust the `htmlpreview.github.io` cache every time.**
 
 Webhook URL:
-`https://chat.googleapis.com/v1/spaces/AAQAqVVMfbw/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7vUO6B8NRfCWVuS9k4CTeygmrZB_4mkbNyL4sNOHBr4`
+`$WEBHOOK_NEWS`
 
 Example curl command:
 ```bash
@@ -94,5 +94,5 @@ URL="https://htmlpreview.github.io/?https://github.com/patriciosantamaria/gemini
 
 curl -X POST -H 'Content-Type: application/json' \
 -d "{\"text\": \"📰 *Vopak Strategic Intelligence*: Your daily briefing is ready.\n\nRead the full executive newsletter here:\n${URL}\"}" \
-"https://chat.googleapis.com/v1/spaces/AAQAqVVMfbw/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=7vUO6B8NRfCWVuS9k4CTeygmrZB_4mkbNyL4sNOHBr4"
+"${WEBHOOK_NEWS}"
 ```

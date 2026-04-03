@@ -31,9 +31,9 @@ async function listenForMessages() {
       logger.info(`📥 Received command: [${command}] from ${requestedBy}`);
 
       if (command === 'run_news') {
-        executeCommand('gemini --skill vopak-news-intelligence run "Run the daily news intelligence gathering and generate the HTML newsletter"');
+        executeCommand('docker run --rm --env-file .env -v $(pwd):/app -w /app geminiclaw-sandbox --skill vopak-news-intelligence run "Run the daily news intelligence gathering and generate the HTML newsletter"');
       } else if (command === 'run_synthesis') {
-        executeCommand('gemini --skill vopak-synthesis run "Generate the personal and business synthesis reports"');
+        executeCommand('docker run --rm --env-file .env -v $(pwd):/app -w /app geminiclaw-sandbox --skill vopak-synthesis run "Generate the personal and business synthesis reports"');
       } else {
         logger.warn(`Unknown command received: ${command}`);
       }

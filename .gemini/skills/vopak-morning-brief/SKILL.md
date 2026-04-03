@@ -30,13 +30,13 @@ You MUST generate the strategic morning briefing as a Google Doc to preserve for
 2. **Webhook Chat Delivery:** You MUST NOT send an email draft. Instead, use `run_shell_command` with a `curl` POST request to send a message to the Google Chat Webhook. Provide a brief executive summary of the day and the hyperlink to the Google Doc in the chat message.
 
 Webhook URL:
-`https://chat.googleapis.com/v1/spaces/AAQA_8tmCmk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=UKn6pm89ClR-Pj8QKgOiqcwn4XLleTukyAVKfrai8xc`
+`$WEBHOOK_MORNING_BRIEF`
 
 Example curl command:
 ```bash
 curl -X POST -H 'Content-Type: application/json' \
 -d '{"text": "🌅 *Good Morning Patricio!* Your Strategic Morning Briefing for today is ready.\n\nRead the full report here: https://docs.google.com/document/d/<documentId>/edit"}' \
-"https://chat.googleapis.com/v1/spaces/AAQA_8tmCmk/messages?key=AIzaSyDdI0hCZtE6vySjMm-WEfRq3CPzqKqqsHI&token=UKn6pm89ClR-Pj8QKgOiqcwn4XLleTukyAVKfrai8xc"
+"${WEBHOOK_MORNING_BRIEF}"
 ```
 
 ## 🎭 Persona: The Collaborative Architect
