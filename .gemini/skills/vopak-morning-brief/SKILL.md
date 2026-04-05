@@ -15,14 +15,16 @@ This skill transforms Gemini CLI into a proactive executive assistant specialize
 
 ## 📋 Execution Workflow
 
-### Step 1: Data Harvesting
-- **Gmail:** Identify unread "Action Items," ServiceNow tickets (INC/RITM), and weekly Sent/Received ratios.
-- **Calendar:** Perform a 7-day rolling scan. Identify "Big Rocks" and conflicts.
-- **Memory:** Query local SQLite `memory.db` and ChromaDB for previous decisions and stakeholder context.
+### Step 1: Data Harvesting (Proactive Approach)
+- **Memory (Proactive Triggers):** Query the `proactive_triggers` table in `memory.db`. Urgent signals (like "Urgent Human Emails" from `vopak-inbox-triage`) MUST influence the day's narrative.
+- **Gmail:** Identify unread "Action Items" using the **3-Tier Wizard Bridge** via `read_workspace_script`.
+- **Calendar:** Perform a 7-day rolling scan. Identify "Big Rocks" and scheduling conflicts.
+- **Memory (Knowledge):** Query ChromaDB for previous decisions and stakeholder context.
 
 ### Step 2: Analysis & Reconstruction
 - **The "Entire Story":** For each "Big Rock," find the last 3 emails and the most recently modified Drive document to provide a "Narrative Arc."
 - **Ghostwriter Drafting:** Prepare drafts for emails requiring responses using the **Collaborative Architect** persona.
+- **Proactive Time Management:** If urgent triggers or high-priority tasks are identified, proactively suggest and schedule **Deep Work** blocks in the calendar using the `write_workspace_script` tool.
 
 ### Step 3: Output Generation & Delivery (Webhook)
 You MUST generate the strategic morning briefing as a Google Doc to preserve formatting and branding.

@@ -18,10 +18,10 @@ This skill automates the 'Manual Data Trap' in tank inspections by using agentic
 - **Integration Layer:** Connects GCP storage directly to Google Docs via the 3-Tier Wizard Bridge.
 
 ## 📋 Operational Workflow
-1. **Identify Source:** Locate new inspection data in the "M2O - Tank Inspection Platform" Drive folder or GCP bucket.
+1. **Identify Source:** Locate new inspection data in the "M2O - Tank Inspection Platform" Drive folder using the **3-Tier Wizard Bridge** via `read_workspace_script`, or check the GCP bucket.
 2. **Technical Extraction:** Extract key parameters (tank number, inspection date, identified defects).
-3. **Audit:** Cross-reference findings with historical terminal data in `memory.db`.
-4. **Report Generation:** Autonomously create a draft in Google Docs using formatted headings and branded colors.
+3. **Audit:** Cross-reference findings with historical terminal data in `memory.db` and check for recent **Proactive Triggers** (e.g., anomalous sensor alerts).
+4. **Report Generation:** Autonomously create a draft in Google Docs using formatted headings and branded colors (Vopak Branding v3.0) via `write_workspace_script`.
 5. **Stakeholder Notification:** Prepare a Gmail draft for technical leads (e.g., Koen van Daalen, Svetlana Sokolova).
 
 ## 🛡️ Safety & Compliance

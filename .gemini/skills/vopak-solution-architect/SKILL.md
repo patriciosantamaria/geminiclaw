@@ -20,4 +20,5 @@ When a solution requires connecting Workspace to 'heavy' AI development (AWS/Ver
 
 ## 🛠️ Tooling
 - **Gemini CLI:** Use for bulk ingestion and local memory management (Ollama).
-- **Workspace Studio:** Leverage for rapid prototyping of 'Digital SMEs'.
+- **3-Tier Wizard Bridge:** Use `read_workspace_script`, `write_workspace_script`, and `destructive_workspace_script` for all Workspace automation, ensuring full Tier 3 awareness.
+- **Vopak Branding v3.0:** All architecture diagrams and documentation MUST use the deep blue (#0a2373) and cyan (#00cfe1) palette.

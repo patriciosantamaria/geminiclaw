@@ -17,8 +17,8 @@ This skill provides the high-end technical "spells" for the Ultimate Vopak AI As
 - Implementation: `gcloud ai batch-prediction-jobs create` for cost-optimized historical audits.
 
 ### 3. Multi-Agent Orchestration (The Council)
-- Use **LangGraph-inspired** state management to coordinate between sub-agents (e.g., vopak-transformation-lead and vopak-solution-architect).
-- Each sub-agent maintains its own 'memory' but reports to the 'High Wizard' (this assistant).
+- Use **LangGraph-inspired** state management and the **Proactive Triggers** table to share context between sub-agents.
+- Each sub-agent maintains its own 'memory' and standardized **3-Tier Wizard Bridge** access, reporting to the 'High Wizard' (this assistant).
 
 ## 🛡️ Mandates
 - **Grounding First:** Always ground technical advice in Vopak's internal technical documentation or official GCP references.

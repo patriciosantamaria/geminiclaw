@@ -32,6 +32,7 @@ When generating a briefing, keep it extremely concise with a strict 3-bullet max
 - **Strategy:** 1 actionable point or question (e.g., "Ask Stephan for concrete metrics on developer speed gained during the pilot.").
 
 ## Workflow
-1.  **Analyze Context:** Identify the recipient, the project (e.g., Gemini usage, ChromeOS), and the strategic goal.
-2.  **Draft Content:** Follow the patterns in [persona.md](references/persona.md) and [common-responses.md](references/common-responses.md).
-3.  **Confirm:** Present the draft to the user for final approval.
+1.  **Analyze Context:** Identify the recipient, the project (e.g., Gemini usage, ChromeOS), and the strategic goal. Leverage **Proactive Triggers** from memory to add immediate context to the draft.
+2.  **Draft Content:** Follow the patterns in [persona.md](references/persona.md) and [common-responses.md](references/common-responses.md). Ensure all drafts align with Vopak Branding v3.0 (e.g., tone, headers).
+3.  **Submit as Draft:** Use the **3-Tier Wizard Bridge** via `write_workspace_script` to create the email draft in Gmail.
+4.  **Confirm:** Present the draft to the user for final approval.

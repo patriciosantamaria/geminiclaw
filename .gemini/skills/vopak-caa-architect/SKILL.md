@@ -9,7 +9,7 @@ description: Use this skill to design, audit, and implement Context-Aware Access
 This skill enables the agent to act as a technical advisor for Vopak's Zero Trust architecture. It specializes in Google Workspace Context-Aware Access (CAA), Data Loss Prevention (DLP), and secure Super Admin practices.
 
 ## 🛡️ The "Super Admin Bridge" Workflow
-Since the agent operates on a standard consultant account, it cannot execute Super Admin changes directly. Use this workflow to prepare execution plans:
+Since the agent operates on a standard consultant account, it cannot execute Super Admin changes directly. Use the **3-Tier Wizard Bridge** via `read_workspace_script` to audit current configurations where accessible, and use this workflow to prepare execution plans:
 
 1.  **Requirement Gathering:** Identify the specific app, user group, or device restriction needed.
 2.  **Access Level Design:** Draft the Common Expression Language (CEL) snippet for the Access Level.
@@ -28,7 +28,7 @@ Ensure users can only access Google Drive from corporate-managed, encrypted lapt
 
 ## 📋 Security Audit Protocol
 When asked to "audit security" or "review CAA":
-1.  Search for `[CAA]` or `[Security]` tags in the `memory.db` for previous implementations.
+1.  Search for `[CAA]` or `[Security]` tags in the `memory.db` for previous implementations and **Proactive Triggers** that might indicate a security anomaly.
 2.  Cross-reference current policies with Vopak Branding v3.0 technical standards.
 3.  Draft a "Security Gap Analysis" Doc for Rinaldo and Koen.
 

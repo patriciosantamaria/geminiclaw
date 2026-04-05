@@ -23,6 +23,6 @@ This skill is the "Guardian of the Brand" for all Vopak AI-generated content.
 - **Voice DNA:** Frame solutions as 'Empowerment' and 'Augmentation' (The Mindshift).
 
 ## 📋 Execution Workflow
-1. **Pre-Flight Check:** Run this skill immediately after generating a Doc or Slide.
-2. **Auto-Correction:** If branding is missing, the agent MUST automatically apply the correct styles.
+1. **Pre-Flight Check:** Use the **3-Tier Wizard Bridge** via `read_workspace_script` to audit the document's current styles and structure.
+2. **Auto-Correction:** If branding is missing, the agent MUST automatically apply the correct styles (Deep Blue: #0a2373, Cyan: #00cfe1) using `write_workspace_script`.
 3. **Certification:** Once validated, mark the document's metadata as 'Vopak Branding Certified'.

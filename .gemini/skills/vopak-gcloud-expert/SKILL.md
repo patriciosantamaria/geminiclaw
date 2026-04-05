@@ -27,7 +27,7 @@ This skill governs all `gcloud` CLI operations for the Vopak environment, focusi
 - Ensure all resources are labeled with `project:tank-inspection` or `owner:patricio`.
 
 ### 3. Cloud Storage & Data
-- Use `gcloud storage` (or `gsutil`) for high-volume data movement between Drive and Cloud Storage.
+- Use `gcloud storage` (or `gsutil`) for high-volume data movement between Drive and Cloud Storage. Leverage the **3-Tier Wizard Bridge** via `read_workspace_script` to list Drive files for transfer.
 - Always check permissions with `gcloud projects get-iam-policy` before making changes.
 
 ## 🛡️ Safety Checkpoints

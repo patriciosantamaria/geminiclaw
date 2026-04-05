@@ -123,6 +123,17 @@ export class MemoryClient {
         FOREIGN KEY(stakeholder_email) REFERENCES stakeholders(email),
         FOREIGN KEY(project_id) REFERENCES projects(id)
       )`);
+
+      // Proactive Triggers table
+      this.db.run(`CREATE TABLE IF NOT EXISTS proactive_triggers (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        source_id TEXT,
+        summary TEXT NOT NULL,
+        payload TEXT,
+        confidence FLOAT DEFAULT 1.0,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
     });
   }
 
@@ -368,26 +379,46 @@ export class MemoryClient {
   }
 
   /**
-   * Pipeline method to generate a "Golden Record" summary of a project's history
+   * Pipeline method to generate a "Golden Record" summary of a project's history.
+   * Now incorporates proactive triggers for higher situational awareness.
    */
   async generateGoldenRecord(projectId: string): Promise<string> {
     try {
       const collection = await this.chroma.getCollection({ name: this.defaultCollection });
 
-      // Get all documents for this project from Chroma
-      const results = await collection.get({
+      // 1. Get historical vector records
+      const vectorResults = await collection.get({
         where: { project_id: projectId }
       });
 
-      if (!results || !results.documents || results.documents.length === 0) {
-        return `No historical records found for project ${projectId}.`;
-      }
+      // 2. Get recent proactive triggers
+      const triggers: any[] = await new Promise((resolve, reject) => {
+        this.db.all(
+          "SELECT * FROM proactive_triggers WHERE timestamp > date('now', '-7 days') ORDER BY timestamp DESC",
+          (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+          }
+        );
+      });
 
-      // Prepare documents for summarization
-      const history = results.documents.join('\n---\n');
+      const history = vectorResults?.documents?.join('\n---\n') || 'No historical vector records found.';
+      const triggerSummary = triggers.length > 0
+        ? triggers.map(t => `[${t.type}] ${t.summary} (Conf: ${t.confidence})`).join('\n')
+        : 'No recent proactive triggers.';
 
-      // Return a stubbed prompt/context for LLM summarization
-      return `GOLDEN RECORD CONTEXT - PROJECT: ${projectId}\n\nRECORDS:\n${history}\n\n[PROMPT: Summarize the above trajectory, identifying key pivots and outcomes.]`;
+      // Return a synthesized context for LLM summarization
+      return `
+GOLDEN RECORD CONTEXT - PROJECT: ${projectId}
+
+HISTORICAL RECORDS:
+${history}
+
+RECENT PROACTIVE TRIGGERS (7 DAYS):
+${triggerSummary}
+
+[PROMPT: Synthesize the above trajectory and recent triggers. Identify key pivots, urgent risks, and recommended proactive actions.]
+      `.trim();
     } catch (e) {
       logger.error(`Golden Record generation failed for ${projectId}`, e);
       return `Failed to generate golden record for project ${projectId}.`;

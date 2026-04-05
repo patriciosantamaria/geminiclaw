@@ -52,6 +52,17 @@ class StrategicHarvester {
     logger.info('📧 Dispatching Branded Briefing Email...');
     // Implementation for email construction and sending
   }
+
+  /**
+   * 📡 Deep Fetch: Centralized Parallel Gmail Search
+   * Efficiently harvests emails using parallel search queries via Wizard Bridge script.
+   */
+  async deepFetchGmail(queries: string[]): Promise<any[]> {
+    logger.info(`Initiating Deep Fetch for ${queries.length} Gmail queries...`);
+    // This is a stub for the logic that would be invoked via the 3-Tier Wizard Bridge script.
+    // The actual execution would involve calling the MCP tool with a dynamic script.
+    return [];
+  }
 }
 
 new StrategicHarvester().runDailyBriefing();

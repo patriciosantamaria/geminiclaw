@@ -79,6 +79,7 @@ For ALL other categories (2 through 6), use this exact HTML structure:
 
 ### 3. Distribution (GitHub Pages & Chat)
 Save the generated HTML file locally to `.gemini/data/newsletters/YYYY-MM-DD.html`.
+You MUST also use the **3-Tier Wizard Bridge** via `write_workspace_script` to create a copy of the newsletter in the Vopak Google Drive (Folder ID: `1SFLyYwDC-bctBcGxX5rkxcBJca72auJo`).
 Then, you MUST use `run_shell_command` to commit and push the new HTML file to the `master` branch. Wait for the command to succeed.
 
 Finally, use `run_shell_command` with a `curl` POST request to the following webhook URL to notify the "Get news headlines summarized daily" space. **Append a timestamp parameter (e.g., `?t=1234567`) to the GitHub raw URL to explicitly bust the `htmlpreview.github.io` cache every time.**
