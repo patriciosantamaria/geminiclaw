@@ -64,7 +64,7 @@ After every significant interaction, the `vopak-self-reflection` skill triggers 
 ## 🔌 5. Core Integrations
 
 ### 💼 5.1. Google Workspace & The 3-Tier Wizard Bridge
-The system treats Google Docs, Slides, and Sheets as API-controllable primitives for generating professional-grade corporate artifacts (Vopak Branding v3.0). It bypasses standard, limited API tools in favor of the **Wizard Bridge MCP**, which allows dynamic JavaScript execution directly against the `googleapis` SDK. To ensure safety, it is split into three strictly isolated tiers:
+The system treats Google Docs, Slides, and Sheets as API-controllable primitives for generating professional-grade corporate artifacts (Vopak Branding v3.0). It bypasses standard, limited API tools in favor of the **Wizard Bridge MCP**, which allows dynamic JavaScript execution directly against the `googleapis` SDK. To ensure maximum security, the MCP server utilizes **`isolated-vm`** for all script executions, providing a hardened, V8-level sandbox. To ensure safety, it is split into three strictly isolated tiers:
 1.  **`read_workspace_script` (Safe):** Used for discovering context, scanning the Inbox for "real humans" via the `vopak-inbox-triage` skill, and fetching Contacts/Tasks.
 2.  **`write_workspace_script` (Mutating):** Used for drafting emails, creating branded reports, and organizing Drive folders.
 3.  **`destructive_workspace_script` (Dangerous):** Isolated for trashing files or deleting data, always triggering explicit confirmation.
@@ -84,6 +84,9 @@ No data-mutating action (e.g., sending an email, deleting a file, or committing 
 
 ### 🧩 6.2. Context-Aware Access (CAA)
 The agent is designed to operate within the constraints of Vopak's security policies, prioritizing non-human identity (NHI) for persistent flows and adhering to DLP standards.
+
+### 🔑 6.3. Secret Management & 1Password
+GeminiClaw strictly prohibits hardcoded secrets. All environment variables and credentials must be managed via **1Password**, with local `.env` files acting solely as manifests using `op://` references to ensure no plain-text secrets reside on disk.
 
 ---
 
