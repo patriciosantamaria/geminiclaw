@@ -1,12 +1,12 @@
-import { Server } from "@modelcontextprotocol/sdk/server/index.ts";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.ts";
-import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.ts";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-import * as vm from "vm";
+import * as ivm from "isolated-vm";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
-import { Logger } from "./utils/logger.ts";
-import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.ts";
+import { Logger } from "./utils/logger.js";
+import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.js";
 
 const logger = new Logger("WizardBridgeMCP");
 
@@ -108,7 +108,7 @@ async function getAuthClient() {
   return authClient;
 }
 
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
+server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
   const validTools = ["read_workspace_script", "write_workspace_script", "destructive_workspace_script"];
   if (!validTools.includes(request.params.name)) {
     throw new Error(`Unknown tool: ${request.params.name}`);
@@ -120,17 +120,29 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   try {
     const auth = await getAuthClient();
 
-    // Create a sandbox context
-    const sandbox = {
-      google,
-      auth, // Pre-authenticated client ready to be used
-      console: console,
-      process: process,
-    };
-    
-    vm.createContext(sandbox);
+    // Create a hardened isolate with a 128MB memory limit
+    const isolate = new ivm.Isolate({ memoryLimit: 128 });
+    const context = await isolate.createContext();
+    const jail = context.global;
 
-    // Compile the script into a script object for repeated execution if needed
+    // To properly share complex objects like 'google' and 'auth' with isolated-vm,
+    // we use References. However, for the user's scripts to work seamlessly,
+    // we must provide a bridge.
+
+    await jail.set('global', jail.derefInto());
+
+    // We pass google and auth as references.
+    // Note: The user script must be aware that these are proxied.
+    await jail.set('google', new ivm.Reference(google));
+    await jail.set('auth', new ivm.Reference(auth));
+    
+    // Provide a basic log function
+    await jail.set('log', new ivm.Reference((...args: any[]) => {
+      logger.info('[Sandbox]', ...args);
+    }));
+
+    // Wrap the script to handle the async nature and the injected references.
+    // We use a simplified approach where we eval the script directly in the context.
     const asyncWrapper = `
       (async () => {
         try {
@@ -141,8 +153,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       })()
     `;
 
-    const scriptObj = new vm.Script(asyncWrapper);
-    const result = await scriptObj.runInContext(sandbox);
+    const result = await context.eval(asyncWrapper, {
+      promise: true,
+      timeout: 30000
+    });
 
     return {
       content: [
