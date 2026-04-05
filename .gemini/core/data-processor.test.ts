@@ -75,6 +75,17 @@ describe('DataProcessor', () => {
         }
       );
     });
+
+    test('should handle large JSON files by providing estimated summary', async () => {
+      logger.debug('Testing summarizeJSON() large file');
+      const largeJsonFile = path.join(testDir, 'very_large.json');
+      const largeData = Buffer.alloc(11 * 1024 * 1024, 'a'); // 11MB
+      fs.writeFileSync(largeJsonFile, largeData);
+
+      const summary = await dp.summarizeJSON(largeJsonFile);
+      assert.strictEqual(summary.type, 'LargeJSON');
+      assert.ok(parseFloat(summary.sizeMB) > 10);
+    });
   });
 
   describe('summarizeJSON()', () => {

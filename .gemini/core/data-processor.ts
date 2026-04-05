@@ -8,6 +8,7 @@ import fs from 'node:fs';
 import readline from 'node:readline';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { performance } from 'node:perf_hooks';
 import { Logger } from './utils/logger.ts';
 import { GeminiClawError, ErrorCode, handleError } from './utils/errors.ts';
 
@@ -19,6 +20,7 @@ export class DataProcessor {
    * Doesn't load the file into context, only returns matching lines.
    */
   async search(filePath: string, pattern: string, limit: number = 100): Promise<string[]> {
+    const startTime = performance.now();
     logger.info(`Searching for pattern "${pattern}" in ${filePath}`);
     try {
       if (!fs.existsSync(filePath)) {
@@ -39,6 +41,8 @@ export class DataProcessor {
         }
         if (count >= limit) break;
       }
+      const duration = performance.now() - startTime;
+      logger.info(`Search completed in ${duration.toFixed(2)}ms`);
       return results;
     } catch (e) {
       throw handleError(logger, e, 'Search failed');
@@ -48,28 +52,45 @@ export class DataProcessor {
   /**
    * 📊 JSON Metadata/Summary
    * For massive JSON arrays/objects, returns keys and object counts.
+   * Enforces a 10MB limit on full parsing to prevent heap overflow.
    */
   async summarizeJSON(filePath: string, sampleKeys: string[] = []): Promise<any> {
+    const startTime = performance.now();
     logger.info(`Summarizing JSON file: ${filePath}`);
     try {
       if (!fs.existsSync(filePath)) {
         throw new GeminiClawError(`File not found: ${filePath}`, ErrorCode.NOT_FOUND);
       }
+      const stats = fs.statSync(filePath);
+      const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+
+      if (stats.size > MAX_SIZE) {
+        logger.warn(`File ${filePath} exceeds 10MB. Providing estimated summary.`);
+        const duration = performance.now() - startTime;
+        return {
+          type: 'LargeJSON',
+          sizeMB: (stats.size / (1024 * 1024)).toFixed(2),
+          message: 'File too large for full parsing. Estimated stats only.',
+          durationMs: duration.toFixed(2)
+        };
+      }
+
       const content = fs.readFileSync(filePath, 'utf-8');
       const data = JSON.parse(content);
 
-      if (Array.isArray(data)) {
-        return {
-          type: 'Array',
-          count: data.length,
-          sample: data.slice(0, 3).map(item => {
-            const summary: any = {};
-            sampleKeys.forEach(k => summary[k] = item[k]);
-            return summary;
-          })
-        };
-      }
-      return { type: 'Object', keys: Object.keys(data) };
+      const result: any = Array.isArray(data) ? {
+        type: 'Array',
+        count: data.length,
+        sample: data.slice(0, 3).map(item => {
+          const summary: any = {};
+          sampleKeys.forEach(k => summary[k] = item[k]);
+          return summary;
+        })
+      } : { type: 'Object', keys: Object.keys(data) };
+
+      const duration = performance.now() - startTime;
+      logger.info(`JSON summarization completed in ${duration.toFixed(2)}ms`);
+      return result;
     } catch (e) {
       throw handleError(logger, e, 'JSON summarization failed');
     }
@@ -90,7 +111,7 @@ export class DataProcessor {
       const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
       let lines = 0;
-      for await (const line of rl) { lines++; }
+      for await (const _line of rl) { lines++; }
 
       return {
         name: path.basename(filePath),
@@ -108,6 +129,7 @@ export class DataProcessor {
    * Splits a massive file into chunks for safe AI consumption if needed.
    */
   async chunk(filePath: string, linesPerChunk: number = 500, targetDir: string = './chunks'): Promise<string[]> {
+    const startTime = performance.now();
     logger.info(`Chunking file: ${filePath} (${linesPerChunk} lines per chunk)`);
     try {
       if (!fs.existsSync(filePath)) {
@@ -140,6 +162,8 @@ export class DataProcessor {
         chunkPaths.push(chunkPath);
       }
 
+      const duration = performance.now() - startTime;
+      logger.info(`Chunking completed in ${duration.toFixed(2)}ms`);
       return chunkPaths;
     } catch (e) {
       throw handleError(logger, e, 'Chunking failed');
