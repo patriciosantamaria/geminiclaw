@@ -2,15 +2,22 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
+<<<<<<< HEAD
+import ivm from "isolated-vm";
+import { google } from "googleapis";
+import { GoogleAuth } from "google-auth-library";
+import { Logger } from "./utils/logger.js";
+import { handleError } from "./utils/errors.js";
+=======
 import * as ivm from "isolated-vm";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
 import { Logger } from "./utils/logger.js";
 import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.js";
+>>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
 
 const logger = new Logger("WizardBridgeMCP");
 
-// Common scopes for Google Workspace + Tasks & Contacts (removed datastudio)
 const SCOPES = [
   "https://www.googleapis.com/auth/drive",
   "https://www.googleapis.com/auth/documents",
@@ -27,7 +34,7 @@ const SCOPES = [
 const server = new Server(
   {
     name: "wizard-bridge-mcp",
-    version: "1.1.0",
+    version: "1.2.0",
   },
   {
     capabilities: {
@@ -108,7 +115,41 @@ async function getAuthClient() {
   return authClient;
 }
 
+<<<<<<< HEAD
+/**
+ * Host-side executor for Google Workspace API calls.
+ */
+async function hostExecuteGoogleApi(cmdJson: string) {
+  const auth = await getAuthClient();
+  const cmd = JSON.parse(cmdJson);
+  
+  const allowedApis = ["drive", "gmail", "calendar", "docs", "sheets", "slides", "tasks", "people", "chat"];
+  if (!allowedApis.includes(cmd.api)) {
+    throw new Error(`API ${cmd.api} is not allowed or supported via the bridge.`);
+  }
+
+  const api = (google as any)[cmd.api]({ ...cmd.options, auth });
+  const parts = cmd.method.split('.');
+  let current = api;
+  for (let i = 0; i < parts.length - 1; i++) {
+    current = current[parts[i]];
+    if (!current) throw new Error(`Invalid method path: ${cmd.method}`);
+  }
+  
+  const method = current[parts[parts.length - 1]];
+  if (typeof method !== 'function') {
+    throw new Error(`Method ${cmd.method} is not a function.`);
+  }
+
+  const response = await method.call(current, cmd.params);
+  // We return the data directly. isolated-vm will copy it if copy: true is used in .apply()
+  return response.data;
+}
+
+server.setRequestHandler(CallToolRequestSchema, async (request) => {
+=======
 server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
+>>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
   const validTools = ["read_workspace_script", "write_workspace_script", "destructive_workspace_script"];
   if (!validTools.includes(request.params.name)) {
     throw new Error(`Unknown tool: ${request.params.name}`);
@@ -117,9 +158,85 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
   const { script } = ExecuteWorkspaceScriptSchema.parse(request.params.arguments);
   logger.info(`Executing script for tool: ${request.params.name}`);
 
-  try {
-    const auth = await getAuthClient();
+  const isolate = new ivm.Isolate({ memoryLimit: 128 });
+  const context = await isolate.createContext();
+  const jail = context.global;
 
+  try {
+    await jail.set('_bridge_execute_ref', new ivm.Reference(hostExecuteGoogleApi));
+    await jail.set('_log_info', new ivm.Reference((msg: string) => logger.info(`[Sandbox Log] ${msg}`)));
+    await jail.set('_log_error', new ivm.Reference((msg: string) => logger.error(`[Sandbox Error] ${msg}`)));
+
+<<<<<<< HEAD
+    const bootstrapScript = `
+      const console = {
+        log: (msg) => _log_info.applySync(undefined, [String(msg)]),
+        error: (msg) => _log_error.applySync(undefined, [String(msg)]),
+      };
+
+      const createApiProxy = (apiName) => {
+        return (opts) => {
+          const proxy = (methodPath) => {
+            return new Proxy({}, {
+              get: (target, prop) => {
+                const newPath = methodPath ? \`\${methodPath}.\${prop}\` : prop;
+                return async (params) => {
+                  const data = await _bridge_execute_ref.apply(undefined, [
+                    JSON.stringify({ api: apiName, options: opts, method: newPath, params })
+                  ], { promise: true, copy: true });
+                  return { data };
+                };
+              }
+            });
+          };
+          
+          return {
+            files: proxy('files'),
+            users: proxy('users'),
+            events: proxy('events'),
+            documents: proxy('documents'),
+            spreadsheets: proxy('spreadsheets'),
+            presentations: proxy('presentations'),
+            tasks: proxy('tasks'),
+            people: proxy('people'),
+            spaces: proxy('spaces'),
+            messages: proxy('messages'),
+          };
+        };
+      };
+
+      const google = {
+        drive: createApiProxy('drive'),
+        gmail: createApiProxy('gmail'),
+        calendar: createApiProxy('calendar'),
+        docs: createApiProxy('docs'),
+        sheets: createApiProxy('sheets'),
+        slides: createApiProxy('slides'),
+        tasks: createApiProxy('tasks'),
+        people: createApiProxy('people'),
+        chat: createApiProxy('chat'),
+      };
+      
+      const auth = {};
+    `;
+
+    const wrappedScript = `
+      return (async () => {
+        ${bootstrapScript}
+        ${script}
+      })()
+    `;
+
+    const resultRef = await context.evalClosure(wrappedScript, [], { 
+      result: { promise: true, copy: true },
+      timeout: 10000 
+    });
+
+    let finalResult = resultRef;
+    if (resultRef instanceof ivm.Reference) {
+      finalResult = await resultRef.deref();
+    }
+=======
     // Create a hardened isolate with a 128MB memory limit
     const isolate = new ivm.Isolate({ memoryLimit: 128 });
     const context = await isolate.createContext();
@@ -157,17 +274,18 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
       promise: true,
       timeout: 30000
     });
+>>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
 
     return {
       content: [
         {
           type: "text",
-          text: result !== undefined ? JSON.stringify(result, null, 2) : "Script executed successfully (no return value).",
+          text: finalResult !== undefined ? JSON.stringify(finalResult, null, 2) : "Script executed successfully (no return value).",
         },
       ],
     };
   } catch (error: any) {
-    const geminiError = handleError(logger, error, 'Error executing workspace script');
+    const geminiError = handleError(logger, error, 'Error executing workspace script in secure sandbox');
     return {
       content: [
         {
@@ -177,6 +295,8 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
       ],
       isError: true,
     };
+  } finally {
+    isolate.dispose();
   }
 });
 

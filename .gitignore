@@ -10,4 +10,7 @@
 node_modules/
 dist/
 build/
+.env.gemini_docker/
+.jules/
+.gemini_bak/
 .env
