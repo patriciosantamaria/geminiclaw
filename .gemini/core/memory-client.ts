@@ -50,9 +50,7 @@ export class MemoryClient {
   private initDatabase() {
     this.db.serialize(() => {
       // Enable WAL mode for better concurrency
-      this.db.run('PRAGMA journal_mode=WAL;', (err) => {
-        if (err) logger.error('Failed to enable WAL mode', err);
-      });
+      this.db.run('PRAGMA journal_mode=WAL;');
 
       // Create base tables if they don't exist
       this.db.run(`CREATE TABLE IF NOT EXISTS projects (
@@ -81,18 +79,18 @@ export class MemoryClient {
         FOREIGN KEY(project_id) REFERENCES projects(id)
       )`);
 
-      // Add confidence_score column if it doesn't exist
-      this.db.all("PRAGMA table_info(knowledge_index)", (err, rows: any[]) => {
-        if (err) {
-          logger.error('Failed to query table info for knowledge_index', err);
-          return;
-        }
+      // Add columns sequentially via serialize to avoid race conditions
+      this.db.run("PRAGMA table_info(knowledge_index)", (err, rows: any[]) => {
+        // This is still in serialize, so it will run in order.
+        // Re-check for confidence_score
         const hasConfidenceScore = rows && rows.some(row => row.name === 'confidence_score');
         if (!hasConfidenceScore) {
-          this.db.run("ALTER TABLE knowledge_index ADD COLUMN confidence_score FLOAT DEFAULT 1.0", (err) => {
-            if (err) logger.error('Failed to add confidence_score column', err);
-            else logger.info('Added confidence_score column to knowledge_index');
-          });
+          this.db.run("ALTER TABLE knowledge_index ADD COLUMN confidence_score FLOAT DEFAULT 1.0");
+        }
+        // Re-check for security_ring (Pillar 3)
+        const hasSecurityRing = rows && rows.some(row => row.name === 'security_ring');
+        if (!hasSecurityRing) {
+          this.db.run("ALTER TABLE knowledge_index ADD COLUMN security_ring INTEGER DEFAULT 2");
         }
       });
 
@@ -134,6 +132,27 @@ export class MemoryClient {
         confidence FLOAT DEFAULT 1.0,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
       )`);
+
+      // Pillar 1: Commitments table
+      this.db.run(`CREATE TABLE IF NOT EXISTS commitments (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        source_id TEXT,
+        project_id TEXT,
+        description TEXT NOT NULL,
+        due_date DATETIME,
+        status TEXT DEFAULT 'Pending',
+        confidence FLOAT DEFAULT 1.0,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY(project_id) REFERENCES projects(id)
+      )`);
+
+      // Pillar 2: Autonomy Config table
+      this.db.run(`CREATE TABLE IF NOT EXISTS autonomy_config (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        description TEXT
+      )`);
+      this.db.run("INSERT OR IGNORE INTO autonomy_config (key, value, description) VALUES ('autonomy_level', '3', 'Agent autonomy level (1-5)')");
     });
   }
 
@@ -379,6 +398,89 @@ export class MemoryClient {
   }
 
   /**
+   * Pillar 1: Add a new commitment (extracted from workspace)
+   */
+  async addCommitment(data: {
+    source_id?: string;
+    project_id?: string;
+    description: string;
+    due_date?: string;
+    confidence?: number;
+  }): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const sql = `INSERT INTO commitments (source_id, project_id, description, due_date, confidence)
+                   VALUES (?, ?, ?, ?, ?)`;
+      const params = [data.source_id, data.project_id, data.description, data.due_date, data.confidence || 1.0];
+      this.db.run(sql, params, (err) => {
+        if (err) {
+          logger.error('Failed to add commitment', err);
+          reject(err);
+        } else {
+          logger.info(`Commitment added: ${data.description.substring(0, 30)}...`);
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Pillar 2: Get current autonomy level
+   */
+  async getAutonomyLevel(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.db.get("SELECT value FROM autonomy_config WHERE key = 'autonomy_level'", (err, row: any) => {
+        if (err) {
+          logger.error('Failed to get autonomy level', err);
+          reject(err);
+        } else {
+          resolve(parseInt(row?.value || '3', 10));
+        }
+      });
+    });
+  }
+
+  /**
+   * Pillar 2: Set autonomy level (1-5)
+   */
+  async setAutonomyLevel(level: number): Promise<void> {
+    if (level < 1 || level > 5) throw new Error('Autonomy level must be between 1 and 5');
+    return new Promise((resolve, reject) => {
+      this.db.run("UPDATE autonomy_config SET value = ? WHERE key = 'autonomy_level'", [level.toString()], (err) => {
+        if (err) {
+          logger.error('Failed to set autonomy level', err);
+          reject(err);
+        } else {
+          logger.info(`Autonomy level set to ${level}`);
+          resolve();
+        }
+      });
+    });
+  }
+
+  /**
+   * Pillar 3: Security Ring Guard
+   * Filters out Ring 0 (Local Only) data if the request is destined for external APIs.
+   */
+  async filterRingZero(projectId?: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      let query = "SELECT * FROM knowledge_index WHERE security_ring > 0";
+      const params: any[] = [];
+      if (projectId) {
+        query += " AND project_id = ?";
+        params.push(projectId);
+      }
+      this.db.all(query, params, (err, rows) => {
+        if (err) {
+          logger.error('Failed to filter Ring 0 data', err);
+          reject(err);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+  }
+
+  /**
    * Pipeline method to generate a "Golden Record" summary of a project's history.
    * Now incorporates proactive triggers for higher situational awareness.
    */
@@ -391,16 +493,23 @@ export class MemoryClient {
         where: { project_id: projectId }
       });
 
-      // 2. Get recent proactive triggers
-      const triggers: any[] = await new Promise((resolve, reject) => {
-        this.db.all(
-          "SELECT * FROM proactive_triggers WHERE timestamp > date('now', '-7 days') ORDER BY timestamp DESC",
-          (err, rows) => {
-            if (err) reject(err);
-            else resolve(rows);
-          }
-        );
-      });
+      // Pillar 2: Check Autonomy Level before including triggers
+      const autonomyLevel = await this.getAutonomyLevel();
+      const triggers: any[] = [];
+
+      if (autonomyLevel > 1) {
+        // 2. Get recent proactive triggers
+        const results: any[] = await new Promise((resolve, reject) => {
+          this.db.all(
+            "SELECT * FROM proactive_triggers WHERE timestamp > date('now', '-7 days') ORDER BY timestamp DESC",
+            (err, rows) => {
+              if (err) reject(err);
+              else resolve(rows);
+            }
+          );
+        });
+        triggers.push(...results);
+      }
 
       const history = vectorResults?.documents?.join('\n---\n') || 'No historical vector records found.';
       const triggerSummary = triggers.length > 0
