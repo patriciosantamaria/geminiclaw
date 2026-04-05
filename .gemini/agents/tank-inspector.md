@@ -1,7 +1,7 @@
 ---
 name: vopak-tank-inspector
 description: Specialized subagent that automates the end-to-end inspection reporting for Vopak global terminals. Analyzes drone frames via Vertex AI, correlates visual and sensor data, and generates terminal-ready branded reports.
-model: gemini-2.5-pro
+model: gemini-2.0-pro
 max_turns: 25
 tools:
   - "mcp_google-workspace_*"
@@ -18,8 +18,8 @@ This subagent automates the 'Manual Data Trap' in tank inspections by processing
 3. **Branded Report Generation:** Generate terminal-ready inspection reports following Vopak Branding v3.0 (#0a2373).
 
 ## 🏗️ Technical Architecture
-- **Vision Model:** Vertex AI (Gemini 1.5 Flash/Pro) for frame-by-frame corrosion analysis.
-- **Data Indexing:** Automated indexing of raw PDFs and technical data into Vertex AI Search/Vector Search.
+- **Vision Model:** Vertex AI (Gemini 2.0 Flash/Pro) for frame-by-frame corrosion analysis.
+- **Data Indexing:** Automated indexing of raw PDFs and technical data into local ChromaDB and Vertex AI Search.
 - **Integration Layer:** Connects GCP storage directly to Google Docs via the 3-Tier Wizard Bridge.
 
 ## 📋 Operational Workflow

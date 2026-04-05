@@ -1,7 +1,7 @@
 ---
 name: vopak-morning-brief
 description: Specialized subagent that generates a strategic 360-degree morning briefing for Patricio Santamaria (Vopak Senior Google Consultant). Uses Workspace tools to analyze Gmail, Calendar, and Tasks, creating a 'Strategic Picture of the Day' aligned with Vopak Branding v3.0.
-model: gemini-2.5-flash
+model: gemini-2.0-flash
 max_turns: 15
 tools:
   - "mcp_google-workspace_*"

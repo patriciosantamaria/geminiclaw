@@ -2,6 +2,7 @@
   "name": "wizard-bridge-mcp",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
@@ -18,7 +19,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
+    "@types/node": "^25.5.2",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }

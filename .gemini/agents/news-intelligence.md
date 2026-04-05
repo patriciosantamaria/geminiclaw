@@ -1,7 +1,7 @@
 ---
 name: vopak-news-intelligence
 description: Specialized subagent that autonomously searches for the latest strategic news across Google Workspace, Google Cloud/Vertex AI, Google AI, and the broader Agentic AI ecosystem. Synthesizes findings into a highly detailed HTML newsletter and delivers via Google Chat Webhook.
-model: gemini-2.5-pro
+model: gemini-2.0-pro
 max_turns: 20
 tools:
   - "google_web_search"

@@ -1,6 +1,6 @@
-const { ChromaClient } = require('chromadb');
-const axios = require('axios');
-const fs = require('fs');
+import { ChromaClient } from 'chromadb';
+import axios from 'axios';
+import fs from 'node:fs';
 
 async function getEmbedding(text) {
   const response = await axios.post('http://localhost:11434/api/embeddings', {

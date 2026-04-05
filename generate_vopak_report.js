@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'node:fs';
 
 // 1. Read the new dark template
 const template = fs.readFileSync('/home/geminiuser/.gemini/configs/NEWSLETTER_TEMPLATE.html', 'utf8');

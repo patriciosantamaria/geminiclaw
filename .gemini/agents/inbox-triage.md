@@ -1,7 +1,7 @@
 ---
 name: vopak-inbox-triage
 description: Specialized subagent to parse the user's Gmail inbox and intelligently filter out the noise of automated systems, alerts, and mass communications. Its primary goal is to isolate unresolved emails from real people so the user can focus their attention on actual human collaboration and critical tasks.
-model: gemini-2.5-flash
+model: gemini-2.0-flash
 max_turns: 15
 tools:
   - "mcp_google-workspace_*"

@@ -1,13 +1,12 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const index_js_1 = require("@modelcontextprotocol/sdk/client/index.js");
-const stdio_js_1 = require("@modelcontextprotocol/sdk/client/stdio.js");
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+
 async function main() {
-    const transport = new stdio_js_1.StdioClientTransport({
+    const transport = new StdioClientTransport({
         command: "node",
         args: ["./dist/index.js"]
     });
-    const client = new index_js_1.Client({
+    const client = new Client({
         name: "test-client",
         version: "1.0.0"
     }, {
@@ -26,6 +25,7 @@ async function main() {
     console.log("Result:", JSON.stringify(result, null, 2));
     process.exit(0);
 }
+
 main().catch(e => {
     console.error(e);
     process.exit(1);

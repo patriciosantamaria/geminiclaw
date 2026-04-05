@@ -4,7 +4,7 @@
  * Defines custom error types and a common way to format errors.
  */
 
-import { Logger } from './logger';
+import { Logger } from './logger.js';
 
 export const ErrorCode = {
   NOT_FOUND: 'NOT_FOUND',
