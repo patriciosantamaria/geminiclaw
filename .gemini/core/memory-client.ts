@@ -1,8 +1,9 @@
-import { ChromaClient } from 'chromadb';
+import { ChromaClient, Collection } from 'chromadb';
 import ollama from 'ollama';
 import sqlite3 from 'sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
+import { performance } from 'node:perf_hooks';
 import { Logger } from './utils/logger.ts';
 import { handleError } from './utils/errors.ts';
 
@@ -16,8 +17,11 @@ export class MemoryClient {
   public chroma: ChromaClient;
   public defaultCollection: string;
   private embeddingCache = new Map<string, number[]>();
+  private embeddingCacheKeys: string[] = [];
+  private readonly CACHE_LIMIT = 1000;
   private embeddingQueue: { text: string; resolve: (v: number[]) => void; reject: (e: any) => void }[] = [];
   private isProcessingQueue = false;
+  private collectionCache = new Map<string, Collection>();
   public db: sqlite3.Database;
 
   constructor(
@@ -140,34 +144,67 @@ export class MemoryClient {
   }
 
   /**
-   * Process the embedding queue sequentially in the background
+   * Process the embedding queue in parallel batches
    */
   private async processEmbeddingQueue() {
     if (this.isProcessingQueue || this.embeddingQueue.length === 0) return;
     this.isProcessingQueue = true;
 
+    const BATCH_SIZE = 5;
+
     while (this.embeddingQueue.length > 0) {
-      const { text, resolve, reject } = this.embeddingQueue.shift()!;
-      try {
-        // Double check cache in case it was added while in queue
-        if (this.embeddingCache.has(text)) {
-          resolve(this.embeddingCache.get(text)!);
-          continue;
+      const batch = this.embeddingQueue.splice(0, BATCH_SIZE);
+
+      await Promise.all(batch.map(async ({ text, resolve, reject }) => {
+        try {
+          // Double check cache in case it was added while in queue
+          if (this.embeddingCache.has(text)) {
+            // Update LRU position
+            this.updateCache(text, this.embeddingCache.get(text)!);
+            resolve(this.embeddingCache.get(text)!);
+            return;
+          }
+
+          const response = await ollama.embeddings({
+            model: 'nomic-embed-text',
+            prompt: text,
+          });
+
+          this.updateCache(text, response.embedding);
+          resolve(response.embedding);
+        } catch (e) {
+          reject(handleError(logger, e, 'Failed to get embedding from background queue'));
         }
-
-        const response = await ollama.embeddings({
-          model: 'nomic-embed-text',
-          prompt: text,
-        });
-
-        this.embeddingCache.set(text, response.embedding);
-        resolve(response.embedding);
-      } catch (e) {
-        reject(handleError(logger, e, 'Failed to get embedding from background queue'));
-      }
+      }));
     }
 
     this.isProcessingQueue = false;
+  }
+
+  /**
+   * Update embedding cache with LRU policy
+   */
+  private updateCache(text: string, embedding: number[]) {
+    if (this.embeddingCache.has(text)) {
+      // Remove from keys to re-add at the end
+      this.embeddingCacheKeys = this.embeddingCacheKeys.filter(k => k !== text);
+    } else if (this.embeddingCacheKeys.length >= this.CACHE_LIMIT) {
+      // Remove oldest
+      const oldest = this.embeddingCacheKeys.shift();
+      if (oldest) this.embeddingCache.delete(oldest);
+    }
+
+    this.embeddingCache.set(text, embedding);
+    this.embeddingCacheKeys.push(text);
+  }
+
+  private async getCollection(name: string): Promise<Collection> {
+    if (this.collectionCache.has(name)) {
+      return this.collectionCache.get(name)!;
+    }
+    const collection = await this.chroma.getCollection({ name });
+    this.collectionCache.set(name, collection);
+    return collection;
   }
 
 
@@ -175,10 +212,11 @@ export class MemoryClient {
    * Query local memory semantically with Time-Decay Weighting
    */
   async recall(query: string, nResults: number = 3, collectionName?: string) {
+    const startTime = performance.now();
     try {
       const targetCollection = collectionName || this.defaultCollection;
       const queryEmbedding = await this.getEmbedding(query);
-      const collection = await this.chroma.getCollection({ name: targetCollection });
+      const collection = await this.getCollection(targetCollection);
 
       // Fetch 2x results to allow for re-ranking
       const results = await collection.query({
@@ -223,6 +261,10 @@ export class MemoryClient {
 
       // Return top nResults in the expected format
       const topResults = scoredResults.slice(0, nResults);
+
+      const duration = performance.now() - startTime;
+      logger.info(`Recall completed in ${duration.toFixed(2)}ms`);
+
       return {
         ids: [topResults.map(r => r.id)],
         distances: [topResults.map(r => r.distance)], // Keeping original distance here
@@ -262,6 +304,7 @@ export class MemoryClient {
   async getEmbedding(text: string): Promise<number[]>;
   async getEmbedding(textOrPath: string, isImage: boolean): Promise<number[]>;
   async getEmbedding(textOrPath: string, isImage: boolean = false): Promise<number[]> {
+    const startTime = performance.now();
     if (isImage) {
       logger.info(`Multi-modal stub: Requesting embedding for image ${textOrPath}`);
       return Array(768).fill(0);
@@ -269,13 +312,20 @@ export class MemoryClient {
 
     if (this.embeddingCache.has(textOrPath)) {
       logger.debug('⚡ Using cached embedding');
-      return this.embeddingCache.get(textOrPath)!;
+      // Update LRU position
+      const embedding = this.embeddingCache.get(textOrPath)!;
+      this.updateCache(textOrPath, embedding);
+      return embedding;
     }
 
-    return new Promise((resolve, reject) => {
+    const result = await new Promise<number[]>((resolve, reject) => {
       this.embeddingQueue.push({ text: textOrPath, resolve, reject });
       this.processEmbeddingQueue();
     });
+
+    const duration = performance.now() - startTime;
+    logger.debug(`Embedding retrieved in ${duration.toFixed(2)}ms`);
+    return result;
   }
 
   /**
@@ -284,10 +334,18 @@ export class MemoryClient {
   async remember(id: string, text: string, metadata?: any, collectionName?: string): Promise<void>;
   async remember(id: string, path: string, metadata: any, collectionName: string, isImage: boolean): Promise<void>;
   async remember(id: string, textOrPath: string, metadata: any = {}, collectionName?: string, isImage: boolean = false) {
+    const startTime = performance.now();
     try {
       const targetCollection = collectionName || this.defaultCollection;
       const embedding = await this.getEmbedding(textOrPath, isImage);
-      const collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
+
+      let collection: Collection;
+      if (this.collectionCache.has(targetCollection)) {
+        collection = this.collectionCache.get(targetCollection)!;
+      } else {
+        collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
+        this.collectionCache.set(targetCollection, collection);
+      }
 
       // Inject timestamp for time-decay weighting
       const enrichedMetadata = {
@@ -301,7 +359,9 @@ export class MemoryClient {
         metadatas: [enrichedMetadata],
         documents: [isImage ? `image_path: ${textOrPath}` : textOrPath],
       });
-      logger.info(`Stored ${isImage ? 'image' : 'fact'}: ${id}`);
+
+      const duration = performance.now() - startTime;
+      logger.info(`Stored ${isImage ? 'image' : 'fact'}: ${id} in ${duration.toFixed(2)}ms`);
     } catch (e) {
       throw handleError(logger, e, `Failed to store ${isImage ? 'image' : 'fact'}: ${id}`);
     }
