@@ -1,7 +1,7 @@
-# 🏗️ Architectural Design Document (ADD): GeminiClaw V4.0 "Consciousness"
+# 🏗️ Architectural Design Document (ADD): GeminiClaw V5.0 "Digital Chief of Staff" (2026 Model)
 
 ## 📌 1. Overview
-**GeminiClaw V4.0** is an agentic AI system designed to integrate deeply with **Google Workspace**, **GitHub**, and **local development environments**. This version adds "Strategic Consciousness"—the ability to synthesize past/present/future data and proactively manage the user's workload.
+**GeminiClaw V5.0** is the evolution of the autonomous agentic system into a full **Digital Chief of Staff (DCoS)**. Following 2026 industry standards, it transitions from a reactive assistant to a proactive, self-improving partner that manages "soft commitments," enforces tiered security rings, and operates via event-driven proactivity.
 
 ---
 
@@ -27,19 +27,25 @@ The system maintains a dual-layer persistent memory for high-fidelity context re
 
 ---
 
-## 🚀 3. Strategic Enhancements (V4.0 Upgrade)
+## 🚀 3. Strategic Enhancements (V5.0 "Digital Chief of Staff" Upgrade)
 
-### 🧠 3.1. Predictive "Cognitive Load" Triage
-The `vopak-inbox-triage` skill now assigns a complexity score (1-5) to incoming communications. For scores >3, the agent autonomously proposes "Deep Work" sessions in the user's calendar.
+### 🧠 3.1. Autonomous Commitment Tracking
+The **Commitment Engine** (`core/commitment-engine.ts`) parses briefings and communications to capture "soft commitments" (e.g., "I will look into..."). These are indexed in SQLite with `URGENCY` tags and proactively surfaced in the Morning Briefing.
 
-### 🛡️ 3.2. The "Super Admin Bridge"
-To maintain security, the agent generates **Admin Execution Manifests** for tasks requiring Super Admin privileges, providing clear, auditable steps without requiring direct agent access to the console.
+### 🎛️ 3.2. The Autonomy Dial (Trust Levels)
+User control is formalized via the `trust_level` attribute in `settings.json`.
+- `OBSERVE`: Flag opportunities only.
+- `PLAN`: Draft plans/PRs and wait for confirmation.
+- `EXECUTE`: Autonomously apply non-destructive changes.
 
-### 📐 3.3. Automated "Blueprint-to-Slide" Pipeline
-A unified workflow that transforms a single technical description into a comprehensive **Google Doc (ADD)** and a corresponding **Google Slide Deck (Executive Briefing)**, all adhering to Branding v3.0.
+### 🛡️ 3.3. Ring-Fenced Security Isolation
+The **Wizard Bridge MCP** enforces "Security Rings" using `isolated-vm`. **Ring 3 (Skills)** is strictly limited to 128MB RAM and a 30s timeout, with NO filesystem access, verified by non-negotiable breakout tests.
 
-### ⏳ 3.4. Temporal "Narrative Arc" Memory
-The agent now synthesizes project history into a chronological context (Yesterday/Today/Tomorrow), ensuring every interaction is grounded in the project's long-term momentum.
+### 🌙 3.4. Reflective Sleep Cycle
+The system performs a nightly automated self-improvement cycle (`core/self-reflection-engine.ts`). It distills daily logs into "Lessons Learned," stored in ChromaDB, which are injected into subsequent session prompts to prevent error repetition.
+
+### 📡 3.5. Event-Driven Proactivity
+Using **Cloud Pub/Sub** (`core/pubsub-listener.ts`), the agent maintains ambient awareness of Gmail and Calendar events, autonomously invoking triage or briefing skills without user initiation.
 
 ---
 

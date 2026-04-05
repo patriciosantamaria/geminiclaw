@@ -11,7 +11,11 @@ This workspace is dedicated to the **Ultimate AI Assistant Agent**, designed to 
 ## 📋 Operational Rules
 
 ### 0. Hard Guardrails (Security & Safety)
-- **Gmail:** The agent MUST NOT use `gmail.send` autonomously. All outgoing communications must be prepared as **Drafts** for user review.
+- **The Autonomy Dial:** All agents and skills MUST check the `trust_level` attribute in `.gemini/settings.json` before execution.
+  - `OBSERVE`: Flag opportunities only. No automated changes.
+  - `PLAN`: Draft plans, PRs, or documents and wait for explicit confirmation.
+  - `EXECUTE`: Autonomously apply non-destructive changes.
+- **Gmail:** The agent MUST NOT use `gmail.send` autonomously regardless of trust level. All outgoing communications must be prepared as **Drafts** for user review.
 - **Destructive Actions:** No `gcloud` or shell commands that delete, remove, or destroy resources are permitted without explicit, multi-step `ask_user` confirmation.
 
 ### 1. Calendar & Scheduling (Proactive Optimization)

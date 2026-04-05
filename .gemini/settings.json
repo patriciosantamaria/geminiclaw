@@ -2,7 +2,8 @@
   "general": {
     "enableAgents": true,
     "previewFeatures": true,
-    "defaultApprovalMode": "plan"
+    "defaultApprovalMode": "plan",
+    "trust_level": "PLAN"
   },
   "security": {
     "auth": {

@@ -8,6 +8,7 @@ description: Autonomously performs post-session audits to update the agent's lon
 This skill is the "Inner Critic" and "Chronicler" of the Vopak Assistant. It ensures the agent evolves by documenting every session's outcomes.
 
 ## 📋 Reflection Workflow
+0. **Automated Sleep Cycle (Nightly):** Every 24 hours, the `vopak-self-reflection` skill autonomously distilled session logs and interaction records into 'Lessons Learned'. These are persisted in a dedicated ChromaDB collection (`vopak_lessons_learned`) to prevent repeating previous errors.
 1. **Narrative Reconstruction:** Review the session's chat history. Update the `narrative_arc` for active projects in `.gemini/PROJECTS.md` (Human-Readable Source of Truth) and synchronize the structured state in the `projects` table of `memory.db`.
 2. **Stakeholder Intelligence:** Identify changes in stakeholder sentiment or requirements (e.g., Koen, Chaniel). Update the `stakeholders` table in `memory.db` for long-term tracking.
 3. **ROI Calculation:** Estimate 'Time Saved' (minutes) for the user. Record this in the `knowledge_index` table for ROI reporting.

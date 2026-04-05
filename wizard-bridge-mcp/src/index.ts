@@ -156,8 +156,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
   }
 
   const { script } = ExecuteWorkspaceScriptSchema.parse(request.params.arguments);
-  logger.info(`Executing script for tool: ${request.params.name}`);
+  logger.info(`Executing script for tool: ${request.params.name} (Ring 3 isolation enforced)`);
 
+  // Ring 3: 128MB RAM limit, 30s timeout, NO filesystem access.
   const isolate = new ivm.Isolate({ memoryLimit: 128 });
   const context = await isolate.createContext();
   const jail = context.global;
@@ -229,7 +230,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
 
     const resultRef = await context.evalClosure(wrappedScript, [], { 
       result: { promise: true, copy: true },
-      timeout: 10000 
+      timeout: 30000
     });
 
     let finalResult = resultRef;

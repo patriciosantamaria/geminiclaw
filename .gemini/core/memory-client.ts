@@ -76,22 +76,35 @@ export class MemoryClient {
         value TEXT NOT NULL,
         source_id TEXT,
         project_id TEXT,
+        type TEXT,
+        tag TEXT,
         last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
         time_saved_minutes INTEGER DEFAULT 0,
+        confidence_score FLOAT DEFAULT 1.0,
         FOREIGN KEY(project_id) REFERENCES projects(id)
       )`);
 
-      // Add confidence_score column if it doesn't exist
+      // Ensure type, tag, and confidence_score columns exist if table was already created
       this.db.all("PRAGMA table_info(knowledge_index)", (err, rows: any[]) => {
         if (err) {
           logger.error('Failed to query table info for knowledge_index', err);
           return;
         }
-        const hasConfidenceScore = rows && rows.some(row => row.name === 'confidence_score');
-        if (!hasConfidenceScore) {
+        const columns = rows.map(row => row.name);
+
+        if (!columns.includes('type')) {
+          this.db.run("ALTER TABLE knowledge_index ADD COLUMN type TEXT", (err) => {
+            if (err) logger.error('Failed to add type column to knowledge_index', err);
+          });
+        }
+        if (!columns.includes('tag')) {
+          this.db.run("ALTER TABLE knowledge_index ADD COLUMN tag TEXT", (err) => {
+            if (err) logger.error('Failed to add tag column to knowledge_index', err);
+          });
+        }
+        if (!columns.includes('confidence_score')) {
           this.db.run("ALTER TABLE knowledge_index ADD COLUMN confidence_score FLOAT DEFAULT 1.0", (err) => {
-            if (err) logger.error('Failed to add confidence_score column', err);
-            else logger.info('Added confidence_score column to knowledge_index');
+            if (err) logger.error('Failed to add confidence_score column to knowledge_index', err);
           });
         }
       });

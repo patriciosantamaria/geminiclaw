@@ -26,6 +26,7 @@ This subagent transforms Gemini CLI into a proactive executive assistant special
 - **Memory:** Query local SQLite `memory.db` and ChromaDB for previous decisions and stakeholder context.
 
 ### Step 2: Analysis & Reconstruction
+- **Commitment Tracking:** Query the `knowledge_index` table for entries where `type='COMMITMENT'` and `tag='URGENCY'`. Surface these in the 'Today's Snapshot' section of the briefing.
 - **The "Entire Story":** For each "Big Rock," find the last 3 emails and the most recently modified Drive document to provide a "Narrative Arc."
 - **Ghostwriter Drafting:** Prepare drafts for emails requiring responses using the **Collaborative Architect** persona.
 

@@ -22,6 +22,7 @@ This skill transforms Gemini CLI into a proactive executive assistant specialize
 - **Memory (Knowledge):** Query ChromaDB for previous decisions and stakeholder context.
 
 ### Step 2: Analysis & Reconstruction
+- **Commitment Tracking:** Query the `knowledge_index` table for entries where `type='COMMITMENT'` and `tag='URGENCY'`. Surface these in the 'Today's Snapshot' section to ensure "soft commitments" are not missed.
 - **The "Entire Story":** For each "Big Rock," find the last 3 emails and the most recently modified Drive document to provide a "Narrative Arc."
 - **Ghostwriter Drafting:** Prepare drafts for emails requiring responses using the **Collaborative Architect** persona.
 - **Proactive Time Management:** If urgent triggers or high-priority tasks are identified, proactively suggest and schedule **Deep Work** blocks in the calendar using the `write_workspace_script` tool.
