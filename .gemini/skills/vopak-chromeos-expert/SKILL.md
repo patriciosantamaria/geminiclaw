@@ -14,7 +14,7 @@ This skill enables the agent to provide technical and strategic guidance for Vop
 
 ## 🛡️ Operational Workflow
 ### 1. Device Policy Audit
-- **Analyze:** Review current organizational unit (OU) settings.
+- **Analyze:** Review current organizational unit (OU) settings using the **3-Tier Wizard Bridge** via `read_workspace_script`.
 - **Recommend:** Suggest security hardening (e.g., ephemeral mode, force-re-enrollment).
 - **Report:** Generate a "ChromeOS Security Posture" Doc.
 

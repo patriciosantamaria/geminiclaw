@@ -12,10 +12,9 @@ This skill acts as an objective, unbiased executive coach and chronicler. It syn
 
 ## Core Mandates
 1. **Unbiased & Objective Analysis:** Shift from subjective interpretation to objective facts. Separate "what happened" from "why it happened." Never sugarcoat failures or exaggerate wins.
-2. **The "Deep Fetch" Data Harvesting & Exact Math:** You MUST NOT estimate numbers. To calculate EXACT metrics efficiently, bypass the `generalist` sub-agent and use parallel tool fetching + local script parsing:
-   - **Calendar:** Make a SINGLE call to `mcp_google-workspace_calendar.listEvents` for the entire period with `maxResults: 2500`.
-   - **Gmail:** Make parallel calls to `mcp_google-workspace_gmail.search` for each individual week in the period (e.g., 4 or 5 parallel tool calls in one turn) with `maxResults: 500`.
-   - **Math Execution:** The tool outputs will be saved as local JSON files in the temporary directory. Use `run_shell_command` to write and execute a fast Node.js script to parse these files locally. The script MUST loop through the events to calculate exact meetings, hours, and unique people per week. **CRITICAL: You MUST EXCLUDE meetings where the user is the only attendee.** Personal focus blocks, reminders, or single-person events do not count as "meetings" and must be excluded from the meeting count and total duration. Exclude all-day events (`start.dateTime` is null). Also parse the Gmail JSON files to get the exact `length` of the messages array for each week.
+2. **Consolidated Data Harvesting & Exact Math:** You MUST NOT estimate numbers. Use the **3-Tier Wizard Bridge** (`read_workspace_script`) to perform parallel Gmail searches and Calendar fetches. For metric calculation, utilize the `calculateWorkspaceMetrics` method in the `DataProcessor` utility.
+   - **Data Fetching:** Construct a script that uses parallel `Promise.all` calls for Gmail weeks and a single large fetch for Calendar.
+   - **Metric Calculation:** Pass the resulting JSON arrays to `DataProcessor.calculateWorkspaceMetrics`. This utility automatically excludes self-only meetings and all-day events, ensuring high-fidelity reporting.
    - **Tasks:** Analyze Google Tasks to assess task completion rates (if data is available) or derive action items.
    - **Drive & Chat:** List new/modified documents and identify active spaces.
 3. **HTML-to-Doc Conversion (The Doc Creator Method):** Do NOT use `docs.create` or `docs.formatText`. Instead, generate complete, beautifully formatted HTML strings (using inline CSS for Vopak Branding: `#0a2373` headers, `#00cfe1` accents) and use the `write_workspace_script` tool to upload them directly to Drive.

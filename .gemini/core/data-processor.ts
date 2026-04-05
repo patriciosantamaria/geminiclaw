@@ -169,6 +169,55 @@ export class DataProcessor {
       throw handleError(logger, e, 'Chunking failed');
     }
   }
+
+  /**
+   * 📊 Automated Metric Calculation
+   * Parses Gmail and Calendar JSON data to calculate exact meeting counts, durations, and email volume.
+   */
+  async calculateWorkspaceMetrics(gmailData: any[], calendarData: any[]): Promise<any> {
+    const startTime = performance.now();
+    logger.info('Calculating workspace metrics from provided JSON data...');
+    try {
+      // 1. Process Gmail Metrics
+      const emailVolume = Array.isArray(gmailData) ? gmailData.length : 0;
+
+      // 2. Process Calendar Metrics
+      let collaborativeMeetings = 0;
+      let totalDurationMinutes = 0;
+      const uniqueParticipants = new Set<string>();
+
+      if (Array.isArray(calendarData)) {
+        calendarData.forEach(event => {
+          // Exclude all-day events
+          if (!event.start || !event.start.dateTime) return;
+
+          // Exclude self-only meetings
+          const attendees = event.attendees || [];
+          if (attendees.length <= 1) return;
+
+          collaborativeMeetings++;
+          const start = new Date(event.start.dateTime).getTime();
+          const end = new Date(event.end.dateTime).getTime();
+          totalDurationMinutes += (end - start) / (1000 * 60);
+
+          attendees.forEach((a: any) => {
+            if (a.email) uniqueParticipants.add(a.email);
+          });
+        });
+      }
+
+      const duration = performance.now() - startTime;
+      return {
+        emails: emailVolume,
+        meetings: collaborativeMeetings,
+        hours: (totalDurationMinutes / 60).toFixed(2),
+        reach: uniqueParticipants.size,
+        calculationDurationMs: duration.toFixed(2)
+      };
+    } catch (e) {
+      throw handleError(logger, e, 'Workspace metrics calculation failed');
+    }
+  }
 }
 
 // 🚀 Command-Line Interface (Simple)

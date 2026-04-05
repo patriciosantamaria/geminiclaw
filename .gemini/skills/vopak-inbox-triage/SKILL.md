@@ -24,10 +24,16 @@ These labels contain alerts, newsletters, and system notifications. Unless expli
 
 ### 1. "Find Real Human Emails" (The Default Triage)
 When asked to find emails the user forgot to reply to, or to summarize important emails:
-1. Use `mcp_google-workspace_gmail.search` or `read_workspace_script`.
+1. Use the **3-Tier Wizard Bridge** via `read_workspace_script`.
 2. Search query logic: Search for emails in `INBOX` that are `UNREAD` or lack a reply, but **strictly exclude** labels starting with `- Attention`, `- Google`, or `- News`. 
-3. Example query logic: `in:inbox is:unread -label:-attention -label:-google -label:-news` (You may need to map these to specific Label IDs if using scripts).
+3. Example query logic: `in:inbox is:unread -label:-attention -label:-google -label:-news`.
 4. If checking the `- People` or `- Partners` labels directly, prioritize those emails above all else.
+
+### 🛡️ Proactive Trigger Sharing
+When you identify an urgent or high-signal email from a **Tier 1 Stakeholder** (Rinaldo, Yassin, Koen, Svetlana, Hamidreza, Philippe) or an external partner that requires immediate action:
+1. **Record as Proactive Trigger:** Use a script with `MemoryClient` logic (or a shell command to a local script) to insert a record into the `proactive_triggers` table in `memory.db`.
+2. **Payload:** Include the `source_id` (Gmail Thread ID), `type` ('urgent_email'), and a concise `summary`.
+3. **Outcome:** This trigger will automatically influence the next **Morning Briefing** and the project's **Golden Record**.
 
 ### 2. "Alert Audit"
 Only when explicitly asked to "check my alerts" or "check system status":

@@ -19,5 +19,5 @@ This skill governs the strategic and cultural shift toward an 'AI-First' organiz
 ## 🛡️ Stakeholder Negotiation (The "Wizard's Bridge")
 When facing architectural boundaries (e.g., 'Google is only for Office'):
 1. **Acknowledge:** Validate the standard (e.g., AWS for hosting).
-2. **Bridge:** Position Google AI as the 'Automation layer' that makes the hosted data useful for the business.
-3. **Proof:** Show small, branded POCs (like the Tank Tracker) to prove ROI instantly.
+2. **Bridge:** Position Google AI as the 'Automation layer' that makes the hosted data useful for the business. Use the **3-Tier Wizard Bridge** script tools to demonstrate real-time integration capabilities.
+3. **Proof:** Show small, branded POCs (like the Tank Tracker) to prove ROI instantly, adhering to Vopak Branding v3.0 (#0a2373, #00cfe1).
