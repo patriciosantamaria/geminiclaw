@@ -255,105 +255,132 @@
             <h2 class="section-title">🎯 Executive Summary & Action Items</h2>
             <div class="insight-panel">
                 <div class="insight-panel-title">🚨 Urgent Super Admin Actions:</div>
-                <ul>
-                    <li><a href="https://developers.google.com/workspace/release-notes" target="_blank">Review Meet API Updates</a>: New `smartNotes` resources are Generally Available. Assess impact on existing integrations and prepare for new automation opportunities.</li>
-                    <li><a href="https://workspaceupdates.googleblog.com/" target="_blank">Configure CAA for NotebookLM</a>: Implement Context-Aware Access policies for the NotebookLM mobile app to protect organizational data.</li>
-                </ul>
+                <ul><li><a href="http://workspaceupdates.googleblog.com/feeds/1791360786541389731/comments/default" target="_blank">Google Meet Recording Downloads</a>: Starting April 11, 2026, the default for Meet recordings will change to allow viewers to download them. Admins must review and adjust settings if this is not the desired behavior for their organization.</li></ul>
                 <div class="insight-panel-title" style="margin-top:15px;">♟️ Major Strategic Shifts:</div>
                 <ul>
-                    <li><a href="https://thenextweb.com/news/anthropic-openclaw-claude-subscription-ban-cost" target="_blank">Anthropic Blocks OpenClaw</a>: Anthropic is cracking down on agentic framework usage, shifting to a pay-as-you-go model. This will significantly increase costs for heavy users and signals a market shift towards monetizing agentic AI.</li>
-                    <li><a href="https://www.ndtvprofit.com/business/openai-ipo-reports-of-differences-between-altman-cfo-over-launch-timing-11316528" target="_blank">OpenAI IPO Tensions & Sora Shutdown</a>: Internal conflict over IPO timing and the discontinuation of Sora indicate a strategic pivot at OpenAI, focusing resources on next-generation models and agents.</li>
+                    <li><a href="https://deepmind.google/blog/gemma-4-byte-for-byte-the-most-capable-open-models/" target="_blank">Google Releases Gemma 4</a>: A new family of powerful, lightweight open models designed for advanced reasoning and agentic workflows, signaling a major push into the open-source AI community.</li>
+                    <li><a href="https://cloud.google.com/blog/topics/threat-intelligence/vsphere-brickstorm-defender-guide/" target="_blank">BRICKSTORM Malware Threat</a>: Mandiant has identified new malware targeting VMware vSphere. This requires immediate attention from infrastructure and security teams to review defenses against virtualization-layer attacks.</li>
+                    <li><a href="https://openai.com/index/openai-acquires-tbpn" target="_blank">OpenAI Acquires TBPN</a>: OpenAI is acquiring a media and events company to 'accelerate global conversations around AI', indicating a strategic move to control the narrative and community engagement around its technologies.</li>
                 </ul>
             </div>
 
             <h2 class="section-title">🛡️ Google Workspace & Security Operations</h2>
             <div class="card">
-                <span class="card-category">Security</span>
-                <h3 class="card-title">Google Details Defense Against Indirect Prompt Injection (IPI)</h3>
-                <p class="card-text">Google has provided a deep dive into its multi-layered defense strategy against Indirect Prompt Injection (IPI) attacks. The approach includes automated red-teaming with machine learning frameworks to stress-test Gemini in Workspace and a new internal process for cataloging AI-specific vulnerabilities.</p>
+                <span class="card-category">Admin Action Required</span>
+                <h3 class="card-title">Upcoming change to default setting for downloading Google Meet recordings</h3>
+                <p class="card-text">Starting April 11, 2026, the default setting for Google Meet recordings will be changed to allow viewers to download them. Currently, recordings are view-only by default. This also impacts the 'Ask Gemini' functionality in the Drive viewer, which will be enabled for viewers as a result. Admins who need to maintain stricter control over recording distribution must proactively review and change the default setting for their organization before the deadline.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>This highlights the growing importance of AI-specific security measures. As Vopak integrates more AI features, understanding and aligning with Google's defense strategies is critical to protecting our data.</p><br>
-                    <div class="insight-panel-title">Strategic Value</div>
-                    <p>Aligns with our "Flow Forward" principle of secure innovation. We must ensure our own AI governance and security protocols are as robust as those of our vendors.</p>
+                    <div class="insight-panel-title">Why it matters</div><p>This is a significant change to data governance defaults. If not addressed, sensitive meeting content could be downloaded and distributed more easily than before, potentially violating internal data handling policies.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Aligning with Flow Forward requires proactive data governance. This is an opportunity to review and enforce our policies regarding the storage and sharing of sensitive information discussed in meetings, ensuring we maintain trust and control over our intellectual property.</p>
                 </div>
-                <a href="https://security.googleblog.com/2026/" class="action-link" target="_blank">Read Full Report</a>
+                <a href="http://workspaceupdates.googleblog.com/feeds/1791360786541389731/comments/default" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+            <div class="card">
+                <span class="card-category">Feature Launch</span>
+                <h3 class="card-title">Google Meet is now available on Apple CarPlay</h3>
+                <p class="card-text">Google Meet has been integrated into Apple CarPlay, allowing users to join meetings and stay connected from their vehicle's dashboard. This feature is designed for hands-free operation to ensure safety for on-the-go professionals.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Provides greater flexibility for employees who travel frequently, allowing them to join crucial meetings safely while on the road without fumbling with their mobile devices.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Supports a mobile and agile workforce, a key tenet of Flow Forward. By enabling seamless connectivity across different environments (office, home, and now car), we empower our teams to be more productive and collaborative.</p>
+                </div>
+                <a href="http://workspaceupdates.googleblog.com/feeds/1715205652489075736/comments/default" class="action-link" target="_blank">Read Full Report</a>
             </div>
             <div class="card">
                 <span class="card-category">API Update</span>
-                <h3 class="card-title">Meet API Updates: Smart Notes GA and New Event Subscriptions</h3>
-                <p class="card-text">The Google Meet API now has the `get` and `list` methods for the `smartNotes` resource as Generally Available. This allows developers to programmatically access AI-generated meeting notes. Additionally, new event subscriptions for Smart Notes creation and file generation are available via the Workspace Events API.</p>
+                <h3 class="card-title">Meet API Adds Smart Notes Retrieval</h3>
+                <p class="card-text">The Google Meet API has been updated and is now Generally Available. New methods `get` and `list` for `conferenceRecords.smartNotes` have been released, allowing developers to programmatically access the AI-generated notes and summaries from Meet sessions.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>This is a significant enhancement for automating post-meeting workflows. We can now build integrations that automatically process and distribute meeting summaries, action items, and other artifacts.</p><br>
-                    <div class="insight-panel-title">Strategic Value</div>
-                    <p>Enables greater efficiency and collaboration, a core tenet of "Flow Forward." We can automate the dissemination of knowledge and decisions, ensuring alignment across teams.</p>
+                    <div class="insight-panel-title">Why it matters</div><p>This enables the automation of workflows that rely on meeting outcomes, such as automatically creating tasks in project management systems from action items identified by Gemini in a meeting.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Unlocks significant potential for process automation and data integration. We can now build systems that connect meeting intelligence directly into our operational workflows, reducing manual effort and ensuring that insights from discussions are not lost.</p>
                 </div>
-                <a href="https://developers.google.com/workspace/release-notes" class="action-link" target="_blank">Read Full Report</a>
+                <a href="https://developers.google.com/workspace/release-notes#April_02_2026" class="action-link" target="_blank">Read Full Report</a>
             </div>
 
             <h2 class="section-title">☁️ GCP & Enterprise AI Infrastructure</h2>
             <div class="card">
-                <span class="card-category">GCP</span>
-                <h3 class="card-title">No Major GCP & Vertex AI Updates</h3>
-                <p class="card-text">There have been no major announcements or updates regarding Google Cloud Platform or Vertex AI in the last 48 hours.</p>
+                <span class="card-category">Threat Intelligence</span>
+                <h3 class="card-title">vSphere and BRICKSTORM Malware: A Defender's Guide</h3>
+                <p class="card-text">Mandiant has published a detailed guide on a new malware family named BRICKSTORM, which specifically targets VMware vSphere environments. The malware is designed to disrupt virtualized infrastructure by manipulating virtual machine files and hypervisor settings. The guide provides indicators of compromise (IOCs) and defensive strategies.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>A significant portion of Vopak's infrastructure is virtualized on VMware. An attack at the hypervisor level could be catastrophic, impacting numerous systems simultaneously and bypassing traditional in-guest security controls.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>This highlights the critical need to secure the management plane of our infrastructure. In line with Flow Forward, we must ensure our foundational platforms are resilient. This intelligence provides actionable steps to harden our vSphere environment against emerging, sophisticated threats.</p>
+                </div>
+                <a href="https://cloud.google.com/blog/topics/threat-intelligence/vsphere-brickstorm-defender-guide/" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+             <div class="card">
+                <span class="card-category">SecOps</span>
+                <h3 class="card-title">Google SecOps SOAR and Playbook Updates</h3>
+                <p class="card-text">Google SecOps has increased the maximum number of branches supported in Playbook Conditions and Multiple Choice Questions. This allows for more complex and nuanced automation workflows within the SOAR platform, enabling security teams to build more sophisticated response and triage processes.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>This update provides greater flexibility for our security automation engineers. More complex logic can now be built directly into playbooks, reducing the need for external scripts and simplifying the overall automation architecture.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Enhances our ability to automate security operations at scale. By enabling more advanced playbooks, we can improve the speed and consistency of our incident response, freeing up security analysts to focus on high-level threats, which is central to a forward-thinking security posture.</p>
+                </div>
+                <a href="https://docs.cloud.google.com/release-notes#April_05_2026" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+            <div class="card">
+                <span class="card-category">GKE</span>
+                <h3 class="card-title">New GKE Versions Available for Upgrades and New Clusters</h3>
+                <p class="card-text">New versions of Google Kubernetes Engine (GKE) are now available in the Rapid, Regular, and Stable release channels. The updates include new patch releases for versions 1.28, 1.29, and introduce 1.30 to the Rapid channel. These updates incorporate the latest security patches and bug fixes.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Staying current with GKE versions is critical for security and stability. Teams should review the release notes and plan upgrades to ensure their clusters are supported and protected against known vulnerabilities.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Leveraging the latest GKE features and security enhancements ensures our containerized applications run on a robust and secure platform. This aligns with our goal of maintaining a modern and resilient infrastructure to support our business applications.</p>
+                </div>
+                <a href="https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#April_02_2026" class="action-link" target="_blank">Read Full Report</a>
             </div>
 
             <h2 class="section-title">🧠 The Future of Google AI</h2>
             <div class="card">
-                <span class="card-category">Google Vids</span>
-                <h3 class="card-title">Google Vids & AI Avatars: Customization and Directorial Control</h3>
-                <p class="card-text">As part of the recent "Workspace Drop," Google Vids now allows users to create custom AI avatars using Nano Banana 2. This update also provides directorial control to place avatars in scenes and have them interact with objects. Additionally, direct publishing to YouTube is now supported.</p>
+                <span class="card-category">Model Release</span>
+                <h3 class="card-title">Gemma 4: Byte for byte, the most capable open models</h3>
+                <p class="card-text">Google DeepMind has released Gemma 4, a new family of lightweight, open-source models. They are described as the 'most intelligent open models to date' for their size, specifically built for advanced reasoning, multi-turn dialogue, and agentic workflows. This release signals a significant investment by Google in the open-source AI landscape.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>This moves AI-generated video from a novelty to a practical tool for creating branded content, training materials, and internal communications at scale.</p><br>
-                    <div class="insight-panel-title">Strategic Value</div>
-                    <p>Offers a new avenue for "Flow Forward" by enabling the rapid creation and dissemination of engaging visual content, improving training and communication effectiveness.</p>
+                    <div class="insight-panel-title">Why it matters</div><p>The availability of high-performance, small-footprint open models allows for on-device or locally-hosted AI applications with greater data privacy and lower cost. This could enable new use cases in environments with limited connectivity or strict data residency requirements.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Gemma 4 presents an opportunity to build and customize AI solutions with more control and potentially lower operational costs compared to relying solely on large, proprietary APIs. This aligns with Flow Forward by giving us the tools to innovate independently and build tailored AI capabilities that fit our unique business context.</p>
                 </div>
-                <a href="https://workspace.google.com/blog/product-announcements/workspace-drops-create-and-share-videos-with-ai-in-google-vids" class="action-link" target="_blank">Read Full Report</a>
+                <a href="https://deepmind.google/blog/gemma-4-byte-for-byte-the-most-capable-open-models/" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+            <div class="card">
+                <span class="card-category">API & Pricing</span>
+                <h3 class="card-title">New ways to balance cost and reliability in the Gemini API</h3>
+                <p class="card-text">Google is introducing two new inference tiers for the Gemini API: Flex and Priority. 'Flex' is a lower-cost option for non-latency-sensitive, batch-oriented tasks, while 'Priority' provides lower latency and higher reliability for interactive, production-grade applications. This gives developers more control over the performance and cost of their AI workloads.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>This provides a much-needed mechanism for cost optimization. Not all AI tasks require the fastest possible response time. We can now assign workloads to the appropriate tier, significantly reducing costs for background processing, data analysis, and other non-interactive tasks.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Enables a more financially sustainable AI strategy. By aligning cost with business value for each specific use case, we can scale our use of AI more broadly across the organization without incurring unnecessary expenses, maximizing the ROI of our AI initiatives.</p>
+                </div>
+                <a href="https://blog.google/innovation-and-ai/technology/developers-tools/introducing-flex-and-priority-inference/" class="action-link" target="_blank">Read Full Report</a>
             </div>
 
             <h2 class="section-title">🌐 The Broader AI Ecosystem</h2>
             <div class="card">
-                <span class="card-category">Market Shift</span>
-                <h3 class="card-title">Anthropic Blocks OpenClaw, Shifting to Pay-As-You-Go for Agentic AI</h3>
-                <p class="card-text">Anthropic has blocked Claude Pro and Max subscribers from using flat-rate plans with third-party AI agent frameworks like OpenClaw. Users are now required to use a pay-as-you-go system, which could dramatically increase costs for heavy agentic workflows. This signals a major shift in the market towards monetizing agentic AI usage.</p>
+                <span class="card-category">Acquisition</span>
+                <h3 class="card-title">OpenAI acquires TBPN</h3>
+                <p class="card-text">OpenAI has acquired TBPN (The Builder's Press Network), a company known for organizing tech events and producing media content for the developer community. OpenAI states the goal is to 'accelerate global conversations around AI' and expand dialogue with builders, businesses, and the tech community.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>This move will force a re-evaluation of the cost-effectiveness of using third-party agent frameworks with proprietary models. It may also accelerate the adoption of open-source models for agentic tasks.</p><br>
-                    <div class="insight-panel-title">Strategic Value</div>
-                    <p>This validates our strategy of building a flexible, multi-model AI architecture. By not being locked into a single provider, we can adapt to these market shifts and optimize for both performance and cost.</p>
+                    <div class="insight-panel-title">Why it matters</div><p>This is a strategic move by OpenAI to influence and control the narrative around AI development. By owning a media and events platform, they can more directly shape public and developer perception of their products and the field of AI in general.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Vopak must be aware of how the information landscape is being shaped. As we engage with the AI ecosystem, it is important to seek diverse sources of information and understand the strategic motivations behind the content we consume. This acquisition highlights the increasing importance of 'soft power' and community building in the AI race.</p>
                 </div>
-                <a href="https://thenextweb.com/news/anthropic-openclaw-claude-subscription-ban-cost" class="action-link" target="_blank">Read Full Report</a>
+                <a href="https://openai.com/index/openai-acquires-tbpn" class="action-link" target="_blank">Read Full Report</a>
             </div>
             <div class="card">
-                <span class="card-category">OpenAI</span>
-                <h3 class="card-title">OpenAI's Strategic Pivot: IPO Tensions and Sora Shutdown</h3>
-                <p class="card-text">Reports suggest internal disagreements at OpenAI regarding the timing of an IPO, with CEO Sam Altman pushing for a 2026 launch against the CFO's preference for 2027. This comes as OpenAI discontinues its Sora video platform to refocus on a "very big and important" next generation of models and agents.</p>
+                <span class="card-category">Pricing & Go-To-Market</span>
+                <h3 class="card-title">Codex now offers more flexible pricing for teams</h3>
+                <p class="card-text">OpenAI has introduced pay-as-you-go pricing for its Codex-powered products, including ChatGPT Business and Enterprise. This moves away from a purely seat-based model, providing a more flexible option for teams to start using the tools and scale their adoption based on actual usage.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>This internal turmoil and strategic shift could create opportunities for competitors. The pivot away from a high-profile product like Sora indicates a deep commitment to foundational model development.</p><br>
-                    <div class="insight-panel-title">Strategic Value</div>
-                    <p>Reinforces the need for a diversified AI portfolio. As the market leader shows signs of internal stress, it is prudent to continue exploring and investing in alternative and open-source solutions to mitigate risk.</p>
+                    <div class="insight-panel-title">Why it matters</div><p>This lowers the barrier to entry for departmental or project-based adoption of advanced coding assistants. Teams can experiment with the tools without committing to a large, upfront annual contract, allowing for more organic growth and evaluation based on demonstrated value.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>This competitive pricing pressure may influence how Google and other providers price their enterprise AI offerings. For Vopak, it provides more options for equipping our developer teams with AI tools, allowing us to choose the best fit for different projects based on both capability and cost-effectiveness.</p>
                 </div>
-                <a href="https://www.ndtvprofit.com/business/openai-ipo-reports-of-differences-between-altman-cfo-over-launch-timing-11316528" class="action-link" target="_blank">Read Full Report</a>
+                <a href="https://openai.com/index/codex-flexible-pricing-for-teams" class="action-link" target="_blank">Read Full Report</a>
             </div>
 
             <h2 class="section-title">💡 Executive Efficiency & Workflow Tips</h2>
             <div class="card">
-                <span class="card-category">Google Meet</span>
-                <h3 class="card-title">Join Meetings on the Go with CarPlay</h3>
-                <p class="card-text">You can now join Google Meet meetings from your car's dashboard using Apple CarPlay. The feature is audio-only, with video automatically disabled to ensure driver safety.</p>
+                <span class="card-category">Productivity</span>
+                <h3 class="card-title">Tip: Use "Help me create" in Google Forms to Draft Surveys Instantly</h3>
+                <p class="card-text">Instead of building surveys from scratch, use the Gemini integration in Google Forms. Simply type a prompt describing the purpose of your form (e.g., "Create a post-training feedback form for a session on cloud security") and Gemini will generate a draft with relevant questions and response types. You can then refine it, saving significant time on initial setup.</p>
                 <div class="insight-panel">
-                    <div class="insight-panel-title">Why it matters</div>
-                    <p>Provides a safe and convenient way to stay connected and productive while on the move, without compromising on safety.</p><br>
+                    <div class="insight-panel-title">Why it matters</div><p>Reduces the administrative overhead of gathering feedback or information, allowing you to focus on the insights rather than the mechanics of form creation.</p>
                 </div>
-                <a href="https://workspaceupdates.googleblog.com/2026/04/google-meet-is-now-available-on-carplay.html" class="action-link" target="_blank">Read Full Report</a>
-            </div>
-            <div class="card">
-                <span class="card-category">Gmail</span>
-                <h3 class="card-title">Schedule Meetings with Multiple Guests Using Gemini</h3>
-                <p class="card-text">The "Help me schedule" feature in Gmail, powered by Gemini, now supports scheduling with multiple guests simultaneously. This streamlines the process of finding a time that works for everyone, directly from your inbox.</p>
+                <a href="http://workspaceupdates.googleblog.com/feeds/8635075296332027098/comments/default" class="action-link" target="_blank">Learn More</a>
             </div>
         </div>
 
