@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vopak Strategic Intelligence | Wednesday, April 15, 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Vopak Branding v3.0 */
+            --vopak-deep-blue: #0a2373;
+            --vopak-cyan: #00cfe1;
+            --vopak-light-blue: #009ef5;
+            --vopak-cobalt: #283ce1;
+            --vopak-steel: #46555a;
+            --vopak-grey: #e1e1e1;
+            --bg-light: #f4f7f6;
+            --text-dark: #1a1a1a;
+            --text-muted: #46555a;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 0px; /* Strictly matter-of-fact */
+            box-shadow: 0 10px 40px rgba(10, 35, 115, 0.1);
+            border-top: 8px solid var(--vopak-cyan);
+            overflow: hidden;
+        }
+
+        .header {
+            background-color: var(--vopak-deep-blue);
+            color: #ffffff;
+            padding: 50px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            text-align: left;
+        }
+
+        .header-content h1 {
+            margin: 0;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .header-content p {
+            margin: 10px 0 0;
+            font-size: 14px;
+            color: var(--vopak-cyan);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .project-header {
+            text-align: right;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--vopak-grey);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-right: 3px solid var(--vopak-cyan);
+            padding-right: 15px;
+        }
+
+        .content {
+            padding: 50px 40px;
+        }
+
+        .section-title {
+            color: var(--vopak-deep-blue);
+            font-size: 26px;
+            font-weight: 800;
+            border-bottom: 2px solid var(--vopak-grey);
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid var(--vopak-grey);
+            border-left: 5px solid var(--vopak-deep-blue);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 0px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateX(8px);
+            border-left-color: var(--vopak-cyan);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .card-category {
+            font-size: 12px;
+            color: var(--vopak-steel);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .card-title {
+            margin: 0 0 15px 0;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--vopak-deep-blue);
+            line-height: 1.3;
+        }
+
+        .card-text {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .action-link {
+            display: inline-flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--vopak-light-blue);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-link:hover {
+            color: var(--vopak-deep-blue);
+        }
+
+        /* Flow Forward Arrow styling */
+        .action-link::after {
+            content: " →";
+            color: var(--vopak-cyan);
+            margin-left: 5px;
+            font-size: 16px;
+            font-weight: 800;
+            transition: margin-left 0.2s ease;
+        }
+
+        .action-link:hover::after {
+            margin-left: 8px;
+        }
+
+        .insight-panel {
+            background-color: rgba(0, 207, 225, 0.05);
+            border-left: 4px solid var(--vopak-cyan);
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .insight-panel-title {
+            color: var(--vopak-deep-blue);
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .insight-panel p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+        
+        .insight-panel ul {
+            margin: 0 0 0 20px;
+            padding: 0;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .insight-panel li {
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            background-color: var(--vopak-steel);
+            color: #ffffff;
+            text-align: center;
+            padding: 35px 40px;
+            font-size: 13px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .footer-tagline {
+            color: var(--vopak-cyan);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .project-header {
+                text-align: left;
+                border-right: none;
+                border-left: 3px solid var(--vopak-cyan);
+                padding-right: 0;
+                padding-left: 15px;
+                margin-top: 20px;
+            }
+            .content { padding: 30px 20px; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>Strategic Intelligence</h1>
+                <p>Global IT & Super Admin Briefing</p>
+            </div>
+            <div class="project-header">
+                Wednesday, April 15, 2026<br>
+                <span style="color: #00cfe1;">Daily Update</span>
+            </div>
+        </div>
+        
+        <div class="content">
+            <h2 class="section-title">🎯 Executive Summary & Action Items</h2>
+            <div class="insight-panel">
+                <div class="insight-panel-title">🚨 Urgent Super Admin Actions:</div>
+                <ul>
+                    <li><a href="https://docs.cloud.google.com/release-notes#April_14_2026" target="_blank">Gemini Cloud Assist Change</a>: As of April 10, 2026, investigations in AlloyDB require specific licensing/access updates.</li>
+                </ul>
+                <div class="insight-panel-title" style="margin-top:15px;">♟️ Major Strategic Shifts:</div>
+                <ul>
+                    <li><a href="https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/" target="_blank">AI Workflow Monetization/Standardization</a>: Google launches "Skills in Chrome" to turn prompts into reusable tools.</li>
+                    <li><a href="https://openai.com/index/scaling-trusted-access-for-cyber-defense" target="_blank">GPT-5.4-Cyber Deployment</a>: OpenAI scales trusted access for cyber defense, marking a new era in AI-driven security.</li>
+                </ul>
+            </div>
+
+            <h2 class="section-title">🛡️ Google Workspace & Security Operations</h2>
+            <div class="card">
+                <span class="card-category">WORKSPACE UPDATES</span>
+                <h3 class="card-title">NotebookLM Limits Expanded for Education & Teaching Licenses</h3>
+                <p class="card-text">Google is increasing limits across NotebookLM features for Education Plus and Teaching & Learning customers at no additional cost.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Enhances personal knowledge management and synthesis capabilities for advanced users.</p><br>
+                    <div class="insight-panel-title">Strategic Value</div><p>Aligns with Vopak's "Flow Forward" by empowering knowledge workers with superior research tools.</p>
+                </div>
+                <a href="http://workspaceupdates.googleblog.com/feeds/277699273396384839/comments/default" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+
+            <div class="card">
+                <span class="card-category">HARDWARE & MEET</span>
+                <h3 class="card-title">Additional BYOD Switchers Certified for Google Meet</h3>
+                <p class="card-text">Lightware peripheral switchers are now certified for Google Meet on ChromeOS touch controller rooms, improving video processing and connectivity.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Simplifies hybrid meeting experiences for employees bringing their own devices.</p>
+                </div>
+                <a href="http://workspaceupdates.googleblog.com/feeds/2070275346401387947/comments/default" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+
+            <h2 class="section-title">☁️ GCP & Enterprise AI Infrastructure</h2>
+            <div class="card">
+                <span class="card-category">COMPUTE ENGINE</span>
+                <h3 class="card-title">Physical Location Visibility for Compute Engine Instances</h3>
+                <p class="card-text">You can now view the physical location of your Compute Engine instances in a zone to understand cluster topology and reduce network latency.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Critical for high-performance computing and latency-sensitive applications.</p>
+                </div>
+                <a href="https://docs.cloud.google.com/release-notes#April_15_2026" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+
+            <h2 class="section-title">🧠 The Future of Google AI</h2>
+            <div class="card">
+                <span class="card-category">ROBOTICS</span>
+                <h3 class="card-title">Gemini Robotics-ER 1.6: Enhanced Embodied Reasoning</h3>
+                <p class="card-text">DeepMind introduces Gemini Robotics-ER 1.6, powering real-world robotics tasks through enhanced spatial reasoning and multi-view understanding.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Strategic Value</div><p>Signals Google's push into physical AI, relevant for future terminal automation at Vopak.</p>
+                </div>
+                <a href="https://deepmind.google/blog/gemini-robotics-er-1-6/" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+
+            <h2 class="section-title">🌐 The Broader AI Ecosystem</h2>
+            <div class="card">
+                <span class="card-category">OPENAI</span>
+                <h3 class="card-title">Trusted Access for Cyber Defense: GPT-5.4-Cyber</h3>
+                <p class="card-text">OpenAI expands its Trusted Access program, introducing GPT-5.4-Cyber to vetted defenders to strengthen global cybersecurity safeguards.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Why it matters</div><p>Sets a new benchmark for AI in cybersecurity operations.</p>
+                </div>
+                <a href="https://openai.com/index/scaling-trusted-access-for-cyber-defense" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+
+            <h2 class="section-title">💡 Executive Efficiency & Workflow Tips</h2>
+            <div class="card">
+                <span class="card-category">CHROME & AI</span>
+                <h3 class="card-title">Turn Prompts into One-Click Tools in Chrome</h3>
+                <p class="card-text">New "Skills in Chrome" let you discover, save, and remix AI workflows, repeating them instantly for maximum efficiency.</p>
+                <div class="insight-panel">
+                    <div class="insight-panel-title">Efficiency Hack</div><p>Save your most-used Vopak reporting prompts as Chrome Skills for instant execution.</p>
+                </div>
+                <a href="https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/" class="action-link" target="_blank">Read Full Report</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="footer-logo">VOPAK</div>
+            <div class="footer-tagline">Flow Forward | Trust, Collaboration, Courage</div>
+            <div>Generated autonomously by GeminiClaw V4.0 for Patricio Santamaria & Yassin Bahasuan.</div>
+            <div style="margin-top: 10px; color: var(--vopak-grey); font-size: 11px;">Confidential & Proprietary. Do not distribute without authorization.</div>
+        </div>
+    </div>
+</body>
+</html>

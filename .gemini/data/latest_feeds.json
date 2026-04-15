@@ -1,0 +1,78 @@
+{
+  "\ud83d\udd34 PRIORITY 1: Google Workspace & Gemini": [
+    {
+      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
+      "title": "Gemini in Google Classroom is now available in all Classroom-supported languages",
+      "url": "http://workspaceupdates.googleblog.com/feeds/6997859027773304512/comments/default",
+      "date": "2026-04-14T09:23:19.451000-07:00",
+      "summary": "Last year, we launched <a href=\"https://workspaceupdates.googleblog.com/2025/06/gemini-google-classroom-all-edu-editions.html\" target=\"_blank\">Gemini in Google Classroom</a> in English to support educators with planning and creating engaging lessons, and to <a href=\"https://workspaceupdates.googlebl..."
+    },
+    {
+      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
+      "title": "Additional BYOD peripheral switchers certified for Google Meet in ChromeOS touch controller rooms",
+      "url": "http://workspaceupdates.googleblog.com/feeds/2070275346401387947/comments/default",
+      "date": "2026-04-13T09:24:07.598000-07:00",
+      "summary": "We have certified additional Lightware peripheral switchers, so that you and your team can bring your own devices (BYOD) to Google Meet on ChromeOS touch controller rooms. The new devices bring improvements for video processing, networking, connectivity and security.<div><br /></div><div>Plug your l..."
+    },
+    {
+      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
+      "title": "Prepare for the NEET UG with practice tests in Gemini",
+      "url": "http://workspaceupdates.googleblog.com/feeds/8669079137324547646/comments/default",
+      "date": "2026-04-13T08:55:22.170000-07:00",
+      "summary": "We recently launched full-length, no-cost practice tests in Gemini, starting with the <a href=\"https://workspaceupdates.googleblog.com/2026/01/prepare-sat-full-length-practice-tests-gemini.html\" target=\"_blank\">SAT</a> and <a href=\"http://workspaceupdates.googleblog.com/2026/02/prepare-for-jee-main-..."
+    },
+    {
+      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
+      "title": "Expanded NotebookLM capabilities for Education Plus and Teaching & Learning add-on customers",
+      "url": "http://workspaceupdates.googleblog.com/feeds/277699273396384839/comments/default",
+      "date": "2026-04-13T08:28:46.707000-07:00",
+      "summary": "We\u2019re increasing limits across <a href=\"https://notebooklm.google.com/\" target=\"_blank\">NotebookLM</a> features for customers with Google Workspace for Education Plus or a Teaching and Learning add-on license at no additional cost. Users will now see a Plus badge next to their profile picture, indic..."
+    },
+    {
+      "source": "https://deepmind.google/blog/rss.xml",
+      "title": "Gemini Robotics-ER 1.6: Powering real-world robotics tasks through enhanced embodied reasoning",
+      "url": "https://deepmind.google/blog/gemini-robotics-er-1-6/",
+      "date": "2026-04-13T15:52:13+00:00",
+      "summary": "Gemini Robotics ER 1.6: Enhancing spatial reasoning and multi-view understanding for autonomous robotics...."
+    },
+    {
+      "source": "https://blog.google/technology/ai/rss/",
+      "title": "Turn your best AI prompts into one-click tools in Chrome",
+      "url": "https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/",
+      "date": "2026-04-14T17:00:00+00:00",
+      "summary": "<img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GoogleChrome_RR_Skills_KeywordH.max-600x600.format-webp.webp\">Skills in Chrome let you discover, save and remix AI workflows \u2014 and repeat them instantly...."
+    },
+    {
+      "source": "https://blog.google/technology/ai/rss/",
+      "title": "Bringing people together at AI for the Economy Forum",
+      "url": "https://blog.google/company-news/outreach-and-initiatives/creating-opportunity/ai-economy-forum/",
+      "date": "2026-04-14T09:00:00+00:00",
+      "summary": "<img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/AI_for_the_Economy_Forum_2026.max-600x600.format-webp.webp\">Google is bringing people together in Washington D.C. at our AI for the Economy Forum...."
+    }
+  ],
+  "\ud83d\udd35 PRIORITY 2: GCP & Cloud Architecture": [
+    {
+      "source": "https://cloud.google.com/feeds/gcp-release-notes.xml",
+      "title": "April 15, 2026",
+      "url": "https://docs.cloud.google.com/release-notes#April_15_2026",
+      "date": "2026-04-15T00:00:00-07:00",
+      "summary": "<h2 class=\"release-note-product-title\">Compute Engine</h2>\n<h3>Announcement</h3>\n<p>You can view the physical location of your Compute Engine instances in a zone\nto understand your cluster topology. This information helps you reduce network\nlatency between your compute instances. For more informatio..."
+    },
+    {
+      "source": "https://cloud.google.com/feeds/gcp-release-notes.xml",
+      "title": "April 14, 2026",
+      "url": "https://docs.cloud.google.com/release-notes#April_14_2026",
+      "date": "2026-04-14T00:00:00-07:00",
+      "summary": "<h2 class=\"release-note-product-title\">AlloyDB for PostgreSQL</h2>\n<h3>Breaking</h3>\n<p>As of April 10, 2026, you can create, run, and edit\n<a href=\"https://docs.cloud.google.com/cloud-assist/investigations\">Gemini Cloud Assist investigations</a>\nonly if you have a <a href=\"https://cloud.google.com/..."
+    }
+  ],
+  "\ud83d\udfe2 PRIORITY 3: Executive AI Summary": [
+    {
+      "source": "https://openai.com/news/rss.xml",
+      "title": "Trusted access for the next era of cyber defense",
+      "url": "https://openai.com/index/scaling-trusted-access-for-cyber-defense",
+      "date": "2026-04-14T00:00:00+00:00",
+      "summary": "OpenAI expands its Trusted Access for Cyber program, introducing GPT-5.4-Cyber to vetted defenders and strengthening safeguards as AI cybersecurity capabilities advance...."
+    }
+  ]
+}
