@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Strategic Intelligence | Q4 Executive Report</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "vopak-deep-blue": "#0a2373",
+                    "vopak-cobalt": "#283ce1",
+                    "vopak-cyan": "#00cfe1",
+                    "vopak-light-blue": "#009ef5",
+                    "vopak-green": "#52d400",
+                    "vopak-orange": "#fc7000",
+                    "vopak-steel": "#46555a",
+                    "vopak-grey": "#e1e1e1",
+                    "primary-fixed-dim": "#bcc4f6",
+                    "on-secondary": "#ffffff",
+                    "outline-variant": "#c6c5d0",
+                    "tertiary-container": "#002536",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#161e47",
+                    "surface-container": "#eceef0",
+                    "secondary-fixed-dim": "#bbc3ff",
+                    "secondary-container": "#4c64fa",
+                    "primary-fixed": "#dee0ff",
+                    "on-surface": "#ffffff",
+                    "on-tertiary-fixed-variant": "#004c6a",
+                    "surface-variant": "#e0e3e5",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#000e5e",
+                    "primary": "#ffffff",
+                    "on-primary-fixed-variant": "#3c446f",
+                    "on-tertiary-container": "#0093c9",
+                    "outline": "#76767f",
+                    "inverse-on-surface": "#191c1e",
+                    "on-primary-fixed": "#101841",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#c5e7ff",
+                    "surface": "#0a2373",
+                    "tertiary-fixed-dim": "#80d0ff",
+                    "surface-dim": "#081b58",
+                    "surface-bright": "#112b82",
+                    "background": "#0a2373",
+                    "error": "#ba1a1a",
+                    "surface-container-lowest": "#081b58",
+                    "inverse-primary": "#bcc4f6",
+                    "secondary": "#00b0f0",
+                    "on-background": "#ffffff",
+                    "surface-tint": "#545c88",
+                    "secondary-fixed": "#dee0ff",
+                    "on-tertiary-fixed": "#001e2d",
+                    "surface-container-highest": "#1c358a",
+                    "on-secondary-container": "#fffbff",
+                    "on-secondary-fixed-variant": "#052dcc",
+                    "on-surface-variant": "#e2e8f0",
+                    "inverse-surface": "#eff1f3",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#112b82",
+                    "surface-container-low": "#0a2373",
+                    "tertiary": "#000d16",
+                    "on-primary-container": "#7f86b5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem",
+                    "2xl": "1rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #0a2373; color: white; }
+    </style>
+</head>
+<body class="bg-vopak-deep-blue text-white">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-vopak-deep-blue border-b border-vopak-cyan/20 shadow-2xl flex justify-between items-center px-8 h-16 font-inter tracking-tight">
+<div class="text-xl font-semibold text-white">Strategic Intelligence</div>
+<nav class="hidden md:flex items-center space-x-8 h-full">
+<a class="text-vopak-cyan border-b-2 border-vopak-cyan pb-1 transition-all duration-200 ease-in-out" href="#">Reports</a>
+<a class="text-vopak-grey/70 hover:text-vopak-cyan transition-colors transition-all duration-200 ease-in-out" href="#">Insights</a>
+<a class="text-vopak-grey/70 hover:text-vopak-cyan transition-colors transition-all duration-200 ease-in-out" href="#">Briefings</a>
+<a class="text-vopak-grey/70 hover:text-vopak-cyan transition-colors transition-all duration-200 ease-in-out" href="#">Archive</a>
+</nav>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-vopak-grey/70 hover:text-white hover:bg-white/10 rounded transition-all">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-vopak-grey/70 hover:text-white hover:bg-white/10 rounded transition-all">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<div class="flex pt-16 min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-16 flex flex-col pt-8 h-screen w-64 border-r border-white/5 bg-[#081b58]">
+<div class="px-6 mb-8">
+<h2 class="text-lg font-bold text-white">Report Index</h2>
+<p class="text-xs text-vopak-grey/50 uppercase tracking-widest">Daily/Weekly Strategic Outlook</p>
+</div>
+<nav class="flex flex-col space-y-2 px-3">
+<a class="flex items-center py-2 px-4 font-bold text-white bg-vopak-cobalt rounded-full transition-colors font-inter text-sm uppercase tracking-wider shadow-lg" href="#">
+<span class="material-symbols-outlined mr-3">summarize</span> Executive Summary
+            </a>
+<a class="flex items-center py-3 text-vopak-grey/70 pl-4 hover:bg-white/5 hover:text-vopak-cyan transition-colors font-inter text-sm uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-vopak-light-blue">trending_up</span> Market Analysis
+            </a>
+<a class="flex items-center py-3 text-vopak-grey/70 pl-4 hover:bg-white/5 hover:text-vopak-cyan transition-colors font-inter text-sm uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-vopak-light-blue">warning</span> Risk Assessment
+            </a>
+<a class="flex items-center py-3 text-vopak-grey/70 pl-4 hover:bg-white/5 hover:text-vopak-cyan transition-colors font-inter text-sm uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-vopak-light-blue">local_shipping</span> Logistics
+            </a>
+<a class="flex items-center py-3 text-vopak-grey/70 pl-4 hover:bg-white/5 hover:text-vopak-cyan transition-colors font-inter text-sm uppercase tracking-wider" href="#">
+<span class="material-symbols-outlined mr-3 text-vopak-light-blue">inventory</span> Conclusion
+            </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 bg-vopak-deep-blue p-12">
+<div class="max-w-5xl mx-auto">
+<!-- Header Branding -->
+<div class="mb-12">
+<span class="inline-block px-3 py-1 bg-vopak-cyan text-vopak-deep-blue text-[10px] font-bold tracking-widest uppercase mb-4 rounded-sm">Internal Briefing // 2026-04-22</span>
+<h1 class="text-5xl font-semibold tracking-tight text-white mb-2">Quarterly Intelligence Synopsis</h1>
+<div class="w-24 h-1 bg-vopak-cyan"></div>
+</div>
+<!-- Executive Summary -->
+<section class="bg-vopak-cobalt p-12 mb-12 rounded-2xl shadow-2xl border-l-8 border-vopak-cyan">
+<div class="flex flex-col md:flex-row gap-12">
+<div class="md:w-1/3">
+<h2 class="text-2xl font-bold text-white tracking-tight">Executive Summary</h2>
+<p class="text-vopak-grey text-sm mt-2 font-medium">Core Directives &amp; Key Shifts</p>
+</div>
+<div class="md:w-2/3">
+<div class="text-lg leading-relaxed text-white">
+<div class="mb-6">
+    <div class="text-vopak-cyan font-bold tracking-wider uppercase mb-2">🚨 Urgent Super Admin Actions:</div>
+    <ul class="list-disc pl-5 space-y-2"><li><a href="https://deepmind.google/blog/partnering-with-industry-leaders-to-accelerate-ai-transformation/" target="_blank" class="text-white hover:text-vopak-cyan underline decoration-vopak-cyan/50 underline-offset-4 transition-colors font-bold">Partnering with industry leaders to accelerate AI transformation</a>: Google DeepMind partners with global consultancies to bring the power of frontier AI to organization...</li></ul>
+</div>
+<div>
+    <div class="text-vopak-cyan font-bold tracking-wider uppercase mb-2">♟️ Major Strategic Shifts:</div>
+    <ul class="list-disc pl-5 space-y-2"><li><a href="https://openai.com/index/introducing-workspace-agents-in-chatgpt" target="_blank" class="text-white hover:text-vopak-cyan underline decoration-vopak-cyan/50 underline-offset-4 transition-colors font-bold">Introducing workspace agents in ChatGPT</a>: Workspace agents in ChatGPT are Codex-powered agents that automate complex workflows, run in the clo...</li></ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Update Cards Grid -->
+<div class="flex flex-col space-y-16"><div>
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-8 pb-3 border-b border-white/10">🔵 PRIORITY 2: GCP & Cloud Architecture</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div></div><div>
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-8 pb-3 border-b border-white/10">🟢 PRIORITY 3: Executive AI Summary</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Introducing workspace agents in ChatGPT</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Workspace agents in ChatGPT are Codex-powered agents that automate complex workflows, run in the cloud, and help teams scale work across tools securely....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://openai.com/index/introducing-workspace-agents-in-chatgpt" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Workspace agents</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Learn how to build, use, and scale workspace agents in ChatGPT to automate repeatable workflows, connect tools, and streamline team operations....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://openai.com/academy/workspace-agents" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Speeding up agentic workflows with WebSockets in the Responses API</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">A deep dive into the Codex agent loop, showing how WebSockets and connection-scoped caching reduced API overhead and improved model latency....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://openai.com/index/speeding-up-agentic-workflows-with-websockets" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Introducing OpenAI Privacy Filter</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">OpenAI Privacy Filter is an open-weight model for detecting and redacting personally identifiable information (PII) in text with state-of-the-art accuracy...</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://openai.com/index/introducing-openai-privacy-filter" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Scaling Codex to enterprises worldwide</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">OpenAI launches Codex Labs, partners with with Accenture, PwC, Infosys, and others to help enterprises deploy and scale Codex across the software development lifecycle, and hits 4M Codex WAU....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://openai.com/index/scaling-codex-to-enterprises-worldwide" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Company-wise memory in Amazon Bedrock with Amazon Neptune and Mem0</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Company-wise memory in Amazon Bedrock, powered by Amazon Neptune and Mem0, provides AI agents with persistent, company-specific context—enabling them to learn, adapt, and respond intelligently across multiple interactions. TrendMicro, one of the largest antivirus software companies in the world, developed the Trend’s Companion chatbot, so their customers can explore information through natural, conversational interactions...</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://aws.amazon.com/blogs/machine-learning/company-wise-memory-in-amazon-bedrock-with-amazon-neptune-and-mem0/" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">From developer desks to the whole organization: Running Claude Cowork in Amazon Bedrock</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Today, we're excited to announce Claude Cowork in Amazon Bedrock. You can now run Cowork and Claude Code Desktop through Amazon Bedrock, directly or using an LLM gateway. In this post, we walk through how Claude Cowork integrates with Amazon Bedrock and show an example of how knowledge workers use it in practice....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://aws.amazon.com/blogs/machine-learning/from-developer-desks-to-the-whole-organization-running-claude-cowork-in-amazon-bedrock/" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">End-to-end lineage with DVC and Amazon SageMaker AI MLflow apps</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">In this post, we show how to combine DVC (Data Version Control), Amazon SageMaker AI, and Amazon SageMaker AI MLflow Apps to build end-to-end ML model lineage. We walk through two deployable patterns — dataset-level lineage and record-level lineage — that you can run in your own AWS account using the companion notebooks....</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://aws.amazon.com/blogs/machine-learning/end-to-end-lineage-with-dvc-and-amazon-sagemaker-ai-mlflow-apps/" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Accelerate Generative AI Inference on Amazon SageMaker AI with G7e Instances</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Today, we are thrilled to announce the availability of G7e instances powered by NVIDIA RTX PRO 6000 Blackwell Server Edition GPUs on Amazon SageMaker AI. You can provision nodes with 1, 2, 4, and 8 RTX PRO 6000 GPU instances, with each GPU providing 96 GB of GDDR7 memory. This launch provides the capability to use a single-node GPU, G7e.2xlarge instance to host powerful open source foundation models (FMs) like GPT-OSS-120B, Nemotron-3-Super-120B-A12B (NVFP4 variant), and Qwen3.5-35B-A3B, offerin...</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://aws.amazon.com/blogs/machine-learning/accelerate-generative-ai-inference-on-amazon-sagemaker-ai-with-g7e-instances/" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div></div></div><div>
+        <h2 class="text-3xl font-bold text-white tracking-tight mb-8 pb-3 border-b border-white/10">🟡 PRIORITY 4: Agentic AI & Open Source Ecosystem</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">Gemma 4 VLA Demo on Jetson Orin Nano Super</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Click to read full details.</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://huggingface.co/blog/nvidia/gemma4" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">QIMMA قِمّة ⛰: A Quality-First Arabic LLM Leaderboard</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Click to read full details.</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://huggingface.co/blog/tiiuae/qimma-arabic-leaderboard" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <div class="bg-[#112b82] rounded-xl p-6 shadow-xl border border-white/5 hover:border-vopak-cyan/30 transition-all flex flex-col h-full">
+                <div class="mb-4">
+                    <span class="inline-block px-2 py-1 bg-vopak-cyan/10 text-vopak-cyan text-xs font-bold rounded uppercase tracking-wider">Strategic Update</span>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-3 leading-snug">AI and the Future of Cybersecurity: Why Openness Matters</h3>
+                <p class="text-vopak-grey/80 text-sm mb-6 flex-grow">Click to read full details.</p>
+                
+                <div class="bg-[#0a2373] rounded-lg p-4 mb-6 border border-white/5">
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Why it matters</div>
+                    <p class="text-white text-sm mb-4">Direct application for Vopak operations.</p>
+                    <div class="text-vopak-cyan text-xs font-bold uppercase tracking-wider mb-1">Strategic Value</div>
+                    <p class="text-white text-sm">Aligns with "Flow Forward".</p>
+                </div>
+                
+                <div class="mt-auto pt-4 border-t border-white/5">
+                    <a href="https://huggingface.co/blog/cybersecurity-openness" target="_blank" class="inline-flex items-center text-vopak-cyan hover:text-white font-bold text-sm transition-colors group">
+                        Read Full Report 
+                        <span class="material-symbols-outlined ml-1 text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div></div></div></div>
+
+<!-- Visual Data Anchor -->
+<div class="mt-12 bg-[#081b58] rounded-2xl overflow-hidden relative group border border-white/5 shadow-2xl">
+<img class="w-full h-80 object-cover opacity-20 mix-blend-overlay grayscale hover:grayscale-0 transition-all duration-700" data-alt="Modern data center server racks with blue LED lighting and a digital interface overlay showing global trade network lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTSVQQOYJll8Uvl1fnIXkFHj7LWI3C-sTH6sKEVfS5X-qhTKxtXIDfw02zyPTvdWCo0SsqBwyzEzbg2S0M8nbtzxhIW_RzssyxXGJgBLNZABPLb6BApapFUuY9jS6m9qtFMNCTT6FqzonelnXnh_s2hST-voc7JpeopPr4z3y8Q-Ouf9QuvzWTqOtpajywTwUNGxEIt7E7d2YbA4B52EYTWER2HpM843S_IjYMOmTO05qNtR7XwKLLZaVrgrWh5VbIPfeuqUi9g_HL"/>
+<div class="absolute inset-0 flex items-center justify-center p-12 text-center">
+<div>
+<p class="text-vopak-cyan text-xs font-bold uppercase tracking-[0.3em] mb-6">Signature Visualization</p>
+<h4 class="text-white text-3xl md:text-4xl font-light leading-snug max-w-3xl">
+                            "Our competitive advantage is no longer just scale, but the <span class="text-vopak-cyan font-bold italic">precision</span> of our operational intelligence."
+                        </h4>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="w-full py-16 bg-[#081b58] border-t border-white/5 flex flex-col items-center justify-center space-y-6 font-inter text-xs opacity-90">
+<div class="font-bold text-white uppercase tracking-[0.2em] text-sm">Strategic Intelligence</div>
+<div class="flex space-x-12 text-vopak-grey/50">
+<a class="hover:text-vopak-cyan transition-colors" href="#">Contact</a>
+<a class="hover:text-vopak-cyan transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-vopak-cyan transition-colors" href="#">Terms of Service</a>
+</div>
+<div class="text-vopak-grey/30 uppercase tracking-tighter">© 2024 Strategic Intelligence. All rights reserved.</div>
+</footer>
+</body></html>
