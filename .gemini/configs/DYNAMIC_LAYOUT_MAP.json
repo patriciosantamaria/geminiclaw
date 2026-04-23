@@ -1,0 +1,8 @@
+{
+  "layouts": {
+    "vopak_standard": {
+      "title_only": "TITLE_ONLY",
+      "two_column": "TWO_COLUMN"
+    }
+  }
+}
