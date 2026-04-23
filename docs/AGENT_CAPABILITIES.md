@@ -32,6 +32,7 @@ I leverage specialized sub-agents to parallelize workflows and execute complex t
 *   **`vopak-morning-brief`**: Generates a strategic 360-degree morning briefing analyzing Gmail, Calendar, and Tasks at 8:00 AM.
 *   **`vopak-news-intelligence`**: Autonomously parses high-fidelity RSS feeds to generate an exhaustive, Vopak-branded daily AI & Cloud news report. *(Note: Enforces absolute exhaustiveness over brevity).*
 *   **`vopak-synthesis`**: Generates highly detailed Weekly/Monthly self-reflection and Google Team Business Reports via Drive API.
+*   **`vopak-presentation-designer`**: High-fidelity automated slide generator that converts ADDs or summaries into Vopak-branded Google Slides using a 50/50 split logic.
 *   **`vopak-deep-research`**: Recursive web searching and deep content extraction for strategic synthesis.
 *   **`vopak-cloud-engineer`**: Manages Google Apps Script projects (clasp), GCP infrastructure (gcloud), and Workspace integrations autonomously.
 *   **`codebase_investigator`**: Analyzes system-wide dependencies and maps architecture for root-cause bug analysis or refactoring.

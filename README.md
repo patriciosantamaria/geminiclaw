@@ -29,6 +29,7 @@ GeminiClaw uses asynchronous **Sub-Agents** to perform heavy lifting without clu
 - **`vopak-news-intelligence` & `vopak-deep-research`**: Autonomously scrapes RSS feeds and GitHub repositories to synthesize highly technical, branded executive newsletters.
 - **`vopak-cloud-engineer`**: Fully autonomous GCP (`gcloud`) and Apps Script (`clasp`) provisioning, equipped with strict destructive-action guardrails.
 - **`vopak-synthesis`**: Generates exact, math-verified weekly and monthly business reports directly into Google Docs.
+- **`vopak-presentation-designer`**: High-fidelity automated slide generator that converts documents into Vopak-branded Google Slides using a simplified 50/50 split logic.
 
 ### 2. Specialized Personas & Guardrails (Skills)
 GeminiClaw dynamically switches between specialized mindsets using **Skills**:

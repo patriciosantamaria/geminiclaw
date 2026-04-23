@@ -35,6 +35,7 @@ Skills are stored in `.gemini/skills/` and mapped directly to the CLI's `activat
 
 ## 4. Webhooks & Integrations
 - Webhooks are preserved in specific agent instruction files (`.gemini/agents/*.md` and `.gemini/skills/*/SKILL.md`).
+- Primary subagents using webhooks: `vopak-morning-brief`, `vopak-news-intelligence`, `vopak-synthesis`, `vopak-presentation-designer`.
 - Notification Script: `/app/scripts/webhook-notifier.sh` (Must have `chmod +x`).
 
 ## 5. Proactive Auto-Repair Mandate
