@@ -27,14 +27,18 @@ The workspace is organized into a core agentic layer (`.gemini/`) and functional
 The system implements a multi-modal memory stack to balance speed, structure, and semantic depth.
 
 - **SQLite Engine:** Manages relational data in `.gemini/data/memory.db`.
-  - **Tables:** `knowledge_index` (Key/Value/Source), `roi_metrics` (Task/TimeSaved/Date), `stakeholder_preferences` (Email/Pref/Context).
+  - **Tables:** 
+    - `knowledge_index` (Key/Value/Source)
+    - `roi_metrics` (Task/TimeSaved/Date)
+    - `stakeholder_preferences` (Email/Pref/Context)
+    - `proactive_triggers` (SourceID/Type/Summary) - Used heavily by subagents (e.g. `vopak-inbox-triage`) to pass urgent asynchronous signals to other agents (e.g. `vopak-morning-brief`).
 - **Embedded Knowledge Engine:** A local SQLite Full-Text Search (FTS5) table for semantic context.
 - **Ollama Integration:** The `MemoryClient` utilizes Ollama's `nomic-embed-text` model to generate 768-dimensional embeddings for all indexed documents.
 
 ### 💼 2.2. Memory Client API (`.gemini/core/memory-client.ts`)
 The `MemoryClient` provides a high-level TypeScript interface:
 - **`remember(id, content, category, project_id, metadata)`:** Generates an embedding via Ollama and persists the document + vector to SQLite.
-- **`recall(query, nResults, category)`:** Performs a hybrid FTS5 text search and cosine-similarity search in the local database to retrieve the top-N relevant context blocks.
+- **`recall(query, nResults, category)`:** Performs a hybrid search combining FTS5 text match and Cosine Similarity (calculated in TypeScript memory) to retrieve the top-N relevant context blocks.
 - **`getEmbedding(text)`:** Direct interface to the local embedding model.
 
 ---

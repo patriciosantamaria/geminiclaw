@@ -1,6 +1,6 @@
 # 🦅 GeminiClaw: The Ultimate Agentic AI Assistant
 
-**GeminiClaw** is a sophisticated, autonomous agentic system designed to serve as the primary interface for **Patricio Santamaria (Vopak Senior Google Consultant)**. It transforms a standard development environment into a proactive, context-aware executive command center, managing Google Workspace, GitHub repositories, and local technical projects with "Wizard-level" automation.
+**GeminiClaw** is a sophisticated, autonomous agentic system designed to serve as the primary interface for **Patricio Santamaria (Vopak Senior Google Consultant)**. It transforms a standard development environment into a proactive, context-aware executive command center, managing Google Workspace, GitHub repositories, Google Cloud (GCP), and local technical projects with "Wizard-level" automation.
 
 ---
 
@@ -9,83 +9,52 @@ To autonomously manage, optimize, and scale the user's digital life and professi
 
 ---
 
-## 🚀 Key Features
+## 📚 Documentation Directory
 
-### 📅 Proactive Workspace Management
-- **The "Deep Fetch" Mandate:** Automatically retrieves full calendar details, attendee status, and linked attachments.
-- **Human-Only Inbox Triage:** Uses the `vopak-inbox-triage` skill to filter out system alerts and isolate emails from real people (Colleagues, Managers, Partners).
-- **Wizard’s Morning Brief:** Every morning at 8:00 AM, the agent performs a 360-degree audit and sends a branded HTML briefing email covering "Big Rocks," weekly horizons, and AI tips.
-- **Smart Scheduling:** Identifies tasks in emails and proactively suggests/creates calendar events.
+For a deep dive into the architecture, capabilities, and technical implementation of GeminiClaw, please refer to the detailed documentation in the `docs/` folder:
 
-### 🌉 3-Tier Wizard Bridge (Secure Execution)
-The agent interacts with Google Workspace via a secure, 3-Tier dynamic script execution model:
-1. **Read Tier:** Safe GET queries for Contacts, Tasks, and Calendar.
-2. **Write Tier:** Mutating actions for Docs, Sheets, and email drafting.
-3. **Destructive Tier:** High-risk actions isolated behind explicit user confirmation.
-
-### 🧠 Hybrid Memory System (SQLite + ChromaDB)
-- **Memory-First Search:** Before searching the web, GeminiClaw queries its local long-term memory to recall previous decisions, stakeholder preferences (Rinaldo, Richard, Koen), and project history.
-- **Self-Reflection:** After every session, the agent autonomously indexes new facts, ROI metrics, and pivots using the `vopak-self-reflection` skill.
-
-### 🛠️ Specialized "Wizard" Skills
-The agent dynamically switches between specialized mindsets based on the task:
-- **The Strategist:** ROI, executive reporting, and global scaling.
-- **The Solution Architect:** Technical design, Apps Script, and Vertex AI integration.
-- **Change Management:** Shifting mindsets and overcoming stakeholder resistance.
-- **Tank Inspector:** Specialized logic for Vopak terminal inspection automation.
-
-### 💻 GitHub & Jules Integration
-- **Autonomous Refactoring:** Uses the `/jules` extension for large-scale code improvements and unit test generation.
-- **Repo Management:** Automated repository creation, initialization, and structured pushing.
+*   **[Architectural Design Document (ADD)](docs/ADD.md):** High-level overview of the V4.0 "Consciousness" architecture, the Wizard's Council mindset, and core integrations.
+*   **[Technical Design Document (TDD)](docs/TDD.md):** In-depth technical specifications of the file structure, Hybrid Memory Stack (SQLite + FTS5 + Ollama), and the Proactive Indexer (Harvester).
+*   **[Agent Capabilities & Rules](docs/AGENT_CAPABILITIES.md):** The comprehensive list of all active Sub-Agents, Specialized Skills, and the strict operational Guardrails (Constitution).
+*   **[System Map & Auto-Repair](docs/SYSTEM_MAP.md):** The source of truth for the physical architecture, MCP server configurations, and auto-repair protocols.
+*   **[Audit Report](docs/AUDIT_REPORT.md):** The latest security and compliance audit regarding secrets, tools, and execution layer boundaries.
 
 ---
 
-## 🛠️ Getting Started
+## 🚀 High-Level Overview
 
-### Prerequisites
-- **Gemini CLI:** The core execution engine.
-- **gh CLI:** For GitHub repository management.
-- **Node.js/TypeScript:** For harvester services and custom skills.
-- **Google Workspace Access:** Authenticated via the Google Workspace Extension.
+### 1. Proactive Agentic Workflows (Sub-Agents)
+GeminiClaw uses asynchronous **Sub-Agents** to perform heavy lifting without cluttering the main conversation:
+- **`vopak-morning-brief` & `vopak-inbox-triage`**: Automatically scans the calendar and inbox, scores cognitive load, creates "Deep Work" blocks, and delivers a branded morning brief via Google Chat webhooks.
+- **`vopak-news-intelligence` & `vopak-deep-research`**: Autonomously scrapes RSS feeds and GitHub repositories to synthesize highly technical, branded executive newsletters.
+- **`vopak-cloud-engineer`**: Fully autonomous GCP (`gcloud`) and Apps Script (`clasp`) provisioning, equipped with strict destructive-action guardrails.
+- **`vopak-synthesis`**: Generates exact, math-verified weekly and monthly business reports directly into Google Docs.
 
-### Installation & Setup
-1. Clone the repository: `git clone https://github.com/patosantamaria/geminiclaw.git`
-2. Initialize the environment:
-   ```bash
-   # Ensure dependencies are met
-   npm install
-   # Set up the harvester service
-   systemctl --user enable --now .gemini/infra/systemd/harvester.timer
-   ```
+### 2. Specialized Personas & Guardrails (Skills)
+GeminiClaw dynamically switches between specialized mindsets using **Skills**:
+- **The Chief Architect & Transformation Lead:** For high-level AWS/Vertex integration design and enterprise change management.
+- **The Ghostwriter:** For drafting emails and reports that perfectly match Patricio's strategic, concise tone.
+- **The CAA Architect:** For designing secure Context-Aware Access policies via "Execution Manifests" for Super Admins.
+- **Branding Validator:** Enforces Vopak Branding v3.0 (Deep Blue `#0a2373`, Cyan `#00cfe1`) across all outputs.
 
----
+### 3. The Hybrid Memory Stack
+Before acting, GeminiClaw queries its **Embedded Memory System**:
+- **Relational (`memory.db`):** Tracks ROI metrics, stakeholder preferences, and `proactive_triggers` (signals passed between sub-agents).
+- **Vector/Semantic (FTS5 + Ollama):** Uses local `nomic-embed-text` embeddings for hybrid text and cosine-similarity searches to recall past project context and meeting notes.
+- **Self-Reflection (`vopak-self-reflection`):** A native engine that parses CLI chat logs post-session to extract lessons, update rules, and codify new skills autonomously.
 
-## 📖 Usage as an Agentic Assistant
-
-### 1. Daily Briefing
-The agent operates autonomously. You don't need to ask for a brief; it arrives in your inbox at 8:00 AM. If you need an ad-hoc update, simply ask:
-> *"Give me a strategic briefing for my meetings today."*
-
-### 2. Task Execution (Directives)
-When you give a Directive (e.g., *"Create a project plan for the Tank Inspection AI"*), GeminiClaw follows its **Constitution**:
-1. **Plan:** It shares a 3-step strategy.
-2. **Act:** It creates a Google Doc (branded), a Sheet for tracking, and sets up Calendar milestones.
-3. **Verify:** It confirms everything aligns with Vopak Branding v3.0.
-
-### 3. Memory Retrieval
-If you've forgotten a detail from a project months ago:
-> *"Search my memory for what we decided regarding the AWS Kiro bridge."*
+### 4. 3-Tier Wizard Bridge (Secure Workspace Execution)
+GeminiClaw interacts with Google Workspace via a custom, secure Model Context Protocol (MCP) server isolated in a V8 VM:
+1. **Tier 1 (Safe):** Read-only fetching (Calendar, Gmail).
+2. **Tier 2 (Mutating):** Creating Docs, Sheets, and Drafts.
+3. **Tier 3 (Dangerous):** Destructive actions, strictly gated by user confirmation.
 
 ---
 
-## 🛡️ Security & Privacy
-- **Human-in-the-Loop:** All "mutating" actions (sending emails, deleting files, committing code) require explicit user confirmation via a preview.
-- **DLP Mindset:** The agent is trained to respect Vopak’s Data Loss Prevention rules and Context-Aware Access (CAA).
-
----
-
-## 📊 ROI Tracking
-Every automated task records "Time Saved." View the cumulative impact in the `.gemini/data/memory.db` ROI dashboard to demonstrate value to executive stakeholders.
+## 🛡️ Security First
+- **No Hardcoded Secrets:** All credentials rely on `op://` 1Password references or local environment manifests.
+- **Human-in-the-Loop:** All mutating or destructive actions require explicit user confirmation via a preview.
+- **DLP Mindset:** Adheres to enterprise Data Loss Prevention rules, ensuring sensitive Vopak data is handled securely.
 
 ---
 
