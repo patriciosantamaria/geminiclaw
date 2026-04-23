@@ -29,12 +29,7 @@ export class Logger {
   private log(level: LogLevel, message: string, ...args: any[]) {
     if (level < this.minLevel) return;
 
-<<<<<<< HEAD
-    const levelNames = ['DEBUG', 'INFO', 'WARN', 'ERROR'];
-    const levelStr = levelNames[level] || 'UNKNOWN';
-=======
     const levelStr = Object.keys(LogLevel).find(key => (LogLevel as any)[key] === level) || 'INFO';
->>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
     const formattedMessage = this.formatMessage(levelStr, message);
 
     // All logs go to stderr to ensure they don't break MCP stdio protocol

@@ -2,19 +2,12 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
-<<<<<<< HEAD
 import ivm from "isolated-vm";
 import { google } from "googleapis";
 import { GoogleAuth } from "google-auth-library";
 import { Logger } from "./utils/logger.js";
-import { handleError } from "./utils/errors.js";
-=======
-import * as ivm from "isolated-vm";
-import { google } from "googleapis";
-import { GoogleAuth } from "google-auth-library";
-import { Logger } from "./utils/logger.js";
 import { handleError, GeminiClawError, ErrorCode } from "./utils/errors.js";
->>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
+import * as fs from "node:fs";
 
 const logger = new Logger("WizardBridgeMCP");
 
@@ -100,22 +93,43 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-let authClient: any = null;
+let authClient: Awaited<ReturnType<GoogleAuth["getClient"]>> | null = null;
 
 async function getAuthClient() {
   if (!authClient) {
     try {
-      const auth = new GoogleAuth({ scopes: SCOPES });
-      authClient = await auth.getClient();
-      logger.info("Initialized Google Auth Client with Application Default Credentials.");
+      const SERVICE_ACCOUNT_PATH = "/app/service-account.json";
+      const OAUTH_CREDS_PATH = "/app/.gemini_docker/oauth_creds.json";
+
+      if (fs.existsSync(SERVICE_ACCOUNT_PATH)) {
+        const auth = new google.auth.GoogleAuth({
+          keyFile: SERVICE_ACCOUNT_PATH,
+          scopes: SCOPES,
+        });
+        authClient = await auth.getClient();
+        logger.info(`Initialized Google Auth Client with Service Account from ${SERVICE_ACCOUNT_PATH}`);
+      } else if (fs.existsSync(OAUTH_CREDS_PATH)) {
+        const auth = new google.auth.GoogleAuth({
+          keyFile: OAUTH_CREDS_PATH,
+          scopes: SCOPES,
+        });
+        authClient = await auth.getClient();
+        logger.info(`Initialized Google Auth Client with OAuth Credentials from ${OAUTH_CREDS_PATH}`);
+      } else {
+        const auth = new GoogleAuth({ scopes: SCOPES });
+        authClient = await auth.getClient();
+        logger.info("Initialized Google Auth Client with Application Default Credentials.");
+      }
     } catch (e) {
-      throw handleError(logger, e, "Failed to initialize Google Auth Client. Please ensure ADC is set up.");
+      throw handleError(logger, e, "Failed to initialize Google Auth Client. Please ensure ADC, Service Account, or OAuth credentials are set up.");
     }
+  }
+  if (!authClient) {
+    throw new GeminiClawError("Auth client initialization failed silently", ErrorCode.INTERNAL_ERROR);
   }
   return authClient;
 }
 
-<<<<<<< HEAD
 /**
  * Host-side executor for Google Workspace API calls.
  */
@@ -142,14 +156,10 @@ async function hostExecuteGoogleApi(cmdJson: string) {
   }
 
   const response = await method.call(current, cmd.params);
-  // We return the data directly. isolated-vm will copy it if copy: true is used in .apply()
   return response.data;
 }
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-=======
-server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
->>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
   const validTools = ["read_workspace_script", "write_workspace_script", "destructive_workspace_script"];
   if (!validTools.includes(request.params.name)) {
     throw new Error(`Unknown tool: ${request.params.name}`);
@@ -167,7 +177,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
     await jail.set('_log_info', new ivm.Reference((msg: string) => logger.info(`[Sandbox Log] ${msg}`)));
     await jail.set('_log_error', new ivm.Reference((msg: string) => logger.error(`[Sandbox Error] ${msg}`)));
 
-<<<<<<< HEAD
     const bootstrapScript = `
       const console = {
         log: (msg) => _log_info.applySync(undefined, [String(msg)]),
@@ -229,52 +238,13 @@ server.setRequestHandler(CallToolRequestSchema, async (request: any) => {
 
     const resultRef = await context.evalClosure(wrappedScript, [], { 
       result: { promise: true, copy: true },
-      timeout: 10000 
+      timeout: 30000
     });
 
     let finalResult = resultRef;
     if (resultRef instanceof ivm.Reference) {
       finalResult = await resultRef.deref();
     }
-=======
-    // Create a hardened isolate with a 128MB memory limit
-    const isolate = new ivm.Isolate({ memoryLimit: 128 });
-    const context = await isolate.createContext();
-    const jail = context.global;
-
-    // To properly share complex objects like 'google' and 'auth' with isolated-vm,
-    // we use References. However, for the user's scripts to work seamlessly,
-    // we must provide a bridge.
-
-    await jail.set('global', jail.derefInto());
-
-    // We pass google and auth as references.
-    // Note: The user script must be aware that these are proxied.
-    await jail.set('google', new ivm.Reference(google));
-    await jail.set('auth', new ivm.Reference(auth));
-    
-    // Provide a basic log function
-    await jail.set('log', new ivm.Reference((...args: any[]) => {
-      logger.info('[Sandbox]', ...args);
-    }));
-
-    // Wrap the script to handle the async nature and the injected references.
-    // We use a simplified approach where we eval the script directly in the context.
-    const asyncWrapper = `
-      (async () => {
-        try {
-          ${script}
-        } catch (e) {
-          throw e;
-        }
-      })()
-    `;
-
-    const result = await context.eval(asyncWrapper, {
-      promise: true,
-      timeout: 30000
-    });
->>>>>>> 246c8f4421ea814be780368666e842cb15e9dbe1
 
     return {
       content: [

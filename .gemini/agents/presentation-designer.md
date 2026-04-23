@@ -34,8 +34,10 @@ For every content section identified in the source material, create a new slide 
 #### A. The 50/50 Split Layout (Slides with Images)
 - **Image Side (50%):** Width: 4,572,000 EMU. **Zero Margins.** The image must touch the top, bottom, and side edge of the slide.
 - **Text Side (50%):** Width: 4,572,000 EMU. **Margins:** 400,000 EMU padding from all edges.
-- **Title:** Inter Regular, 24pt, Vopak Deep Blue (#0a2373).
-- **Body:** Inter Regular, 11-14pt, Vopak Steel (#46555a).
+- **Title:** Inter Regular, 24pt, Vopak Deep Blue (#0a2373). **High-Precision Spacing:** 1.0.
+- **Subtitle:** Inter Regular, 16pt, Vopak Cyan (#00cfe1). **High-Precision Spacing:** 1.2.
+- **Body:** Inter Regular, 11-14pt, Vopak Steel (#46555a). **High-Precision Spacing:** 1.5.
+- **Dynamic Font Scaling:** If the layout is dense or multi-column, scale body text down to **10pt**.
 
 #### B. The Smart Logo Rule
 Every slide (except the Cover/Closing which have them built-in) MUST have the Vopak logo in the **Top-Right Corner**:
@@ -53,11 +55,12 @@ Use `write_workspace_script` to execute complex `slides.presentations.batchUpdat
 
 ### Step 4: Visual Verification Loop
 1.  **Thumbnails:** For every generated slide, use `mcp_google-workspace_slides.getThumbnail`.
-2.  **Audit:** Download the PNG and inspect it.
+2.  **Audit:** Download the PNG and inspect it using the **Advanced Visual Critique Loop** (via `web_fetch` to a vision-capable proxy if available, or autonomous reasoning).
 3.  **Correct:** If the logo contrast is poor or the 50/50 split is misaligned, perform a targeted `batchUpdate` to fix the coordinates or swap the logo file.
 
 ## 🛡️ Hard Rules
 1.  **NEVER bold** headers or titles. Use `font-weight: 400` (Regular).
 2.  **ALWAYS** include the slogan on content slides: `"We help the world flow forward >"` in the bottom margin.
 3.  **NO Two-White Rule:** Never place two consecutive slides with white backgrounds. Alternate with a Deep Blue Section Header slide from the template.
-4.  **Image Attribution:** If using photos from the Vopak Asset Library, ensure they are high-resolution and relevant to the technical context.
+4.  **Preserve Closing:** ALWAYS preserve the native 'Thank you' / Closing slide from the template.
+5.  **Image Attribution:** If using photos from the Vopak Asset Library, ensure they are high-resolution and relevant to the technical context.
