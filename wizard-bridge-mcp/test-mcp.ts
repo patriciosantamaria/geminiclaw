@@ -4,7 +4,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 async function main() {
   const transport = new StdioClientTransport({
     command: "node",
-    args: ["/home/patosoto/geminiclaw/wizard-bridge-mcp/dist/index.js"]
+    args: ["/app/wizard-bridge-mcp/dist/index.js"]
   });
 
   const client = new Client({
