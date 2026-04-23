@@ -3,7 +3,7 @@
 This project implements a dedicated memory system using local infrastructure.
 
 ## 🏗️ Stack
-- **Vector Database:** ChromaDB (port 8000)
+- **Vector Database:** Embedded SQLite FTS5 & Cosine Similarity
 - **Embedding Model:** nomic-embed-text (Ollama, port 11434)
 - **Structured Database:** SQLite (.gemini/memory.db)
 - **Orchestration:** TypeScript

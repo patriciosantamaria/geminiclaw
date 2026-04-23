@@ -1,0 +1,14 @@
+[Unit]
+Description=GeminiClaw Nightly Sleep Cycle Maintenance
+After=network.target
+
+[Service]
+Type=oneshot
+User=node
+WorkingDirectory=/app
+ExecStart=/usr/bin/npx tsx /app/.gemini/core/run-sleep-cycle.ts
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

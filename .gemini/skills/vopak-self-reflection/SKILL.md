@@ -1,29 +1,38 @@
 ---
 name: vopak-self-reflection
-description: Autonomously performs post-session audits to update the agent's long-term memory (SQLite + ChromaDB). It summarizes project progress, updates stakeholder context, and records ROI metrics.
+description: Autonomously performs continuous and post-session audits to update the agent's long-term memory (Embedded SQLite + FTS5). It synthesizes project progress, utilizes the Hermes Periodic Nudge for active learning, and employs OpenViking's Tiered Context for efficient recall.
 ---
 
 # Vopak Self-Reflection Skill
 
-This skill is the "Inner Critic" and "Chronicler" of the Vopak Assistant. It ensures the agent evolves by documenting every session's outcomes.
+This skill is the "Inner Critic" and "Chronicler" of the Vopak Assistant. It ensures the agent evolves continuously, learning from user interactions and codifying complex behaviors into reusable skills.
 
-## 📋 Reflection Workflow
-1. **Narrative Reconstruction:** Review the session's chat history. Update the `narrative_arc` for active projects in `.gemini/PROJECTS.md` (Human-Readable Source of Truth) and synchronize the structured state in the `projects` table of `memory.db`.
-2. **Stakeholder Intelligence:** Identify changes in stakeholder sentiment or requirements (e.g., Koen, Chaniel). Update the `stakeholders` table in `memory.db` for long-term tracking.
-3. **ROI Calculation:** Estimate 'Time Saved' (minutes) for the user. Record this in the `knowledge_index` table for ROI reporting.
-4. **Proactive Awareness:** Update the **Golden Record** via `MemoryClient.generateGoldenRecord` to synthesize the session's outcomes with historical project trajectory.
-5. **Fact Indexing:** Extract 3-5 key technical facts, decisions, or snippets. Index them into ChromaDB using the `MemoryClient` for semantic recall.
-5. **CRITIC.md Audit:** Review `.gemini/CRITIC.md` for user feedback and update the agent's "Rules of Engagement."
+## 📋 The Hermes "Periodic Nudge" Workflow
+Instead of waiting for a session to end, this skill is triggered autonomously every 5 interactions by the Cloud Listener.
+1. **Real-Time Evaluation:** Review the last segment of the conversation.
+2. **Skill Codification:** If a complex problem was solved or a reusable tool sequence was identified, autonomously write a new `.md` Skill file in `.gemini/skills/`.
+3. **Fact Extraction:** Identify specific facts, decisions, or user preferences (e.g., "User prefers concise emails").
 
-## 🧠 Memory Hierarchy (Division of Labor)
+## 🧠 Memory Architecture (OpenViking Paradigm)
+This system utilizes an embedded SQLite knowledge engine with FTS5 search.
 
-| Feature | Primary: Markdown (`.md`) | Extended: Hybrid (SQLite/Chroma) |
-| :--- | :--- | :--- |
-| **Project Status** | High-level goals & narrative arcs. | Task-level details & technical snippets. |
-| **Stakeholders** | Who they are (Roles). | **Context & Intelligence Briefs** (Sentiment). |
-| **Analytics** | Static milestones. | **ROI Tracking** (Minutes saved per session). |
-| **Knowledge** | Rules of Engagement (Style). | **Technical Decisions** (API keys, logic). |
+### 8-Category Extraction
+All memories are strictly categorized into:
+* **User Context:** Profile, Preferences, Entities, Events.
+* **Agent Context:** Cases, Patterns, Tools, Skills.
 
-## 🛡️ Mandates
-- **Markdown First:** Always use Markdown files as the primary entry point for understanding the "Story" of a project.
-- **Hybrid for Detail:** Use the SQLite/ChromaDB layer for high-granularity technical details that would clutter Markdown files.
+### Prompt Backpropagation (GEPA)
+This system incorporates the Generative Experience-driven Prompt Alignment (GEPA) logic.
+* **Failure Analysis:** If an interaction resulted in an error or required manual correction, the agent must extract the lesson and use the `replace` tool to write a strict, permanent warning to `.gemini/configs/CRITIC.md`.
+* **Persona Adaptation:** User preferences must be continuously appended to `.gemini/configs/USER.md`.
+
+### L0/L1/L2 Tiered Context
+To conserve token context, memories are stored and retrieved using a tiered system:
+* **L0 (Abstract):** A single sentence gist.
+* **L1 (Overview):** Structural summary.
+* **L2 (Detail):** Full content, loaded only when surgical precision is needed.
+
+## 🛡️ Post-Session Mandates
+1. **Narrative Reconstruction:** Update the `narrative_arc` for active projects in `.gemini/PROJECTS.md` (Human-Readable Source of Truth).
+2. **ROI Calculation:** Estimate 'Time Saved' (minutes) for the user. Record this in the `roi_metrics` table for reporting.
+3. **CRITIC Audit:** Review `.gemini/CRITIC.md` against user feedback to dynamically update the agent's internal "Rules of Engagement."

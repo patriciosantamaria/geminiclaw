@@ -13,18 +13,18 @@ Update .gemini/core/memory-client.ts to implement the full Hybrid Memory Stack d
 3. The Janitor Service: Create a new file .gemini/core/janitor.ts that exports a service to run routine maintenance:
     - Call a new vacuum() method on the SQLite database for compression.
     - Implement a Time-To-Live (TTL) purge deleting records older than 90 days to enforce Data Lifecycle Management.
-    - Implement a basic semantic deduplication pass (identifying and removing exact duplicate texts in ChromaDB).
+    - Implement a basic semantic deduplication pass (identifying and removing exact duplicate texts in Embedded Memory).
 4. Standards: Ensure all new code uses the centralized Logger and GeminiClawError from .gemini/core/utils/. Write unit tests for the Janitor service.`
 
 ---
 
-## 🧠 Session 2: Advanced Semantic Architecture (ChromaDB & Search)
+## 🧠 Session 2: Advanced Semantic Architecture (Embedded SQLite FTS5)
 **Status:** Pending Session 1
 
 **Jules Prompt:**
 `// Arch Refactor (Session 2/3): Advanced Semantic Architecture
 Update .gemini/core/memory-client.ts and related services to implement advanced vector features:
-1. Time-Decay Weighting: Modify the recall method to apply a recency bias. When querying ChromaDB, mathematically boost the relevance score of newer embeddings (e.g., within the last 30 days).
+1. Time-Decay Weighting: Modify the recall method to apply a recency bias. When querying the local Embedded Memory, mathematically boost the relevance score of newer embeddings (e.g., within the last 30 days).
 2. Air-Gapped Partitions: Update the MemoryClient constructor and methods to support targeting either 'vopak_general' or 'vopak_executive_strategy' collections/tables based on an optional parameter.
 3. Graph-Relational Mapping Logic: Implement methods to query the 'entity_links' SQLite table to instantly retrieve associated executives for a given project ID without a semantic search.
 4. Golden Record Stub: Create a placeholder pipeline method generateGoldenRecord(projectId) that retrieves all historical vectors for a project and prepares them for LLM summarization.`

@@ -22,4 +22,4 @@
 
 ## 🤖 Systems & Sources
 - **ServiceNow:** Tickets via email (INC/RITM).
-- **Local Stack:** Ollama (embeddings) + ChromaDB (vector memory).
+- **Local Stack:** Ollama (embeddings) + Embedded SQLite (FTS5 & Vector memory).

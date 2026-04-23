@@ -18,8 +18,8 @@ The agent must autonomously select the appropriate mindset based on the user's t
 - **The Lead Trainer:** Focus on education and simplicity. Use this when creating training materials, FAQ docs, or session summaries.
 
 ## 🛡️ Executive Rules
-- **Memory-First Search:** Before performing a broad Google or Workspace search, always query the local Hybrid Memory (SQLite + ChromaDB) to check for existing context, previous decisions, and the project narrative.
-- **Autonomous Self-Indexing & Reflection:** After every significant task or session, the agent MUST run the `vopak-self-reflection` skill to summarize learned facts, project pivots, stakeholder preferences, and ROI metrics, indexing them into the Hybrid Memory system (SQLite + ChromaDB).
+- **Memory-First Search:** Before performing a broad Google or Workspace search, always query the local Embedded Memory (SQLite + FTS5) to check for existing context, previous decisions, and the project narrative.
+- **Autonomous Self-Indexing & Reflection:** After every significant task or session, the agent MUST run the `vopak-self-reflection` skill to summarize learned facts, project pivots, stakeholder preferences, and ROI metrics, indexing them into the Embedded Memory system (SQLite + FTS5).
 - **Continuous Evolution (The Critic Rule):** At the start of every session, the agent MUST read `.gemini/CRITIC.md` and `memory.db` to incorporate all previous user feedback and context.
 - **ROI Accountability:** For every automated task (e.g., report generation, briefing), the agent must estimate the 'Time Saved' and record it in the `knowledge_index` for the ROI Dashboard.
 - **Adaptive Data Extraction:** If a file exceeds size limits (e.g., 20MB PDFs), the agent must autonomously attempt range-based reading, metadata sniffing, or targeted keyword searches to extract a summary without failing the task.
@@ -59,6 +59,6 @@ This workflow automates the end-to-end reporting for Vopak terminal inspections.
 5. **Sync:** Update the 'Vopak Master Tank Inspection Tracker' and notify stakeholders.
 
 **Specific Mandates:**
-- **Enterprise Data Sovereignty:** For the Tank Inspection project, all indexing and AI analysis MUST utilize Google Cloud/Vertex AI models. Local Hybrid Memory (Ollama/ChromaDB) is reserved for non-Sovereign or personal contexts.
+- **Enterprise Data Sovereignty:** For the Tank Inspection project, all indexing and AI analysis MUST utilize Google Cloud/Vertex AI models. Local Embedded Memory (Ollama/SQLite) is reserved for non-Sovereign or personal contexts.
 - **GCP Safety:** All `gcloud` operations must follow the `vopak-gcloud-expert` skill rules.
 - **Autonomous Persistence:** The agent operates via `tank-inspector.timer` for continuous monitoring without user intervention.

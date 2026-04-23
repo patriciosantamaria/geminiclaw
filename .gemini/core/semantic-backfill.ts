@@ -109,25 +109,25 @@ SUMMARY:`;
         const goldenRecord = await this.generateGoldenRecord(month, events);
         logger.info(`✅ Golden Record generated for ${month}`);
 
-        // 2. Inject into ChromaDB with proper Timestamp
+        // 2. Inject into the Embedded Knowledge Engine with proper Timestamp
         const recordId = `real_historical_summary_${month}`;
-        
+
         // Approximate a date in the middle of that month for time-decay weighting
         const targetDate = new Date(`${month}-15T12:00:00Z`);
-
         await this.memoryClient.remember(
-          recordId, 
-          goldenRecord, 
-          { 
-            type: 'historical_backfill', 
+          recordId,
+          goldenRecord,
+          'Events',
+          'L2',
+          'semantic-backfill',
+          {
+            type: 'historical_backfill',
             timeframe: month,
             timestamp: targetDate.toISOString(),
-            event_count: events.length
           }
         );
 
-        logger.info(`💾 Injected ${month} summary into ChromaDB.`);
-        
+        logger.info(`💾 Injected ${month} summary into Embedded Memory.`);        
         // Brief cooldown to avoid overheating the CPU if using local Ollama
         await new Promise(resolve => setTimeout(resolve, 2000));
       }

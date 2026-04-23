@@ -1,51 +1,20 @@
 {
-  "general": {
-    "enableAgents": true,
-    "previewFeatures": true,
-    "defaultApprovalMode": "plan"
-  },
-  "security": {
-    "auth": {
-      "selectedType": "oauth-personal"
-    },
-    "enablePermanentToolApproval": true
-  },
   "mcpServers": {
-    "wizard-bridge": {
-      "command": "/app/wizard-bridge-mcp/wizard-bridge-wrapper.sh",
-      "args": [],
-      "trust": true
+    "jules": {
+      "command": "/app/scripts/jules-mcp-wrapper.sh",
+      "args": []
     },
     "github": {
-      "command": "/app/github-mcp-wrapper.sh",
-      "args": [],
-      "trust": true,
-      "includeTools": [
-        "get_pull_request",
-        "list_pull_requests",
-        "get_pull_request_files",
-        "get_pull_request_status",
-        "get_pull_request_comments",
-        "get_pull_request_reviews",
-        "get_file_contents",
-        "list_commits",
-        "merge_pull_request"
-      ]
+      "command": "/app/scripts/github-mcp-wrapper.sh",
+      "args": []
     },
-    "jules": {
-      "command": "/app/jules-mcp-wrapper.sh",
-      "args": [],
-      "trust": true
+    "wizard-bridge": {
+      "command": "/app/wizard-bridge-mcp/wizard-bridge-wrapper.sh",
+      "args": []
     },
-    "sequential-thinking": {
-      "command": "/home/node/.npm-global/bin/mcp-server-sequential-thinking",
-      "args": [],
-      "trust": true
-    },
-    "context7": {
-      "command": "/home/node/.npm-global/bin/context7-mcp",
-      "args": [],
-      "trust": true
+    "stitch": {
+      "command": "/app/scripts/stitch-mcp-wrapper.sh",
+      "args": []
     }
   }
 }

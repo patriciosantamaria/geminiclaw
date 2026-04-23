@@ -1,4 +1,3 @@
-
 import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
@@ -34,19 +33,19 @@ describe('Janitor Service', () => {
   test('ttlPurge() should remove old records', async () => {
     return new Promise((resolve, reject) => {
       client.db.serialize(() => {
-        // Insert some old records and some new records
-        client.db.run("INSERT INTO knowledge_index (key, value, last_updated) VALUES ('old', 'info', date('now', '-91 days'))");
-        client.db.run("INSERT INTO knowledge_index (key, value, last_updated) VALUES ('new', 'info', date('now'))", async (err) => {
+        // Insert some old records and some new records using the V3.0 schema
+        client.db.run("INSERT INTO knowledge_index (id_str, category, content, last_updated) VALUES ('old_1', 'Events', 'info', date('now', '-91 days'))");
+        client.db.run("INSERT INTO knowledge_index (id_str, category, content, last_updated) VALUES ('new_1', 'Events', 'info2', date('now'))", async (err) => {
           if (err) return reject(err);
 
           try {
             const removed = await janitor.ttlPurge(90);
             assert.strictEqual(removed, 1);
 
-            client.db.all("SELECT key FROM knowledge_index", (err, rows: any[]) => {
+            client.db.all("SELECT id_str FROM knowledge_index", (err, rows: any[]) => {
               if (err) return reject(err);
               assert.strictEqual(rows.length, 1);
-              assert.strictEqual(rows[0].key, 'new');
+              assert.strictEqual(rows[0].id_str, 'new_1');
               resolve();
             });
           } catch (e) {
@@ -57,10 +56,8 @@ describe('Janitor Service', () => {
     });
   });
 
-  // Mocking ChromaDB for deduplication test might be complex, so we'll do a basic check
-  // that it handles an empty collection (or no collection) gracefully as we've tested with empty db
-  test('deduplicateChroma() should handle empty collection gracefully', async () => {
-    const removed = await janitor.deduplicateChroma();
+  test('deduplicateMemory() should handle deduplication gracefully', async () => {
+    const removed = await janitor.deduplicateMemory();
     assert.strictEqual(typeof removed, 'number');
   });
 });

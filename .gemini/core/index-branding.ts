@@ -16,11 +16,14 @@ async function indexBranding() {
     }
     const brandingContent = fs.readFileSync(brandingPath, 'utf-8');
 
-    logger.info('🧠 Indexing Vopak Branding v3.0 into ChromaDB...');
+    logger.info('🧠 Indexing Vopak Branding v3.0 into Embedded Knowledge Engine...');
 
     await memory.remember(
       'vopak_branding_v3',
       brandingContent,
+      'Patterns',
+      'L2',
+      'branding-init',
       {
         type: 'branding_standard',
         version: '3.0',

@@ -63,17 +63,19 @@ export class HistoricalIngestionPipeline {
         // Use the new Background Embedding Queue in MemoryClient
         const recordId = `historical_summary_${monthString}`;
         
-        // Push the synthesized summary to ChromaDB with the historical timestamp
+        // Push the synthesized summary to the Embedded Knowledge Engine with the historical timestamp
         await this.memoryClient.remember(
-          recordId, 
-          goldenRecord, 
-          { 
-            type: 'historical_backfill', 
+          recordId,
+          goldenRecord,
+          'Events',
+          'L2',
+          'historical-backfill',
+          {
+            type: 'historical_backfill',
             timeframe: monthString,
             timestamp: targetDate.toISOString() // Ensure time-decay weighting works properly
           }
         );
-
         logger.info(`✅ Successfully injected memory for ${monthString}`);
 
         // 4. RATE LIMITING & COOLDOWN

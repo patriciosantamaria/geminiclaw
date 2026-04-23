@@ -1,58 +1,44 @@
-import { ChromaClient, Collection } from 'chromadb';
 import ollama from 'ollama';
 import sqlite3 from 'sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
-import { performance } from 'node:perf_hooks';
 import { Logger } from './utils/logger.ts';
 import { handleError } from './utils/errors.ts';
 
 const logger = new Logger('MemoryClient');
 
 /**
- * Ultimate Assistant Memory Client
- * Interfaces with local Ollama (embeddings), ChromaDB (vector storage), and SQLite (structured storage).
+ * V3.0 Memory Client: "The Embedded Knowledge Engine"
+ * 
+ * Integrated Architecture:
+ * - 🛡️ Hermes: 100% Serverless/Embedded via SQLite + FTS5 (Full-Text Search).
+ * - 🌊 OpenViking: L0/L1/L2 Tiered Context & 8-Category Extraction.
+ * - 🧠 Local Vectors: Embeddings stored in SQLite with Cosine Similarity in JS.
  */
 export class MemoryClient {
-  public chroma: ChromaClient;
-  public defaultCollection: string;
-  private embeddingCache = new Map<string, number[]>();
-  private embeddingCacheKeys: string[] = [];
-  private readonly CACHE_LIMIT = 1000;
-  private embeddingQueue: { text: string; resolve: (v: number[]) => void; reject: (e: any) => void }[] = [];
-  private isProcessingQueue = false;
-  private collectionCache = new Map<string, Collection>();
   public db: sqlite3.Database;
+  private embeddingCache = new Map<string, number[]>();
+  private isProcessingQueue = false;
+  private embeddingQueue: { text: string; resolve: (v: number[]) => void; reject: (e: any) => void }[] = [];
 
-  constructor(
-    dbPath: string = '.gemini/data/memory.db',
-    defaultCollection: string = 'vopak_general'
-  ) {
-    this.defaultCollection = defaultCollection;
+  constructor(dbPath: string = '.gemini/data/memory.db') {
     const dir = path.dirname(dbPath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
 
-    this.chroma = new ChromaClient({ path: 'http://localhost:8000' });
     this.db = new sqlite3.Database(dbPath, (err) => {
-      if (err) {
-        throw handleError(logger, err, 'Failed to connect to SQLite');
-      }
-      logger.info(`Connected to SQLite at ${dbPath}`);
+      if (err) throw handleError(logger, err, 'Failed to connect to SQLite');
+      logger.info(`Connected to SQLite (v3.0 Engine) at ${dbPath}`);
     });
     this.initDatabase();
   }
 
-  /**
-   * Initialize tables and perform schema evolution
-   */
   private initDatabase() {
     this.db.serialize(() => {
-      // Enable WAL mode for better concurrency
       this.db.run('PRAGMA journal_mode=WAL;');
 
-      // Create base tables if they don't exist
+      // 1. Core Relational Tables
       this.db.run(`CREATE TABLE IF NOT EXISTS projects (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -67,34 +53,42 @@ export class MemoryClient {
         context_notes TEXT
       )`);
 
-      // Ensure knowledge_index exists and evolve schema
+      // 2. The Hermes Knowledge Store (SQLite + FTS5)
+      // Stores structured facts, 8-category extraction, and vector embeddings
       this.db.run(`CREATE TABLE IF NOT EXISTS knowledge_index (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        key TEXT NOT NULL,
-        value TEXT NOT NULL,
-        source_id TEXT,
+        id_str TEXT UNIQUE,
+        category TEXT NOT NULL, -- Profile, Preferences, Entities, Events, Cases, Patterns, Tools, Skills
+        tier TEXT DEFAULT 'L2', -- L0 (Abstract), L1 (Overview), L2 (Full)
+        content TEXT NOT NULL,
+        metadata TEXT, -- JSON string
+        embedding TEXT, -- JSON array of floats
         project_id TEXT,
         last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
-        time_saved_minutes INTEGER DEFAULT 0,
+        confidence_score FLOAT DEFAULT 1.0,
+        security_ring INTEGER DEFAULT 2,
         FOREIGN KEY(project_id) REFERENCES projects(id)
       )`);
 
-      // Add columns sequentially via serialize to avoid race conditions
-      this.db.run("PRAGMA table_info(knowledge_index)", (err, rows: any[]) => {
-        // This is still in serialize, so it will run in order.
-        // Re-check for confidence_score
-        const hasConfidenceScore = rows && rows.some(row => row.name === 'confidence_score');
-        if (!hasConfidenceScore) {
-          this.db.run("ALTER TABLE knowledge_index ADD COLUMN confidence_score FLOAT DEFAULT 1.0");
-        }
-        // Re-check for security_ring (Pillar 3)
-        const hasSecurityRing = rows && rows.some(row => row.name === 'security_ring');
-        if (!hasSecurityRing) {
-          this.db.run("ALTER TABLE knowledge_index ADD COLUMN security_ring INTEGER DEFAULT 2");
-        }
-      });
+      // FTS5 Virtual Table for Instant Text Search
+      this.db.run(`CREATE VIRTUAL TABLE IF NOT EXISTS knowledge_fts USING fts5(
+        content,
+        category,
+        tier,
+        content='knowledge_index',
+        content_rowid='id'
+      )`);
 
-      // ROI Metrics table
+      // Triggers to keep FTS in sync
+      this.db.run(`CREATE TRIGGER IF NOT EXISTS knowledge_ai AFTER INSERT ON knowledge_index BEGIN
+        INSERT INTO knowledge_fts(rowid, content, category, tier) VALUES (new.id, new.content, new.category, new.tier);
+      END`);
+
+      this.db.run(`CREATE TRIGGER IF NOT EXISTS knowledge_ad AFTER DELETE ON knowledge_index BEGIN
+        INSERT INTO knowledge_fts(knowledge_fts, rowid, content, category, tier) VALUES('delete', old.id, old.content, old.category, old.tier);
+      END`);
+
+      // 3. Analytics & Proactive Layer
       this.db.run(`CREATE TABLE IF NOT EXISTS roi_metrics (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         project_id TEXT,
@@ -104,433 +98,188 @@ export class MemoryClient {
         FOREIGN KEY(project_id) REFERENCES projects(id)
       )`);
 
-      // Stakeholder Preferences table
-      this.db.run(`CREATE TABLE IF NOT EXISTS stakeholder_preferences (
-        stakeholder_email TEXT,
-        preference_key TEXT,
-        preference_value TEXT,
-        PRIMARY KEY (stakeholder_email, preference_key),
-        FOREIGN KEY(stakeholder_email) REFERENCES stakeholders(email)
-      )`);
-
-      // Entity Linkage table (Stakeholders to Projects)
-      this.db.run(`CREATE TABLE IF NOT EXISTS entity_links (
-        stakeholder_email TEXT,
-        project_id TEXT,
-        PRIMARY KEY (stakeholder_email, project_id),
-        FOREIGN KEY(stakeholder_email) REFERENCES stakeholders(email),
-        FOREIGN KEY(project_id) REFERENCES projects(id)
-      )`);
-
-      // Proactive Triggers table
       this.db.run(`CREATE TABLE IF NOT EXISTS proactive_triggers (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         type TEXT NOT NULL,
-        source_id TEXT,
         summary TEXT NOT NULL,
         payload TEXT,
-        confidence FLOAT DEFAULT 1.0,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
       )`);
 
-      // Pillar 1: Commitments table
-      this.db.run(`CREATE TABLE IF NOT EXISTS commitments (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        source_id TEXT,
-        project_id TEXT,
-        description TEXT NOT NULL,
-        due_date DATETIME,
-        status TEXT DEFAULT 'Pending',
-        confidence FLOAT DEFAULT 1.0,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(project_id) REFERENCES projects(id)
-      )`);
-
-      // Pillar 2: Autonomy Config table
       this.db.run(`CREATE TABLE IF NOT EXISTS autonomy_config (
         key TEXT PRIMARY KEY,
-        value TEXT NOT NULL,
-        description TEXT
+        value TEXT NOT NULL
       )`);
-      this.db.run("INSERT OR IGNORE INTO autonomy_config (key, value, description) VALUES ('autonomy_level', '3', 'Agent autonomy level (1-5)')");
+      this.db.run("INSERT OR IGNORE INTO autonomy_config (key, value) VALUES ('autonomy_level', '3')");
     });
   }
 
   /**
-   * Run a vacuum command to compress the database
+   * OpenViking Pattern: Extract and categorize a fact into the tiered system
    */
-  async vacuum(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      this.db.run('VACUUM', (err) => {
-        if (err) {
-          logger.error('Vacuum failed', err);
-          reject(err);
-        } else {
-          logger.info('Database vacuumed successfully');
-          resolve();
-        }
-      });
-    });
-  }
-
-  /**
-   * Process the embedding queue in parallel batches
-   */
-  private async processEmbeddingQueue() {
-    if (this.isProcessingQueue || this.embeddingQueue.length === 0) return;
-    this.isProcessingQueue = true;
-
-    const BATCH_SIZE = 5;
-
-    while (this.embeddingQueue.length > 0) {
-      const batch = this.embeddingQueue.splice(0, BATCH_SIZE);
-
-      await Promise.all(batch.map(async ({ text, resolve, reject }) => {
-        try {
-          // Double check cache in case it was added while in queue
-          if (this.embeddingCache.has(text)) {
-            // Update LRU position
-            this.updateCache(text, this.embeddingCache.get(text)!);
-            resolve(this.embeddingCache.get(text)!);
-            return;
-          }
-
-          const response = await ollama.embeddings({
-            model: 'nomic-embed-text',
-            prompt: text,
-          });
-
-          this.updateCache(text, response.embedding);
-          resolve(response.embedding);
-        } catch (e) {
-          reject(handleError(logger, e, 'Failed to get embedding from background queue'));
-        }
-      }));
-    }
-
-    this.isProcessingQueue = false;
-  }
-
-  /**
-   * Update embedding cache with LRU policy
-   */
-  private updateCache(text: string, embedding: number[]) {
-    if (this.embeddingCache.has(text)) {
-      // Remove from keys to re-add at the end
-      this.embeddingCacheKeys = this.embeddingCacheKeys.filter(k => k !== text);
-    } else if (this.embeddingCacheKeys.length >= this.CACHE_LIMIT) {
-      // Remove oldest
-      const oldest = this.embeddingCacheKeys.shift();
-      if (oldest) this.embeddingCache.delete(oldest);
-    }
-
-    this.embeddingCache.set(text, embedding);
-    this.embeddingCacheKeys.push(text);
-  }
-
-  private async getCollection(name: string): Promise<Collection> {
-    if (this.collectionCache.has(name)) {
-      return this.collectionCache.get(name)!;
-    }
-    const collection = await this.chroma.getCollection({ name });
-    this.collectionCache.set(name, collection);
-    return collection;
-  }
-
-
-  /**
-   * Query local memory semantically with Time-Decay Weighting
-   */
-  async recall(query: string, nResults: number = 3, collectionName?: string) {
-    const startTime = performance.now();
+  async remember(id: string, content: string, category: string, tier: string = 'L2', project_id?: string, metadata: any = {}) {
     try {
-      const targetCollection = collectionName || this.defaultCollection;
-      const queryEmbedding = await this.getEmbedding(query);
-      const collection = await this.getCollection(targetCollection);
+      const embedding = await this.getEmbedding(content);
+      const metadataStr = JSON.stringify(metadata);
+      const embeddingStr = JSON.stringify(embedding);
 
-      // Fetch 2x results to allow for re-ranking
-      const results = await collection.query({
-        queryEmbeddings: [queryEmbedding],
-        nResults: nResults * 2,
+      return new Promise<void>((resolve, reject) => {
+        const sql = `INSERT OR REPLACE INTO knowledge_index 
+          (id_str, category, tier, content, metadata, embedding, project_id) 
+          VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        this.db.run(sql, [id, category, tier, content, metadataStr, embeddingStr, project_id], (err) => {
+          if (err) reject(err);
+          else {
+            logger.info(`🧠 [Remembered] Category: ${category} | Tier: ${tier} | ID: ${id}`);
+            resolve();
+          }
+        });
       });
+    } catch (e) {
+      throw handleError(logger, e, `Failed to store fact: ${id}`);
+    }
+  }
 
-      if (!results || !results.distances || results.distances[0].length === 0) {
-        return results;
+  /**
+   * Hermes Pattern: Hybrid Recall (FTS5 + Semantic Vector Re-ranking)
+   */
+  async recall(query: string, nResults: number = 3, category?: string, tier?: string) {
+    try {
+      // 1. Get query embedding for semantic check
+      const queryEmbedding = await this.getEmbedding(query);
+
+      // 2. Perform FTS5 search first (Fastest)
+      let sql = `SELECT i.* FROM knowledge_index i 
+                 JOIN knowledge_fts f ON i.id = f.rowid 
+                 WHERE knowledge_fts MATCH ?`;
+      let params: any[] = [query];
+
+      if (category) {
+        sql += ` AND i.category = ?`;
+        params.push(category);
+      }
+      
+      if (tier) {
+        sql += ` AND i.tier = ?`;
+        params.push(tier);
       }
 
-      // Re-rank based on recency bias
-      const now = new Date().getTime();
-      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
-
-      const scoredResults = results.distances[0].map((distance, index) => {
-        const metadata = results.metadatas![0][index] as any;
-        const timestamp = metadata?.timestamp ? new Date(metadata.timestamp).getTime() : now;
-        const age = now - timestamp;
-
-        // Semantic score (lower distance is better)
-        let score = distance;
-
-        // Apply recency boost: if newer than 30 days, reduce the "distance" (improve score)
-        // A simple linear boost up to 20% improvement for brand new content
-        if (age < thirtyDaysMs) {
-          const recencyFactor = 1 - (age / thirtyDaysMs);
-          score = score * (1 - (0.2 * recencyFactor));
-        }
-
-        return {
-          id: results.ids[0][index],
-          document: results.documents![0][index],
-          metadata,
-          distance,
-          score
-        };
+      const rows: any[] = await new Promise((resolve, reject) => {
+        this.db.all(sql, params, (err, rows) => {
+          if (err) reject(err);
+          else resolve(rows || []);
+        });
       });
 
-      // Sort by boosted score
-      scoredResults.sort((a, b) => a.score - b.score);
+      // 3. If no FTS results, or to augment, fetch by category and tier
+      if (rows.length < nResults) {
+        let fallbackSql = `SELECT * FROM knowledge_index WHERE 1=1`;
+        let fallbackParams: any[] = [];
+        
+        if (category) {
+          fallbackSql += ` AND category = ?`;
+          fallbackParams.push(category);
+        }
+        
+        if (tier) {
+          fallbackSql += ` AND tier = ?`;
+          fallbackParams.push(tier);
+        }
+        
+        fallbackSql += ` LIMIT 50`;
+        
+        const allRows: any[] = await new Promise((resolve, reject) => {
+          this.db.all(fallbackSql, fallbackParams, (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows || []);
+          });
+        });
+        rows.push(...allRows.filter(r => !rows.find(existing => existing.id === r.id)));
+      }
 
-      // Return top nResults in the expected format
+      // 4. Manual Cosine Similarity Re-ranking
+      const scoredResults = rows.map(row => {
+        const embedding = JSON.parse(row.embedding || '[]');
+        const similarity = this.cosineSimilarity(queryEmbedding, embedding);
+        return { ...row, similarity };
+      });
+
+      scoredResults.sort((a, b) => b.similarity - a.similarity);
       const topResults = scoredResults.slice(0, nResults);
 
-      const duration = performance.now() - startTime;
-      logger.info(`Recall completed in ${duration.toFixed(2)}ms`);
-
       return {
-        ids: [topResults.map(r => r.id)],
-        distances: [topResults.map(r => r.distance)], // Keeping original distance here
-        metadatas: [topResults.map(r => r.metadata)],
-        documents: [topResults.map(r => r.document)],
-      } as any;
+        documents: [topResults.map(r => r.content)],
+        metadatas: [topResults.map(r => JSON.parse(r.metadata || '{}'))],
+        ids: [topResults.map(r => r.id_str)],
+        similarities: [topResults.map(r => r.similarity)]
+      };
 
     } catch (e) {
       throw handleError(logger, e, 'Recall failed');
     }
   }
 
-  /**
-   * Retrieve all associated stakeholders for a project using relational mapping
-   */
-  async getExecutivesForProject(projectId: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      const query = `
-        SELECT s.* FROM stakeholders s
-        JOIN entity_links el ON s.email = el.stakeholder_email
-        WHERE el.project_id = ?
-      `;
-      this.db.all(query, [projectId], (err, rows) => {
-        if (err) {
-          logger.error(`Failed to get executives for project: ${projectId}`, err);
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
+  private cosineSimilarity(vecA: number[], vecB: number[]) {
+    if (!vecA.length || !vecB.length) return 0;
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+    for (let i = 0; i < vecA.length; i++) {
+      dotProduct += vecA[i] * vecB[i];
+      normA += vecA[i] * vecA[i];
+      normB += vecB[i] * vecB[i];
+    }
+    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
   }
 
-  /**
-   * Multi-modal support: Get embedding for an image (STUB)
-   */
-  async getEmbedding(text: string): Promise<number[]>;
-  async getEmbedding(textOrPath: string, isImage: boolean): Promise<number[]>;
-  async getEmbedding(textOrPath: string, isImage: boolean = false): Promise<number[]> {
-    const startTime = performance.now();
-    if (isImage) {
-      logger.info(`Multi-modal stub: Requesting embedding for image ${textOrPath}`);
-      return Array(768).fill(0);
-    }
+  async getEmbedding(text: string): Promise<number[]> {
+    if (this.embeddingCache.has(text)) return this.embeddingCache.get(text)!;
 
-    if (this.embeddingCache.has(textOrPath)) {
-      logger.debug('⚡ Using cached embedding');
-      // Update LRU position
-      const embedding = this.embeddingCache.get(textOrPath)!;
-      this.updateCache(textOrPath, embedding);
-      return embedding;
-    }
-
-    const result = await new Promise<number[]>((resolve, reject) => {
-      this.embeddingQueue.push({ text: textOrPath, resolve, reject });
+    return new Promise((resolve, reject) => {
+      this.embeddingQueue.push({ text, resolve, reject });
       this.processEmbeddingQueue();
     });
-
-    const duration = performance.now() - startTime;
-    logger.debug(`Embedding retrieved in ${duration.toFixed(2)}ms`);
-    return result;
   }
 
-  /**
-   * Save a fact to local vector memory (Overloaded for multi-modal support)
-   */
-  async remember(id: string, text: string, metadata?: any, collectionName?: string): Promise<void>;
-  async remember(id: string, path: string, metadata: any, collectionName: string, isImage: boolean): Promise<void>;
-  async remember(id: string, textOrPath: string, metadata: any = {}, collectionName?: string, isImage: boolean = false) {
-    const startTime = performance.now();
-    try {
-      const targetCollection = collectionName || this.defaultCollection;
-      const embedding = await this.getEmbedding(textOrPath, isImage);
+  private async processEmbeddingQueue() {
+    if (this.isProcessingQueue || this.embeddingQueue.length === 0) return;
+    this.isProcessingQueue = true;
 
-      let collection: Collection;
-      if (this.collectionCache.has(targetCollection)) {
-        collection = this.collectionCache.get(targetCollection)!;
-      } else {
-        collection = await this.chroma.getOrCreateCollection({ name: targetCollection });
-        this.collectionCache.set(targetCollection, collection);
-      }
-
-      // Inject timestamp for time-decay weighting
-      const enrichedMetadata = {
-        ...metadata,
-        timestamp: metadata.timestamp || new Date().toISOString(),
-      };
-
-      await collection.add({
-        ids: [id],
-        embeddings: [embedding],
-        metadatas: [enrichedMetadata],
-        documents: [isImage ? `image_path: ${textOrPath}` : textOrPath],
-      });
-
-      const duration = performance.now() - startTime;
-      logger.info(`Stored ${isImage ? 'image' : 'fact'}: ${id} in ${duration.toFixed(2)}ms`);
-    } catch (e) {
-      throw handleError(logger, e, `Failed to store ${isImage ? 'image' : 'fact'}: ${id}`);
-    }
-  }
-
-  /**
-   * Pillar 1: Add a new commitment (extracted from workspace)
-   */
-  async addCommitment(data: {
-    source_id?: string;
-    project_id?: string;
-    description: string;
-    due_date?: string;
-    confidence?: number;
-  }): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO commitments (source_id, project_id, description, due_date, confidence)
-                   VALUES (?, ?, ?, ?, ?)`;
-      const params = [data.source_id, data.project_id, data.description, data.due_date, data.confidence || 1.0];
-      this.db.run(sql, params, (err) => {
-        if (err) {
-          logger.error('Failed to add commitment', err);
-          reject(err);
-        } else {
-          logger.info(`Commitment added: ${data.description.substring(0, 30)}...`);
-          resolve();
-        }
-      });
-    });
-  }
-
-  /**
-   * Pillar 2: Get current autonomy level
-   */
-  async getAutonomyLevel(): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.db.get("SELECT value FROM autonomy_config WHERE key = 'autonomy_level'", (err, row: any) => {
-        if (err) {
-          logger.error('Failed to get autonomy level', err);
-          reject(err);
-        } else {
-          resolve(parseInt(row?.value || '3', 10));
-        }
-      });
-    });
-  }
-
-  /**
-   * Pillar 2: Set autonomy level (1-5)
-   */
-  async setAutonomyLevel(level: number): Promise<void> {
-    if (level < 1 || level > 5) throw new Error('Autonomy level must be between 1 and 5');
-    return new Promise((resolve, reject) => {
-      this.db.run("UPDATE autonomy_config SET value = ? WHERE key = 'autonomy_level'", [level.toString()], (err) => {
-        if (err) {
-          logger.error('Failed to set autonomy level', err);
-          reject(err);
-        } else {
-          logger.info(`Autonomy level set to ${level}`);
-          resolve();
-        }
-      });
-    });
-  }
-
-  /**
-   * Pillar 3: Security Ring Guard
-   * Filters out Ring 0 (Local Only) data if the request is destined for external APIs.
-   */
-  async filterRingZero(projectId?: string): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      let query = "SELECT * FROM knowledge_index WHERE security_ring > 0";
-      const params: any[] = [];
-      if (projectId) {
-        query += " AND project_id = ?";
-        params.push(projectId);
-      }
-      this.db.all(query, params, (err, rows) => {
-        if (err) {
-          logger.error('Failed to filter Ring 0 data', err);
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
-  }
-
-  /**
-   * Pipeline method to generate a "Golden Record" summary of a project's history.
-   * Now incorporates proactive triggers for higher situational awareness.
-   */
-  async generateGoldenRecord(projectId: string): Promise<string> {
-    try {
-      const collection = await this.chroma.getCollection({ name: this.defaultCollection });
-
-      // 1. Get historical vector records
-      const vectorResults = await collection.get({
-        where: { project_id: projectId }
-      });
-
-      // Pillar 2: Check Autonomy Level before including triggers
-      const autonomyLevel = await this.getAutonomyLevel();
-      const triggers: any[] = [];
-
-      if (autonomyLevel > 1) {
-        // 2. Get recent proactive triggers
-        const results: any[] = await new Promise((resolve, reject) => {
-          this.db.all(
-            "SELECT * FROM proactive_triggers WHERE timestamp > date('now', '-7 days') ORDER BY timestamp DESC",
-            (err, rows) => {
-              if (err) reject(err);
-              else resolve(rows);
-            }
-          );
+    while (this.embeddingQueue.length > 0) {
+      const { text, resolve, reject } = this.embeddingQueue.shift()!;
+      try {
+        const response = await ollama.embeddings({
+          model: 'nomic-embed-text',
+          prompt: text,
         });
-        triggers.push(...results);
+        this.embeddingCache.set(text, response.embedding);
+        resolve(response.embedding);
+      } catch (e) {
+        reject(e);
       }
-
-      const history = vectorResults?.documents?.join('\n---\n') || 'No historical vector records found.';
-      const triggerSummary = triggers.length > 0
-        ? triggers.map(t => `[${t.type}] ${t.summary} (Conf: ${t.confidence})`).join('\n')
-        : 'No recent proactive triggers.';
-
-      // Return a synthesized context for LLM summarization
-      return `
-GOLDEN RECORD CONTEXT - PROJECT: ${projectId}
-
-HISTORICAL RECORDS:
-${history}
-
-RECENT PROACTIVE TRIGGERS (7 DAYS):
-${triggerSummary}
-
-[PROMPT: Synthesize the above trajectory and recent triggers. Identify key pivots, urgent risks, and recommended proactive actions.]
-      `.trim();
-    } catch (e) {
-      logger.error(`Golden Record generation failed for ${projectId}`, e);
-      return `Failed to generate golden record for project ${projectId}.`;
     }
+    this.isProcessingQueue = false;
+  }
+
+  // Pillar-based helper methods (Backward Compatibility)
+  async getAutonomyLevel(): Promise<number> {
+    return new Promise((resolve) => {
+      this.db.get("SELECT value FROM autonomy_config WHERE key = 'autonomy_level'", (err, row: any) => {
+        resolve(parseInt(row?.value || '3', 10));
+      });
+    });
+  }
+
+  async generateGoldenRecord(projectId: string): Promise<string> {
+    const rows: any[] = await new Promise((resolve) => {
+      this.db.all("SELECT category, content FROM knowledge_index WHERE project_id = ? ORDER BY last_updated DESC LIMIT 10", [projectId], (err, rows) => {
+        resolve(rows || []);
+      });
+    });
+
+    if (rows.length === 0) return `No records found for project ${projectId}.`;
+
+    const summary = rows.map(r => `[${r.category}] ${r.content}`).join('\n---\n');
+    return `GOLDEN RECORD: ${projectId}\n\n${summary}\n\n[PROMPT: Summarize the trajectory.]`;
   }
 }

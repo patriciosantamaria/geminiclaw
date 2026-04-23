@@ -20,7 +20,7 @@ This mission defines the next phase of the GeminiClaw evolution, focusing on 5 k
 ## 😴 Pillar 4: Sleep Cycle (The "Circadian Maintenance")
 - **Objective:** Optimize performance via scheduled downtime.
 - **Requirement:** Integrate `Janitor.ts` into a cron-like cycle (`sleep_cycle.ts`).
-- **Function:** Defragment SQLite, optimize ChromaDB indices, and clear transient caches during low-activity hours (02:00 - 04:00).
+- **Function:** Defragment SQLite and clear transient caches during low-activity hours (02:00 - 04:00).
 
 ## 📡 Pillar 5: Pub/Sub Proactivity (The "Signal Hub")
 - **Objective:** Event-driven response to workspace changes.

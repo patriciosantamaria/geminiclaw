@@ -1,78 +1,114 @@
 {
-  "\ud83d\udd34 PRIORITY 1: Google Workspace & Gemini": [
-    {
-      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
-      "title": "Gemini in Google Classroom is now available in all Classroom-supported languages",
-      "url": "http://workspaceupdates.googleblog.com/feeds/6997859027773304512/comments/default",
-      "date": "2026-04-14T09:23:19.451000-07:00",
-      "summary": "Last year, we launched <a href=\"https://workspaceupdates.googleblog.com/2025/06/gemini-google-classroom-all-edu-editions.html\" target=\"_blank\">Gemini in Google Classroom</a> in English to support educators with planning and creating engaging lessons, and to <a href=\"https://workspaceupdates.googlebl..."
-    },
-    {
-      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
-      "title": "Additional BYOD peripheral switchers certified for Google Meet in ChromeOS touch controller rooms",
-      "url": "http://workspaceupdates.googleblog.com/feeds/2070275346401387947/comments/default",
-      "date": "2026-04-13T09:24:07.598000-07:00",
-      "summary": "We have certified additional Lightware peripheral switchers, so that you and your team can bring your own devices (BYOD) to Google Meet on ChromeOS touch controller rooms. The new devices bring improvements for video processing, networking, connectivity and security.<div><br /></div><div>Plug your l..."
-    },
-    {
-      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
-      "title": "Prepare for the NEET UG with practice tests in Gemini",
-      "url": "http://workspaceupdates.googleblog.com/feeds/8669079137324547646/comments/default",
-      "date": "2026-04-13T08:55:22.170000-07:00",
-      "summary": "We recently launched full-length, no-cost practice tests in Gemini, starting with the <a href=\"https://workspaceupdates.googleblog.com/2026/01/prepare-sat-full-length-practice-tests-gemini.html\" target=\"_blank\">SAT</a> and <a href=\"http://workspaceupdates.googleblog.com/2026/02/prepare-for-jee-main-..."
-    },
-    {
-      "source": "https://workspaceupdates.googleblog.com/feeds/posts/default",
-      "title": "Expanded NotebookLM capabilities for Education Plus and Teaching & Learning add-on customers",
-      "url": "http://workspaceupdates.googleblog.com/feeds/277699273396384839/comments/default",
-      "date": "2026-04-13T08:28:46.707000-07:00",
-      "summary": "We\u2019re increasing limits across <a href=\"https://notebooklm.google.com/\" target=\"_blank\">NotebookLM</a> features for customers with Google Workspace for Education Plus or a Teaching and Learning add-on license at no additional cost. Users will now see a Plus badge next to their profile picture, indic..."
-    },
+  "🔴 PRIORITY 1: Google Workspace & Gemini": [
     {
       "source": "https://deepmind.google/blog/rss.xml",
-      "title": "Gemini Robotics-ER 1.6: Powering real-world robotics tasks through enhanced embodied reasoning",
-      "url": "https://deepmind.google/blog/gemini-robotics-er-1-6/",
-      "date": "2026-04-13T15:52:13+00:00",
-      "summary": "Gemini Robotics ER 1.6: Enhancing spatial reasoning and multi-view understanding for autonomous robotics...."
+      "title": "Partnering with industry leaders to accelerate AI transformation",
+      "url": "https://deepmind.google/blog/partnering-with-industry-leaders-to-accelerate-ai-transformation/",
+      "date": "Tue, 21 Apr 2026 14:54:15 +0000",
+      "summary": "Google DeepMind partners with global consultancies to bring the power of frontier AI to organizations around the world...."
     },
     {
       "source": "https://blog.google/technology/ai/rss/",
-      "title": "Turn your best AI prompts into one-click tools in Chrome",
-      "url": "https://blog.google/products-and-platforms/products/chrome/skills-in-chrome/",
-      "date": "2026-04-14T17:00:00+00:00",
-      "summary": "<img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/GoogleChrome_RR_Skills_KeywordH.max-600x600.format-webp.webp\">Skills in Chrome let you discover, save and remix AI workflows \u2014 and repeat them instantly...."
+      "title": "We're launching two specialized TPUs for the agentic era.",
+      "url": "https://blog.google/innovation-and-ai/infrastructure-and-cloud/google-cloud/tpus-8t-8i-cloud-next/",
+      "date": "Wed, 22 Apr 2026 12:00:00 +0000",
+      "summary": "&lt;img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Were_launching_two_TPUs_social.max-600x600.format-webp.webp\"&gt;The eighth generation of Google’s TPU includes two specialized chips that will power the future of AI...."
     },
     {
       "source": "https://blog.google/technology/ai/rss/",
-      "title": "Bringing people together at AI for the Economy Forum",
-      "url": "https://blog.google/company-news/outreach-and-initiatives/creating-opportunity/ai-economy-forum/",
-      "date": "2026-04-14T09:00:00+00:00",
-      "summary": "<img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/AI_for_the_Economy_Forum_2026.max-600x600.format-webp.webp\">Google is bringing people together in Washington D.C. at our AI for the Economy Forum...."
+      "title": "3 new ways Ads Advisor is making Google Ads safer and faster",
+      "url": "https://blog.google/products/ads-commerce/ads-advisor-google-ads/",
+      "date": "Tue, 21 Apr 2026 14:30:00 +0000",
+      "summary": "&lt;img src=\"https://storage.googleapis.com/gweb-uniblog-publish-prod/images/Road_to_GML_Master-Header.max-600x600.format-webp.webp\"&gt;Three new agentic safety and policy features integrated into Ads Advisor will help protect and streamline your Google Ads account...."
     }
   ],
-  "\ud83d\udd35 PRIORITY 2: GCP & Cloud Architecture": [
-    {
-      "source": "https://cloud.google.com/feeds/gcp-release-notes.xml",
-      "title": "April 15, 2026",
-      "url": "https://docs.cloud.google.com/release-notes#April_15_2026",
-      "date": "2026-04-15T00:00:00-07:00",
-      "summary": "<h2 class=\"release-note-product-title\">Compute Engine</h2>\n<h3>Announcement</h3>\n<p>You can view the physical location of your Compute Engine instances in a zone\nto understand your cluster topology. This information helps you reduce network\nlatency between your compute instances. For more informatio..."
-    },
-    {
-      "source": "https://cloud.google.com/feeds/gcp-release-notes.xml",
-      "title": "April 14, 2026",
-      "url": "https://docs.cloud.google.com/release-notes#April_14_2026",
-      "date": "2026-04-14T00:00:00-07:00",
-      "summary": "<h2 class=\"release-note-product-title\">AlloyDB for PostgreSQL</h2>\n<h3>Breaking</h3>\n<p>As of April 10, 2026, you can create, run, and edit\n<a href=\"https://docs.cloud.google.com/cloud-assist/investigations\">Gemini Cloud Assist investigations</a>\nonly if you have a <a href=\"https://cloud.google.com/..."
-    }
-  ],
-  "\ud83d\udfe2 PRIORITY 3: Executive AI Summary": [
+  "🔵 PRIORITY 2: GCP & Cloud Architecture": [],
+  "🟢 PRIORITY 3: Executive AI Summary": [
     {
       "source": "https://openai.com/news/rss.xml",
-      "title": "Trusted access for the next era of cyber defense",
-      "url": "https://openai.com/index/scaling-trusted-access-for-cyber-defense",
-      "date": "2026-04-14T00:00:00+00:00",
-      "summary": "OpenAI expands its Trusted Access for Cyber program, introducing GPT-5.4-Cyber to vetted defenders and strengthening safeguards as AI cybersecurity capabilities advance...."
+      "title": "Introducing workspace agents in ChatGPT",
+      "url": "https://openai.com/index/introducing-workspace-agents-in-chatgpt",
+      "date": "Wed, 22 Apr 2026 10:00:00 GMT",
+      "summary": "Workspace agents in ChatGPT are Codex-powered agents that automate complex workflows, run in the cloud, and help teams scale work across tools securely...."
+    },
+    {
+      "source": "https://openai.com/news/rss.xml",
+      "title": "Workspace agents",
+      "url": "https://openai.com/academy/workspace-agents",
+      "date": "Wed, 22 Apr 2026 10:00:00 GMT",
+      "summary": "Learn how to build, use, and scale workspace agents in ChatGPT to automate repeatable workflows, connect tools, and streamline team operations...."
+    },
+    {
+      "source": "https://openai.com/news/rss.xml",
+      "title": "Speeding up agentic workflows with WebSockets in the Responses API",
+      "url": "https://openai.com/index/speeding-up-agentic-workflows-with-websockets",
+      "date": "Wed, 22 Apr 2026 10:00:00 GMT",
+      "summary": "A deep dive into the Codex agent loop, showing how WebSockets and connection-scoped caching reduced API overhead and improved model latency...."
+    },
+    {
+      "source": "https://openai.com/news/rss.xml",
+      "title": "Introducing OpenAI Privacy Filter",
+      "url": "https://openai.com/index/introducing-openai-privacy-filter",
+      "date": "Wed, 22 Apr 2026 00:00:00 GMT",
+      "summary": "OpenAI Privacy Filter is an open-weight model for detecting and redacting personally identifiable information (PII) in text with state-of-the-art accuracy..."
+    },
+    {
+      "source": "https://openai.com/news/rss.xml",
+      "title": "Scaling Codex to enterprises worldwide",
+      "url": "https://openai.com/index/scaling-codex-to-enterprises-worldwide",
+      "date": "Tue, 21 Apr 2026 00:00:00 GMT",
+      "summary": "OpenAI launches Codex Labs, partners with with Accenture, PwC, Infosys, and others to help enterprises deploy and scale Codex across the software development lifecycle, and hits 4M Codex WAU...."
+    },
+    {
+      "source": "https://aws.amazon.com/blogs/machine-learning/feed/",
+      "title": "Company-wise memory in Amazon Bedrock with Amazon Neptune and Mem0",
+      "url": "https://aws.amazon.com/blogs/machine-learning/company-wise-memory-in-amazon-bedrock-with-amazon-neptune-and-mem0/",
+      "date": "Wed, 22 Apr 2026 15:56:24 +0000",
+      "summary": "Company-wise memory in Amazon Bedrock, powered by Amazon Neptune and Mem0, provides AI agents with persistent, company-specific context—enabling them to learn, adapt, and respond intelligently across multiple interactions. TrendMicro, one of the largest antivirus software companies in the world, developed the Trend’s Companion chatbot, so their customers can explore information through natural, conversational interactions..."
+    },
+    {
+      "source": "https://aws.amazon.com/blogs/machine-learning/feed/",
+      "title": "From developer desks to the whole organization: Running Claude Cowork in Amazon Bedrock",
+      "url": "https://aws.amazon.com/blogs/machine-learning/from-developer-desks-to-the-whole-organization-running-claude-cowork-in-amazon-bedrock/",
+      "date": "Tue, 21 Apr 2026 19:13:49 +0000",
+      "summary": "Today, we're excited to announce Claude Cowork in Amazon Bedrock. You can now run Cowork and Claude Code Desktop through Amazon Bedrock, directly or using an LLM gateway. In this post, we walk through how Claude Cowork integrates with Amazon Bedrock and show an example of how knowledge workers use it in practice...."
+    },
+    {
+      "source": "https://aws.amazon.com/blogs/machine-learning/feed/",
+      "title": "End-to-end lineage with DVC and Amazon SageMaker AI MLflow apps",
+      "url": "https://aws.amazon.com/blogs/machine-learning/end-to-end-lineage-with-dvc-and-amazon-sagemaker-ai-mlflow-apps/",
+      "date": "Tue, 21 Apr 2026 16:43:03 +0000",
+      "summary": "In this post, we show how to combine DVC (Data Version Control), Amazon SageMaker AI, and Amazon SageMaker AI MLflow Apps to build end-to-end ML model lineage. We walk through two deployable patterns — dataset-level lineage and record-level lineage — that you can run in your own AWS account using the companion notebooks...."
+    },
+    {
+      "source": "https://aws.amazon.com/blogs/machine-learning/feed/",
+      "title": "Accelerate Generative AI Inference on Amazon SageMaker AI with G7e Instances",
+      "url": "https://aws.amazon.com/blogs/machine-learning/accelerate-generative-ai-inference-on-amazon-sagemaker-ai-with-g7e-instances/",
+      "date": "Mon, 20 Apr 2026 19:38:10 +0000",
+      "summary": "Today, we are thrilled to announce the availability of G7e instances powered by NVIDIA RTX PRO 6000 Blackwell Server Edition GPUs on Amazon SageMaker AI. You can provision nodes with 1, 2, 4, and 8 RTX PRO 6000 GPU instances, with each GPU providing 96 GB of GDDR7 memory. This launch provides the capability to use a single-node GPU, G7e.2xlarge instance to host powerful open source foundation models (FMs) like GPT-OSS-120B, Nemotron-3-Super-120B-A12B (NVFP4 variant), and Qwen3.5-35B-A3B, offerin..."
+    }
+  ],
+  "🟡 PRIORITY 4: Agentic AI & Open Source Ecosystem": [
+    {
+      "source": "https://huggingface.co/blog/feed.xml",
+      "title": "Gemma 4 VLA Demo on Jetson Orin Nano Super",
+      "url": "https://huggingface.co/blog/nvidia/gemma4",
+      "date": "Wed, 22 Apr 2026 15:40:50 GMT",
+      "summary": ""
+    },
+    {
+      "source": "https://huggingface.co/blog/feed.xml",
+      "title": "QIMMA قِمّة ⛰: A Quality-First Arabic LLM Leaderboard",
+      "url": "https://huggingface.co/blog/tiiuae/qimma-arabic-leaderboard",
+      "date": "Tue, 21 Apr 2026 10:09:58 GMT",
+      "summary": ""
+    },
+    {
+      "source": "https://huggingface.co/blog/feed.xml",
+      "title": "AI and the Future of Cybersecurity: Why Openness Matters",
+      "url": "https://huggingface.co/blog/cybersecurity-openness",
+      "date": "Tue, 21 Apr 2026 00:00:00 GMT",
+      "summary": ""
     }
   ]
 }

@@ -13,7 +13,7 @@ class ServiceNowTriage {
     
     try {
       // 1. SEARCH LOCAL MEMORY
-    // Query ChromaDB for semantically similar historical tickets
+    // Query Embedded Memory for semantically similar historical tickets
     
     // 2. DRIVE SCAN
     // Search for related technical documentation in 'Digital IT' folders

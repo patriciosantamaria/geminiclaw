@@ -6,14 +6,16 @@ const logger = new Logger('ReportGenerator');
 async function generateAnnualReport() {
   try {
     const memory = new MemoryClient();
-    const collection = await memory.chroma.getCollection({ name: memory.defaultCollection });
     
     // Fetch all historical backfill records
-    const results = await collection.get({
-      where: { type: 'historical_backfill' }
+    const results: any[] = await new Promise((resolve, reject) => {
+      memory.db.all("SELECT content, metadata FROM knowledge_index WHERE json_extract(metadata, '$.type') = 'historical_backfill'", (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows || []);
+      });
     });
 
-    if (!results || !results.documents || results.documents.length === 0) {
+    if (results.length === 0) {
       console.log("No historical records found in the database.");
       return;
     }
@@ -23,11 +25,11 @@ async function generateAnnualReport() {
     console.log("==================================================\n");
 
     // Sort results by timeframe (chronological)
-    const records = results.documents.map((doc, index) => {
-      const metadata = results.metadatas![index] as any;
+    const records = results.map((row) => {
+      const metadata = JSON.parse(row.metadata || '{}');
       return {
         timeframe: metadata.timeframe,
-        summary: doc,
+        summary: row.content,
         timestamp: metadata.timestamp
       };
     });

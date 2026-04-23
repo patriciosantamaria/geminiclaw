@@ -1,4 +1,3 @@
-
 import { MemoryClient } from './memory-client.ts';
 import { Logger } from './utils/logger.ts';
 import { handleError, GeminiClawError, ErrorCode } from './utils/errors.ts';
@@ -22,7 +21,12 @@ export class Janitor {
   async runVacuum(): Promise<void> {
     logger.info('Starting SQLite vacuum...');
     try {
-      await this.memoryClient.vacuum();
+      await new Promise<void>((resolve, reject) => {
+        this.memoryClient.db.run('VACUUM', (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
       logger.info('SQLite vacuum complete.');
     } catch (e) {
       throw handleError(logger, e, 'Janitor vacuum failed');
@@ -48,55 +52,29 @@ export class Janitor {
   }
 
   /**
-   * Basic semantic deduplication in ChromaDB
+   * Basic semantic deduplication in Embedded Memory
    * (Removing exact duplicate documents)
    */
-  async deduplicateChroma(): Promise<number> {
-    logger.info('Starting ChromaDB deduplication...');
-    try {
-      const collectionName = this.memoryClient.defaultCollection;
-      const chroma = this.memoryClient.chroma;
-
-      let collection;
-      try {
-        collection = await chroma.getCollection({ name: collectionName });
-      } catch (err) {
-        logger.warn('Could not find ChromaDB collection, skipping deduplication.');
-        return 0;
-      }
-
-      const results = await collection.get();
-
-      if (!results || !results.ids || results.ids.length === 0) {
-        logger.info('ChromaDB is empty, no deduplication needed.');
-        return 0;
-      }
-
-      const seenDocuments = new Set<string>();
-      const idsToDelete: string[] = [];
-
-      for (let i = 0; i < results.ids.length; i++) {
-        const doc = results.documents[i];
-        if (doc === null || doc === undefined) continue;
-
-        if (seenDocuments.has(doc)) {
-          idsToDelete.push(results.ids[i]);
+  async deduplicateMemory(): Promise<number> {
+    logger.info('Starting Memory deduplication...');
+    return new Promise((resolve, reject) => {
+      const sql = `
+        DELETE FROM knowledge_index
+        WHERE id NOT IN (
+          SELECT MIN(id)
+          FROM knowledge_index
+          GROUP BY content
+        )
+      `;
+      this.memoryClient.db.run(sql, function(err) {
+        if (err) {
+          reject(handleError(logger, err, 'Memory deduplication failed'));
         } else {
-          seenDocuments.add(doc);
+          logger.info(`Removed ${this.changes} duplicate documents from Memory.`);
+          resolve(this.changes);
         }
-      }
-
-      if (idsToDelete.length > 0) {
-        await collection.delete({ ids: idsToDelete });
-        logger.info(`Removed ${idsToDelete.length} duplicate documents from ChromaDB.`);
-      } else {
-        logger.info('No duplicates found in ChromaDB.');
-      }
-
-      return idsToDelete.length;
-    } catch (e) {
-      throw handleError(logger, e, 'ChromaDB deduplication failed');
-    }
+      });
+    });
   }
 
   /**
@@ -106,7 +84,7 @@ export class Janitor {
     logger.info('--- Starting Janitor Maintenance Cycle ---');
     await this.runVacuum();
     await this.ttlPurge();
-    await this.deduplicateChroma();
+    await this.deduplicateMemory();
     logger.info('--- Janitor Maintenance Cycle Complete ---');
   }
 }
